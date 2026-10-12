@@ -83,6 +83,30 @@ app.post("/api/solicitacoes", async (req, res) => {
     }
 });
 
+// Buscar todas as solicitações
+app.get("/api/solicitacoes", async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `SELECT *
+             FROM solicitacoes
+             ORDER BY id DESC`
+        );
+
+        res.json({
+            sucesso: true,
+            solicitacoes: resultado.rows
+        });
+
+    } catch (erro) {
+        console.error("❌ Erro ao buscar solicitações:", erro);
+
+        res.status(500).json({
+            sucesso: false,
+            mensagem: "Erro ao buscar solicitações."
+        });
+    }
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 Servidor iniciado na porta ${PORT}`);
