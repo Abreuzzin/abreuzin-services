@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
@@ -9,103 +8,236 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
+// ==========================================
+// MIDDLEWARES
+// ==========================================
+
 app.use(cors());
 app.use(express.json());
 
-// Conexão com PostgreSQL
+// ==========================================
+// POSTGRESQL
+// ==========================================
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
+
     ssl: process.env.NODE_ENV === "production"
         ? { rejectUnauthorized: false }
         : false
 });
 
 // ==========================================
-// TESTAR CONEXÃO COM O BANCO
+// CONFIGURAR BANCO
 // ==========================================
 
-pool.query("SELECT NOW()", (erro, resultado) => {
-    if (erro) {
-        console.error(
-            "❌ Erro ao conectar ao PostgreSQL:",
-            erro.message
-        );
-    } else {
-        console.log("✅ PostgreSQL conectado!");
-        console.log(
-            "🕐 Banco respondeu em:",
-            resultado.rows[0].now
-        );
-    }
-});
+async function configurarBanco() {
 
-// ==========================================
-// LOGIN DO ADMINISTRADOR
-// ==========================================
-
-app.post("/api/admin/login", async (req, res) => {
     try {
-        const { usuario, senha } = req.body;
 
-        const usuarioAdmin =
-            process.env.ADMIN_USER;
+        // Criar coluna status
+        await pool.query(`
+            ALTER TABLE solicitacoes
+            ADD COLUMN IF NOT EXISTS status
+            VARCHAR(20)
+            DEFAULT 'pendente'
+        `);
 
-        const senhaAdmin =
-            process.env.ADMIN_PASSWORD;
+        // Criar coluna protocolo
+        await pool.query(`
+            ALTER TABLE solicitacoes
+            ADD COLUMN IF NOT EXISTS protocolo
+            VARCHAR(50)
+        `);
 
-        if (!usuario || !senha) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "Informe usuário e senha."
-            });
+        // Criar coluna de atualização
+        await pool.query(`
+            ALTER TABLE solicitacoes
+            ADD COLUMN IF NOT EXISTS atualizado_em
+            TIMESTAMP
+            DEFAULT CURRENT_TIMESTAMP
+        `);
+
+        // Garantir status nas solicitações antigas
+        await pool.query(`
+            UPDATE solicitacoes
+            SET status = 'pendente'
+            WHERE status IS NULL
+        `);
+
+        // Criar protocolos nas solicitações antigas
+        const antigas = await pool.query(`
+            SELECT id
+            FROM solicitacoes
+            WHERE protocolo IS NULL
+        `);
+
+        for (const solicitacao of antigas.rows) {
+
+            const protocolo =
+                `ABS-${String(solicitacao.id).padStart(6, "0")}`;
+
+            await pool.query(
+                `
+                UPDATE solicitacoes
+                SET protocolo = $1
+                WHERE id = $2
+                `,
+                [
+                    protocolo,
+                    solicitacao.id
+                ]
+            );
         }
 
-        if (
-            usuario !== usuarioAdmin ||
-            senha !== senhaAdmin
-        ) {
-            return res.status(401).json({
-                sucesso: false,
-                mensagem: "Usuário ou senha inválidos."
-            });
-        }
-
-        const token = jwt.sign(
-            {
-                usuario: usuarioAdmin,
-                tipo: "admin"
-            },
-            process.env.JWT_SECRET,
-            {
-                expiresIn: "8h"
-            }
+        console.log(
+            "✅ Banco configurado!"
         );
-
-        res.json({
-            sucesso: true,
-            token
-        });
 
     } catch (erro) {
 
         console.error(
-            "❌ Erro no login:",
-            erro
+            "❌ Erro ao configurar banco:",
+            erro.message
         );
 
-        res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro interno no servidor."
-        });
     }
-});
+}
 
 // ==========================================
-// MIDDLEWARE DE AUTENTICAÇÃO
+// TESTAR CONEXÃO
 // ==========================================
 
-function verificarAdmin(req, res, next) {
+pool.query(
+    "SELECT NOW()",
+    async (erro, resultado) => {
+
+        if (erro) {
+
+            console.error(
+                "❌ Erro ao conectar ao PostgreSQL:",
+                erro.message
+            );
+
+            return;
+        }
+
+        console.log(
+            "✅ PostgreSQL conectado!"
+        );
+
+        console.log(
+            "🕐 Banco respondeu em:",
+            resultado.rows[0].now
+        );
+
+        await configurarBanco();
+
+    }
+);
+
+// ==========================================
+// LOGIN ADMINISTRADOR
+// ==========================================
+
+app.post(
+    "/api/admin/login",
+    async (req, res) => {
+
+        try {
+
+            const {
+                usuario,
+                senha
+            } = req.body;
+
+            const usuarioAdmin =
+                process.env.ADMIN_USER;
+
+            const senhaAdmin =
+                process.env.ADMIN_PASSWORD;
+
+            if (!usuario || !senha) {
+
+                return res.status(400).json({
+
+                    sucesso: false,
+
+                    mensagem:
+                        "Informe usuário e senha."
+
+                });
+
+            }
+
+            if (
+                usuario !== usuarioAdmin ||
+                senha !== senhaAdmin
+            ) {
+
+                return res.status(401).json({
+
+                    sucesso: false,
+
+                    mensagem:
+                        "Usuário ou senha inválidos."
+
+                });
+
+            }
+
+            const token =
+                jwt.sign(
+                    {
+                        usuario: usuarioAdmin,
+                        tipo: "admin"
+                    },
+
+                    process.env.JWT_SECRET,
+
+                    {
+                        expiresIn: "8h"
+                    }
+                );
+
+            res.json({
+
+                sucesso: true,
+
+                token
+
+            });
+
+        } catch (erro) {
+
+            console.error(
+                "❌ Erro no login:",
+                erro
+            );
+
+            res.status(500).json({
+
+                sucesso: false,
+
+                mensagem:
+                    "Erro interno no servidor."
+
+            });
+
+        }
+
+    }
+);
+
+// ==========================================
+// AUTENTICAÇÃO ADMIN
+// ==========================================
+
+function verificarAdmin(
+    req,
+    res,
+    next
+) {
 
     const autorizacao =
         req.headers.authorization;
@@ -113,8 +245,12 @@ function verificarAdmin(req, res, next) {
     if (!autorizacao) {
 
         return res.status(401).json({
+
             sucesso: false,
-            mensagem: "Acesso não autorizado."
+
+            mensagem:
+                "Acesso não autorizado."
+
         });
 
     }
@@ -128,13 +264,18 @@ function verificarAdmin(req, res, next) {
     ) {
 
         return res.status(401).json({
+
             sucesso: false,
-            mensagem: "Token inválido."
+
+            mensagem:
+                "Token inválido."
+
         });
 
     }
 
-    const token = partes[1];
+    const token =
+        partes[1];
 
     try {
 
@@ -144,41 +285,75 @@ function verificarAdmin(req, res, next) {
                 process.env.JWT_SECRET
             );
 
-        if (dados.tipo !== "admin") {
+        if (
+            dados.tipo !== "admin"
+        ) {
 
             return res.status(403).json({
+
                 sucesso: false,
-                mensagem: "Acesso negado."
+
+                mensagem:
+                    "Acesso negado."
+
             });
 
         }
 
-        req.admin = dados;
+        req.admin =
+            dados;
 
         next();
 
     } catch (erro) {
 
         return res.status(401).json({
+
             sucesso: false,
-            mensagem: "Sessão expirada ou inválida."
+
+            mensagem:
+                "Sessão expirada ou inválida."
+
         });
 
     }
+
 }
 
 // ==========================================
 // ROTA PRINCIPAL
 // ==========================================
 
-app.get("/", (req, res) => {
+app.get(
+    "/",
+    (req, res) => {
 
-    res.json({
-        mensagem:
-            "Abreuzin Services API está funcionando 🚀"
-    });
+        res.json({
 
-});
+            mensagem:
+                "Abreuzin Services API está funcionando 🚀"
+
+        });
+
+    }
+);
+
+// ==========================================
+// HEALTH CHECK
+// ==========================================
+
+app.get(
+    "/healthz",
+    (req, res) => {
+
+        res.json({
+
+            status: "ok"
+
+        });
+
+    }
+);
 
 // ==========================================
 // CRIAR SOLICITAÇÃO
@@ -200,9 +375,29 @@ app.post(
                 prazo
             } = req.body;
 
+            if (
+                !nome ||
+                !whatsapp ||
+                !email ||
+                !servico
+            ) {
+
+                return res.status(400).json({
+
+                    sucesso: false,
+
+                    mensagem:
+                        "Preencha os campos obrigatórios."
+
+                });
+
+            }
+
+            // Primeiro criamos a solicitação
             const resultado =
                 await pool.query(
-                    `INSERT INTO solicitacoes
+                    `
+                    INSERT INTO solicitacoes
                     (
                         nome,
                         whatsapp,
@@ -210,7 +405,8 @@ app.post(
                         servico,
                         descricao,
                         orcamento,
-                        prazo
+                        prazo,
+                        status
                     )
                     VALUES
                     (
@@ -220,9 +416,11 @@ app.post(
                         $4,
                         $5,
                         $6,
-                        $7
+                        $7,
+                        'pendente'
                     )
-                    RETURNING *`,
+                    RETURNING *
+                    `,
                     [
                         nome,
                         whatsapp,
@@ -234,12 +432,38 @@ app.post(
                     ]
                 );
 
+            const solicitacao =
+                resultado.rows[0];
+
+            // Criar protocolo baseado no ID
+            const protocolo =
+                `ABS-${String(
+                    solicitacao.id
+                ).padStart(6, "0")}`;
+
+            // Salvar protocolo
+            const atualizada =
+                await pool.query(
+                    `
+                    UPDATE solicitacoes
+                    SET
+                        protocolo = $1,
+                        atualizado_em = CURRENT_TIMESTAMP
+                    WHERE id = $2
+                    RETURNING *
+                    `,
+                    [
+                        protocolo,
+                        solicitacao.id
+                    ]
+                );
+
             console.log(
-                "✅ Nova solicitação salva:"
+                "✅ Nova solicitação:"
             );
 
             console.log(
-                resultado.rows[0]
+                atualizada.rows[0]
             );
 
             res.status(201).json({
@@ -247,10 +471,12 @@ app.post(
                 sucesso: true,
 
                 mensagem:
-                    "Solicitação salva com sucesso!",
+                    "Solicitação criada com sucesso!",
+
+                protocolo,
 
                 solicitacao:
-                    resultado.rows[0]
+                    atualizada.rows[0]
 
             });
 
@@ -276,8 +502,8 @@ app.post(
 );
 
 // ==========================================
-// BUSCAR SOLICITAÇÕES
-// PROTEGIDO PELO LOGIN
+// BUSCAR TODAS AS SOLICITAÇÕES
+// ADMIN
 // ==========================================
 
 app.get(
@@ -289,9 +515,11 @@ app.get(
 
             const resultado =
                 await pool.query(
-                    `SELECT *
-                     FROM solicitacoes
-                     ORDER BY id DESC`
+                    `
+                    SELECT *
+                    FROM solicitacoes
+                    ORDER BY id DESC
+                    `
                 );
 
             res.json({
@@ -316,6 +544,295 @@ app.get(
 
                 mensagem:
                     "Erro ao buscar solicitações."
+
+            });
+
+        }
+
+    }
+);
+
+// ==========================================
+// BUSCAR SOLICITAÇÕES PENDENTES
+// ADMIN
+// ==========================================
+
+app.get(
+    "/api/solicitacoes/pendentes",
+    verificarAdmin,
+    async (req, res) => {
+
+        try {
+
+            const resultado =
+                await pool.query(
+                    `
+                    SELECT *
+                    FROM solicitacoes
+                    WHERE status != 'concluido'
+                    ORDER BY id DESC
+                    `
+                );
+
+            res.json({
+
+                sucesso: true,
+
+                solicitacoes:
+                    resultado.rows
+
+            });
+
+        } catch (erro) {
+
+            console.error(
+                "❌ Erro ao buscar pendentes:",
+                erro
+            );
+
+            res.status(500).json({
+
+                sucesso: false,
+
+                mensagem:
+                    "Erro ao buscar solicitações."
+
+            });
+
+        }
+
+    }
+);
+
+// ==========================================
+// HISTÓRICO DE CONCLUÍDOS
+// ADMIN
+// ==========================================
+
+app.get(
+    "/api/solicitacoes/concluidas",
+    verificarAdmin,
+    async (req, res) => {
+
+        try {
+
+            const resultado =
+                await pool.query(
+                    `
+                    SELECT *
+                    FROM solicitacoes
+                    WHERE status = 'concluido'
+                    ORDER BY id DESC
+                    `
+                );
+
+            res.json({
+
+                sucesso: true,
+
+                solicitacoes:
+                    resultado.rows
+
+            });
+
+        } catch (erro) {
+
+            console.error(
+                "❌ Erro ao buscar histórico:",
+                erro
+            );
+
+            res.status(500).json({
+
+                sucesso: false,
+
+                mensagem:
+                    "Erro ao buscar histórico."
+
+            });
+
+        }
+
+    }
+);
+
+// ==========================================
+// ALTERAR STATUS
+// ADMIN
+// ==========================================
+
+app.patch(
+    "/api/solicitacoes/:id/status",
+    verificarAdmin,
+    async (req, res) => {
+
+        try {
+
+            const {
+                id
+            } = req.params;
+
+            const {
+                status
+            } = req.body;
+
+            const statusPermitidos = [
+                "pendente",
+                "em_andamento",
+                "concluido"
+            ];
+
+            if (
+                !statusPermitidos.includes(
+                    status
+                )
+            ) {
+
+                return res.status(400).json({
+
+                    sucesso: false,
+
+                    mensagem:
+                        "Status inválido."
+
+                });
+
+            }
+
+            const resultado =
+                await pool.query(
+                    `
+                    UPDATE solicitacoes
+                    SET
+                        status = $1,
+                        atualizado_em = CURRENT_TIMESTAMP
+                    WHERE id = $2
+                    RETURNING *
+                    `,
+                    [
+                        status,
+                        id
+                    ]
+                );
+
+            if (
+                resultado.rows.length === 0
+            ) {
+
+                return res.status(404).json({
+
+                    sucesso: false,
+
+                    mensagem:
+                        "Solicitação não encontrada."
+
+                });
+
+            }
+
+            res.json({
+
+                sucesso: true,
+
+                mensagem:
+                    "Status atualizado com sucesso!",
+
+                solicitacao:
+                    resultado.rows[0]
+
+            });
+
+        } catch (erro) {
+
+            console.error(
+                "❌ Erro ao alterar status:",
+                erro
+            );
+
+            res.status(500).json({
+
+                sucesso: false,
+
+                mensagem:
+                    "Erro ao alterar status."
+
+            });
+
+        }
+
+    }
+);
+
+// ==========================================
+// CONSULTAR PELO PROTOCOLO
+// CLIENTE
+// ==========================================
+
+app.get(
+    "/api/solicitacoes/protocolo/:protocolo",
+    async (req, res) => {
+
+        try {
+
+            const {
+                protocolo
+            } = req.params;
+
+            const resultado =
+                await pool.query(
+                    `
+                    SELECT
+                        protocolo,
+                        nome,
+                        servico,
+                        status,
+                        criado_em,
+                        atualizado_em
+                    FROM solicitacoes
+                    WHERE protocolo = $1
+                    `,
+                    [
+                        protocolo
+                    ]
+                );
+
+            if (
+                resultado.rows.length === 0
+            ) {
+
+                return res.status(404).json({
+
+                    sucesso: false,
+
+                    mensagem:
+                        "Protocolo não encontrado."
+
+                });
+
+            }
+
+            res.json({
+
+                sucesso: true,
+
+                solicitacao:
+                    resultado.rows[0]
+
+            });
+
+        } catch (erro) {
+
+            console.error(
+                "❌ Erro ao consultar protocolo:",
+                erro
+            );
+
+            res.status(500).json({
+
+                sucesso: false,
+
+                mensagem:
+                    "Erro ao consultar protocolo."
 
             });
 
