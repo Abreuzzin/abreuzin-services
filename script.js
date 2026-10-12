@@ -12,27 +12,104 @@ const API = "https://abreuzin-services.onrender.com";
 
 
 // ==========================================
+// NAVEGAÇÃO ENTRE ABAS
+// ==========================================
+
+function abrirAba(nomeAba) {
+
+    const secoes =
+        document.querySelectorAll(".page-section");
+
+    const linksMenu =
+        document.querySelectorAll(".nav-link");
+
+
+    // Esconde todas as seções
+
+    secoes.forEach(function (secao) {
+
+        secao.classList.remove(
+            "active-section"
+        );
+
+    });
+
+
+    // Encontra a seção escolhida
+
+    const secaoAtiva =
+        document.getElementById(nomeAba);
+
+
+    if (secaoAtiva) {
+
+        secaoAtiva.classList.add(
+            "active-section"
+        );
+
+    }
+
+
+    // Atualiza o menu
+
+    linksMenu.forEach(function (link) {
+
+        link.classList.remove("active");
+
+
+        if (
+            link.dataset.tab === nomeAba
+        ) {
+
+            link.classList.add("active");
+
+        }
+
+    });
+
+
+    // Volta para o topo
+
+    window.scrollTo({
+
+        top: 0,
+        behavior: "smooth"
+
+    });
+
+
+    // Atualiza a URL
+
+    history.replaceState(
+        null,
+        "",
+        "#" + nomeAba
+    );
+
+}
+
+
+// ==========================================
 // ABRIR FORMULÁRIO
 // ==========================================
 
 function abrirFormulario(servico) {
 
-    const formulario = document.getElementById("formulario");
+    // Abre diretamente a aba de orçamento
 
-    if (formulario) {
+    abrirAba("formulario");
 
-        formulario.scrollIntoView({
-            behavior: "smooth"
-        });
 
-    }
-
+    // Seleciona automaticamente o serviço
 
     const selectServico =
         document.getElementById("servico");
 
 
-    if (selectServico) {
+    if (
+        selectServico &&
+        servico
+    ) {
 
         selectServico.value = servico;
 
@@ -42,11 +119,90 @@ function abrirFormulario(servico) {
 
 
 // ==========================================
+// CONFIGURAÇÃO DOS BOTÕES data-tab
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const elementosAbas =
+            document.querySelectorAll(
+                "[data-tab]"
+            );
+
+
+        elementosAbas.forEach(
+            function (elemento) {
+
+                elemento.addEventListener(
+                    "click",
+                    function (event) {
+
+                        const aba =
+                            elemento.dataset.tab;
+
+
+                        if (!aba) {
+
+                            return;
+
+                        }
+
+
+                        event.preventDefault();
+
+
+                        abrirAba(aba);
+
+                    }
+                );
+
+            }
+        );
+
+
+        // Verifica se existe uma aba na URL
+
+        const hash =
+            window.location.hash.replace(
+                "#",
+                ""
+            );
+
+
+        const secaoInicial =
+            document.getElementById(hash);
+
+
+        if (
+            hash &&
+            secaoInicial &&
+            secaoInicial.classList.contains(
+                "page-section"
+            )
+        ) {
+
+            abrirAba(hash);
+
+        } else {
+
+            abrirAba("inicio");
+
+        }
+
+    }
+);
+
+
+// ==========================================
 // ENVIO DA SOLICITAÇÃO
 // ==========================================
 
 const formulario =
-    document.getElementById("contratacaoForm");
+    document.getElementById(
+        "contratacaoForm"
+    );
 
 
 if (formulario) {
@@ -58,28 +214,46 @@ if (formulario) {
             event.preventDefault();
 
 
+            // ==================================
+            // PEGAR DADOS DO FORMULÁRIO
+            // ==================================
+
             const dados = {
 
                 nome:
-                    document.getElementById("nome").value,
+                    document.getElementById(
+                        "nome"
+                    ).value.trim(),
 
                 whatsapp:
-                    document.getElementById("whatsapp").value,
+                    document.getElementById(
+                        "whatsapp"
+                    ).value.trim(),
 
                 email:
-                    document.getElementById("email").value,
+                    document.getElementById(
+                        "email"
+                    ).value.trim(),
 
                 servico:
-                    document.getElementById("servico").value,
+                    document.getElementById(
+                        "servico"
+                    ).value,
 
                 descricao:
-                    document.getElementById("descricao").value,
+                    document.getElementById(
+                        "descricao"
+                    ).value.trim(),
 
                 orcamento:
-                    document.getElementById("orcamento").value,
+                    document.getElementById(
+                        "orcamento"
+                    ).value.trim(),
 
                 prazo:
-                    document.getElementById("prazo").value
+                    document.getElementById(
+                        "prazo"
+                    ).value.trim()
 
             };
 
@@ -90,22 +264,54 @@ if (formulario) {
             );
 
 
+            // ==================================
+            // VALIDAÇÃO
+            // ==================================
+
+            if (
+                !dados.nome ||
+                !dados.whatsapp ||
+                !dados.email ||
+                !dados.servico ||
+                !dados.descricao
+            ) {
+
+                alert(
+                    "⚠️ Preencha todos os campos obrigatórios."
+                );
+
+                return;
+
+            }
+
+
             try {
 
-                const resposta = await fetch(
-                    `${API}/api/solicitacoes`,
-                    {
-                        method: "POST",
+                // ==================================
+                // ENVIAR PARA O BACKEND
+                // ==================================
 
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
+                const resposta =
+                    await fetch(
+                        `${API}/api/solicitacoes`,
+                        {
 
-                        body:
-                            JSON.stringify(dados)
-                    }
-                );
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    dados
+                                )
+
+                        }
+                    );
 
 
                 const resultado =
@@ -118,6 +324,10 @@ if (formulario) {
                 );
 
 
+                // ==================================
+                // SUCESSO
+                // ==================================
+
                 if (resposta.ok) {
 
                     alert(
@@ -129,11 +339,14 @@ if (formulario) {
                     );
 
 
+                    // Limpa formulário
+
                     formulario.reset();
 
 
-                    // Coloca o protocolo automaticamente
-                    // no campo de acompanhamento
+                    // ==================================
+                    // COLOCAR PROTOCOLO NO CAMPO
+                    // ==================================
 
                     const campoProtocolo =
                         document.getElementById(
@@ -149,26 +362,21 @@ if (formulario) {
                     }
 
 
-                    // Leva o cliente para
-                    // a área de acompanhamento
+                    // ==================================
+                    // ABRIR ACOMPANHAMENTO
+                    // ==================================
 
-                    const acompanhar =
-                        document.getElementById(
-                            "acompanhar"
-                        );
+                    setTimeout(
+                        function () {
 
+                            abrirAba(
+                                "acompanhar"
+                            );
 
-                    if (acompanhar) {
+                        },
+                        500
+                    );
 
-                        setTimeout(() => {
-
-                            acompanhar.scrollIntoView({
-                                behavior: "smooth"
-                            });
-
-                        }, 500);
-
-                    }
 
                 } else {
 
@@ -176,6 +384,7 @@ if (formulario) {
                         "❌ Erro ao enviar solicitação.\n\n" +
                         (
                             resultado.mensagem ||
+                            resultado.erro ||
                             "Tente novamente."
                         )
                     );
@@ -186,7 +395,7 @@ if (formulario) {
             } catch (erro) {
 
                 console.error(
-                    "❌ Erro:",
+                    "❌ Erro ao enviar solicitação:",
                     erro
                 );
 
@@ -209,7 +418,9 @@ if (formulario) {
 // ==========================================
 
 const consultaForm =
-    document.getElementById("consultaForm");
+    document.getElementById(
+        "consultaForm"
+    );
 
 
 if (consultaForm) {
@@ -220,6 +431,10 @@ if (consultaForm) {
 
             event.preventDefault();
 
+
+            // ==================================
+            // PEGAR PROTOCOLO
+            // ==================================
 
             const campoProtocolo =
                 document.getElementById(
@@ -245,7 +460,9 @@ if (consultaForm) {
                 );
 
 
-            // Esconde mensagens anteriores
+            // ==================================
+            // LIMPAR RESULTADOS ANTERIORES
+            // ==================================
 
             if (resultadoConsulta) {
 
@@ -262,6 +479,10 @@ if (consultaForm) {
 
             }
 
+
+            // ==================================
+            // VALIDAR PROTOCOLO
+            // ==================================
 
             if (!protocolo) {
 
@@ -282,9 +503,15 @@ if (consultaForm) {
                 );
 
 
+                // ==================================
+                // CONSULTAR BACKEND
+                // ==================================
+
                 const resposta =
                     await fetch(
-                        `${API}/api/solicitacoes/protocolo/${encodeURIComponent(protocolo)}`
+                        `${API}/api/solicitacoes/protocolo/${encodeURIComponent(
+                            protocolo
+                        )}`
                     );
 
 
@@ -298,29 +525,55 @@ if (consultaForm) {
                 );
 
 
+                // ==================================
+                // PROTOCOLO ENCONTRADO
+                // ==================================
+
                 if (resposta.ok) {
 
                     const solicitacao =
                         resultado.solicitacao;
 
 
-                    // Protocolo
+                    // ==================================
+                    // PROTOCOLO
+                    // ==================================
 
-                    document.getElementById(
-                        "consultaProtocolo"
-                    ).textContent =
-                        solicitacao.protocolo;
-
-
-                    // Serviço
-
-                    document.getElementById(
-                        "consultaServico"
-                    ).textContent =
-                        solicitacao.servico;
+                    const elementoProtocolo =
+                        document.getElementById(
+                            "consultaProtocolo"
+                        );
 
 
-                    // Status
+                    if (elementoProtocolo) {
+
+                        elementoProtocolo.textContent =
+                            solicitacao.protocolo;
+
+                    }
+
+
+                    // ==================================
+                    // SERVIÇO
+                    // ==================================
+
+                    const elementoServico =
+                        document.getElementById(
+                            "consultaServico"
+                        );
+
+
+                    if (elementoServico) {
+
+                        elementoServico.textContent =
+                            solicitacao.servico;
+
+                    }
+
+
+                    // ==================================
+                    // STATUS
+                    // ==================================
 
                     const statusElemento =
                         document.getElementById(
@@ -358,36 +611,63 @@ if (consultaForm) {
                     } else {
 
                         statusTexto =
-                            solicitacao.status;
+                            solicitacao.status ||
+                            "Não informado";
 
                     }
 
 
-                    statusElemento.textContent =
-                        statusTexto;
+                    if (statusElemento) {
+
+                        statusElemento.textContent =
+                            statusTexto;
+
+                    }
 
 
-                    // Data de criação
+                    // ==================================
+                    // DATA DE CRIAÇÃO
+                    // ==================================
 
-                    document.getElementById(
-                        "consultaCriado"
-                    ).textContent =
-                        formatarData(
-                            solicitacao.criado_em
+                    const elementoCriado =
+                        document.getElementById(
+                            "consultaCriado"
                         );
 
 
-                    // Última atualização
+                    if (elementoCriado) {
 
-                    document.getElementById(
-                        "consultaAtualizado"
-                    ).textContent =
-                        formatarData(
-                            solicitacao.atualizado_em
+                        elementoCriado.textContent =
+                            formatarData(
+                                solicitacao.criado_em
+                            );
+
+                    }
+
+
+                    // ==================================
+                    // DATA DE ATUALIZAÇÃO
+                    // ==================================
+
+                    const elementoAtualizado =
+                        document.getElementById(
+                            "consultaAtualizado"
                         );
 
 
-                    // Mensagem conforme o status
+                    if (elementoAtualizado) {
+
+                        elementoAtualizado.textContent =
+                            formatarData(
+                                solicitacao.atualizado_em
+                            );
+
+                    }
+
+
+                    // ==================================
+                    // MENSAGEM DO STATUS
+                    // ==================================
 
                     const mensagem =
                         document.getElementById(
@@ -395,39 +675,45 @@ if (consultaForm) {
                         );
 
 
-                    if (
-                        solicitacao.status ===
-                        "pendente"
-                    ) {
+                    if (mensagem) {
 
-                        mensagem.textContent =
-                            "📨 Recebemos sua solicitação e ela está aguardando análise.";
+                        if (
+                            solicitacao.status ===
+                            "pendente"
+                        ) {
 
-                    } else if (
-                        solicitacao.status ===
-                        "em_andamento"
-                    ) {
+                            mensagem.textContent =
+                                "📨 Recebemos sua solicitação e ela está aguardando análise.";
 
-                        mensagem.textContent =
-                            "🛠️ Nossa equipe está trabalhando na sua solicitação.";
+                        } else if (
+                            solicitacao.status ===
+                            "em_andamento"
+                        ) {
 
-                    } else if (
-                        solicitacao.status ===
-                        "concluido"
-                    ) {
+                            mensagem.textContent =
+                                "🛠️ Nossa equipe está trabalhando na sua solicitação.";
 
-                        mensagem.textContent =
-                            "✅ Sua solicitação foi concluída.";
+                        } else if (
+                            solicitacao.status ===
+                            "concluido"
+                        ) {
 
-                    } else {
+                            mensagem.textContent =
+                                "✅ Sua solicitação foi concluída.";
 
-                        mensagem.textContent =
-                            "";
+                        } else {
+
+                            mensagem.textContent =
+                                "";
+
+                        }
 
                     }
 
 
-                    // Mostra resultado
+                    // ==================================
+                    // MOSTRAR RESULTADO
+                    // ==================================
 
                     if (resultadoConsulta) {
 
@@ -438,6 +724,10 @@ if (consultaForm) {
 
 
                 } else {
+
+                    // ==================================
+                    // PROTOCOLO NÃO ENCONTRADO
+                    // ==================================
 
                     if (erroConsulta) {
 
@@ -503,11 +793,17 @@ function formatarData(data) {
     return dataConvertida.toLocaleString(
         "pt-BR",
         {
+
             day: "2-digit",
+
             month: "2-digit",
+
             year: "numeric",
+
             hour: "2-digit",
+
             minute: "2-digit"
+
         }
     );
 
