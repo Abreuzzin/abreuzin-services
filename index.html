@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Abreuzin Services</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+    <header>
+
+        <h1>Abreuzin Services</h1>
+
+        <nav>
+            <a href="#inicio">Início</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#contato">Contato</a>
+        </nav>
+
+    </header>
+
+
+    <main>
+
+        <!-- INÍCIO -->
+        <section id="inicio" class="hero">
+
+            <div>
+
+                <p class="tag">
+                    SOLUÇÕES DIGITAIS
+                </p>
+
+                <h2>
+                    Seu projeto começa
+                    <span>aqui.</span>
+                </h2>
+
+                <p>
+                    Desenvolvimento de sites, sistemas e soluções
+                    digitais para empresas e profissionais.
+                </p>
+
+                <a href="#servicos" class="botao">
+                    Ver serviços
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- SERVIÇOS -->
+        <section id="servicos" class="servicos">
+
+            <h2>Meus serviços</h2>
+
+            <p>
+                Escolha o serviço que você precisa.
+            </p>
+
+
+            <div class="cards">
+
+                <!-- SITE -->
+                <div class="card">
+
+                    <h3>
+                        🌐 Criação de Sites
+                    </h3>
+
+                    <p>
+                        Sites modernos, rápidos e responsivos
+                        para empresas e profissionais.
+                    </p>
+
+                    <strong>
+                        A partir de R$ 400
+                    </strong>
+
+                    <button
+                        onclick="abrirFormulario('Criação de Sites')">
+                        Quero contratar
+                    </button>
+
+                </div>
+
+
+                <!-- LANDING PAGE -->
+                <div class="card">
+
+                    <h3>
+                        📱 Landing Pages
+                    </h3>
+
+                    <p>
+                        Páginas focadas em divulgação,
+                        vendas e captação de clientes.
+                    </p>
+
+                    <strong>
+                        A partir de R$ 250
+                    </strong>
+
+                    <button
+                        onclick="abrirFormulario('Landing Pages')">
+                        Quero contratar
+                    </button>
+
+                </div>
+
+
+                <!-- SUPORTE -->
+                <div class="card">
+
+                    <h3>
+                        💻 Suporte Técnico
+                    </h3>
+
+                    <p>
+                        Configuração e suporte para computadores,
+                        programas e sistemas.
+                    </p>
+
+                    <strong>
+                        A partir de R$ 80
+                    </strong>
+
+                    <button
+                        onclick="abrirFormulario('Suporte Técnico')">
+                        Quero contratar
+                    </button>
+
+                </div>
+
+
+                <!-- PLANILHAS -->
+                <div class="card">
+
+                    <h3>
+                        📊 Planilhas
+                    </h3>
+
+                    <p>
+                        Criação e organização de planilhas
+                        para empresas e profissionais.
+                    </p>
+
+                    <strong>
+                        A partir de R$ 100
+                    </strong>
+
+                    <button
+                        onclick="abrirFormulario('Planilhas')">
+                        Quero contratar
+                    </button>
+
+                </div>
+
+
+                <!-- LOJA ONLINE -->
+                <div class="card">
+
+                    <h3>
+                        🛒 Loja Online
+                    </h3>
+
+                    <p>
+                        Configuração e organização de lojas
+                        e produtos para vendas online.
+                    </p>
+
+                    <strong>
+                        A partir de R$ 300
+                    </strong>
+
+                    <button
+                        onclick="abrirFormulario('Loja Online')">
+                        Quero contratar
+                    </button>
+
+                </div>
+
+
+                <!-- AUTOMAÇÃO -->
+                <div class="card">
+
+                    <h3>
+                        🤖 Automações
+                    </h3>
+
+                    <p>
+                        Automação de tarefas para melhorar
+                        processos e economizar tempo.
+                    </p>
+
+                    <strong>
+                        A partir de R$ 300
+                    </strong>
+
+                    <button
+                        onclick="abrirFormulario('Automações')">
+                        Quero contratar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SOBRE -->
+        <section id="sobre" class="sobre">
+
+            <h2>
+                Sobre mim
+            </h2>
+
+            <p>
+                Trabalho com soluções digitais para ajudar
+                empresas e profissionais a melhorarem sua
+                presença e seus processos na internet.
+            </p>
+
+        </section>
+
+
+        <!-- FORMULÁRIO -->
+        <section id="formulario" class="formulario">
+
+            <div class="formulario-container">
+
+                <h2>
+                    Solicitar serviço
+                </h2>
+
+                <p>
+                    Preencha as informações abaixo e entrarei
+                    em contato para entender seu projeto.
+                </p>
+
+
+                <form id="contratacaoForm">
+
+                    <!-- NOME -->
+                    <label for="nome">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Seu nome"
+                        required
+                    >
+
+
+                    <!-- WHATSAPP -->
+                    <label for="whatsapp">
+                        WhatsApp
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="whatsapp"
+                        name="whatsapp"
+                        placeholder="(00) 00000-0000"
+                        required
+                    >
+
+
+                    <!-- EMAIL -->
+                    <label for="email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="seuemail@email.com"
+                        required
+                    >
+
+
+                    <!-- SERVIÇO -->
+                    <label for="servico">
+                        Serviço desejado
+                    </label>
+
+                    <select
+                        id="servico"
+                        name="servico"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione um serviço
+                        </option>
+
+                        <option value="Criação de Sites">
+                            Criação de Sites
+                        </option>
+
+                        <option value="Landing Pages">
+                            Landing Pages
+                        </option>
+
+                        <option value="Suporte Técnico">
+                            Suporte Técnico
+                        </option>
+
+                        <option value="Planilhas">
+                            Planilhas
+                        </option>
+
+                        <option value="Loja Online">
+                            Loja Online
+                        </option>
+
+                        <option value="Automações">
+                            Automações
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+
+                    <!-- DESCRIÇÃO -->
+                    <label for="descricao">
+                        O que você precisa?
+                    </label>
+
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        placeholder="Explique o que você precisa..."
+                        rows="6"
+                        required
+                    ></textarea>
+
+
+                    <!-- ORÇAMENTO -->
+                    <label for="orcamento">
+                        Qual seu orçamento?
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento"
+                        name="orcamento"
+                        placeholder="Ex: 500"
+                        min="0"
+                    >
+
+
+                    <!-- PRAZO -->
+                    <label for="prazo">
+                        Prazo desejado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="prazo"
+                        name="prazo"
+                        placeholder="Ex: 15 dias"
+                    >
+
+
+                    <!-- BOTÃO -->
+                    <button type="submit">
+                        🚀 Enviar solicitação
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTATO -->
+        <section id="contato" class="contato">
+
+            <h2>
+                Precisa de um serviço?
+            </h2>
+
+            <p>
+                Entre em contato e explique o que você precisa.
+            </p>
+
+            <button
+                onclick="abrirFormulario('Orçamento')">
+                Solicitar orçamento
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- RODAPÉ -->
+    <footer>
+
+        <p>
+            © 2026 Abreuzin Services. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>
+```
