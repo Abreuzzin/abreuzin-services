@@ -31,7 +31,7 @@ if (formulario) {
 console.log("🔥 SCRIPT.JS FOI CARREGADO!");
         try {
             const resposta = await fetch(
-                "http://localhost:3000/api/solicitacoes",
+                "https://abreuzin-services.onrender.com/api/solicitacoes",
                 {
                     method: "POST",
                     headers: {
