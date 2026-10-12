@@ -21,6 +21,8 @@
             <a href="#inicio">Início</a>
             <a href="#servicos">Serviços</a>
             <a href="#sobre">Sobre</a>
+            <a href="#formulario">Solicitar</a>
+            <a href="#acompanhar">Acompanhar</a>
             <a href="#contato">Contato</a>
         </nav>
 
@@ -391,6 +393,110 @@
         </section>
 
 
+        <!-- ACOMPANHAR SOLICITAÇÃO -->
+        <section id="acompanhar" class="formulario">
+
+            <div class="formulario-container">
+
+                <h2>
+                    🔎 Acompanhar minha solicitação
+                </h2>
+
+                <p>
+                    Já enviou uma solicitação?
+                    Digite seu protocolo para acompanhar o andamento.
+                </p>
+
+
+                <form id="consultaForm">
+
+                    <label for="protocolo">
+                        Número do protocolo
+                    </label>
+
+                    <input
+                        type="text"
+                        id="protocolo"
+                        name="protocolo"
+                        placeholder="Ex: ABS-000011"
+                        required
+                    >
+
+
+                    <button type="submit">
+                        🔎 Consultar solicitação
+                    </button>
+
+                </form>
+
+
+                <!-- RESULTADO -->
+                <div
+                    id="resultadoConsulta"
+                    style="display: none;"
+                >
+
+                    <h3>
+                        📋 Detalhes da solicitação
+                    </h3>
+
+
+                    <p>
+                        <strong>Protocolo:</strong>
+                        <span id="consultaProtocolo"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Serviço:</strong>
+                        <span id="consultaServico"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Status:</strong>
+                        <span id="consultaStatus"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Solicitação criada em:</strong>
+                        <span id="consultaCriado"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Última atualização:</strong>
+                        <span id="consultaAtualizado"></span>
+                    </p>
+
+
+                    <p id="consultaMensagem"></p>
+
+                </div>
+
+
+                <!-- ERRO -->
+                <div
+                    id="erroConsulta"
+                    style="display: none;"
+                >
+
+                    <p>
+                        ❌ Protocolo não encontrado.
+                    </p>
+
+                    <p>
+                        Confira o número informado e tente novamente.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
         <!-- CONTATO -->
         <section id="contato" class="contato">
 
@@ -428,4 +534,3 @@
 </body>
 
 </html>
-```
