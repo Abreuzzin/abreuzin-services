@@ -5,127 +5,297 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Painel Admin | Abreuzin Services</title>
+    <title>Abreuzin Services | Administração</title>
 
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #0f1115;
-            color: #fff;
-            padding: 30px;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: auto;
+        /* =========================
+           LOGIN
+        ========================= */
+
+        #loginContainer {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        h1 {
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            background: #1e293b;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-box h1 {
+            text-align: center;
             margin-bottom: 10px;
         }
 
-        .subtitulo {
-            color: #999;
+        .login-box p {
+            text-align: center;
+            color: #94a3b8;
             margin-bottom: 30px;
+        }
+
+        .campo {
+            margin-bottom: 18px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 7px;
+            color: #cbd5e1;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            background: #0f172a;
+            color: white;
+            outline: none;
+        }
+
+        .campo input:focus {
+            border-color: #38bdf8;
+        }
+
+        #btnLogin {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #btnLogin:hover {
+            background: #1d4ed8;
+        }
+
+        #mensagemLogin {
+            margin-top: 15px;
+            text-align: center;
+            color: #f87171;
+        }
+
+        /* =========================
+           PAINEL
+        ========================= */
+
+        #painelContainer {
+            display: none;
+            padding: 30px;
         }
 
         .topo {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 30px;
             gap: 20px;
-            margin-bottom: 25px;
         }
 
-        button {
-            background: #fff;
-            color: #000;
+        .topo h1 {
+            font-size: 28px;
+        }
+
+        .botoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
             border: none;
-            padding: 12px 20px;
+            padding: 11px 16px;
             border-radius: 8px;
             cursor: pointer;
+            color: white;
             font-weight: bold;
         }
 
-        button:hover {
-            opacity: 0.85;
+        .btn-atualizar {
+            background: #2563eb;
         }
 
-        .status {
-            margin-bottom: 20px;
-            color: #aaa;
+        .btn-sair {
+            background: #dc2626;
         }
 
         .tabela-container {
             overflow-x: auto;
-            background: #171a21;
+            background: #1e293b;
             border-radius: 12px;
-            border: 1px solid #292d36;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1100px;
+            min-width: 900px;
         }
 
         th,
         td {
-            padding: 15px;
+            padding: 14px;
+            border-bottom: 1px solid #334155;
             text-align: left;
-            border-bottom: 1px solid #292d36;
         }
 
         th {
-            background: #1d2129;
-            color: #fff;
+            background: #172033;
+            color: #38bdf8;
         }
 
         td {
-            color: #ccc;
+            color: #e2e8f0;
         }
 
-        tr:hover td {
-            background: #1c2028;
-        }
-
-        .vazio {
+        .sem-solicitacoes {
             text-align: center;
             padding: 40px;
-            color: #888;
+            color: #94a3b8;
+        }
+
+        .carregando {
+            text-align: center;
+            padding: 40px;
+            color: #38bdf8;
+        }
+
+        @media (max-width: 700px) {
+
+            #painelContainer {
+                padding: 15px;
+            }
+
+            .topo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <!-- =========================
+         LOGIN
+    ========================= -->
+
+    <div id="loginContainer">
+
+        <div class="login-box">
+
+            <h1>🔐 Administração</h1>
+
+            <p>Abreuzin Services</p>
+
+            <form id="formLogin">
+
+                <div class="campo">
+
+                    <label for="usuario">
+                        Usuário
+                    </label>
+
+                    <input
+                        type="text"
+                        id="usuario"
+                        placeholder="Digite o usuário"
+                        required
+                    >
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="senha">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        placeholder="Digite a senha"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    id="btnLogin"
+                >
+                    Entrar
+                </button>
+
+                <div id="mensagemLogin"></div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         PAINEL ADMIN
+    ========================= -->
+
+    <div id="painelContainer">
 
         <div class="topo">
 
             <div>
-                <h1>📋 Painel de Solicitações</h1>
 
-                <p class="subtitulo">
-                    Abreuzin Services
+                <h1>📋 Solicitações</h1>
+
+                <p>
+                    Painel administrativo
                 </p>
+
             </div>
 
-            <button onclick="carregarSolicitacoes()">
-                🔄 Atualizar
-            </button>
+            <div class="botoes">
+
+                <button
+                    class="btn btn-atualizar"
+                    onclick="carregarSolicitacoes()"
+                >
+                    🔄 Atualizar
+                </button>
+
+                <button
+                    class="btn btn-sair"
+                    onclick="sair()"
+                >
+                    🚪 Sair
+                </button>
+
+            </div>
 
         </div>
 
-        <div class="status" id="status">
-            Carregando solicitações...
-        </div>
 
         <div class="tabela-container">
 
@@ -134,20 +304,34 @@
                 <thead>
 
                     <tr>
+
                         <th>ID</th>
                         <th>Nome</th>
                         <th>WhatsApp</th>
-                        <th>E-mail</th>
+                        <th>Email</th>
                         <th>Serviço</th>
                         <th>Descrição</th>
                         <th>Orçamento</th>
                         <th>Prazo</th>
                         <th>Data</th>
+
                     </tr>
 
                 </thead>
 
                 <tbody id="listaSolicitacoes">
+
+                    <tr>
+
+                        <td
+                            colspan="9"
+                            class="carregando"
+                        >
+                            Carregando...
+                        </td>
+
+                    </tr>
+
                 </tbody>
 
             </table>
@@ -156,157 +340,354 @@
 
     </div>
 
+
     <script>
 
-        const API_URL =
-            "https://abreuzin-services.onrender.com/api/solicitacoes";
+        const API =
+            "https://abreuzin-services.onrender.com";
 
+        const loginContainer =
+            document.getElementById(
+                "loginContainer"
+            );
+
+        const painelContainer =
+            document.getElementById(
+                "painelContainer"
+            );
+
+        const formLogin =
+            document.getElementById(
+                "formLogin"
+            );
+
+        const mensagemLogin =
+            document.getElementById(
+                "mensagemLogin"
+            );
+
+        const listaSolicitacoes =
+            document.getElementById(
+                "listaSolicitacoes"
+            );
+
+
+        // ==========================================
+        // VERIFICAR LOGIN SALVO
+        // ==========================================
+
+        const token =
+            localStorage.getItem(
+                "adminToken"
+            );
+
+        if (token) {
+
+            mostrarPainel();
+
+        }
+
+
+        // ==========================================
+        // LOGIN
+        // ==========================================
+
+        formLogin.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                const usuario =
+                    document.getElementById(
+                        "usuario"
+                    ).value;
+
+                const senha =
+                    document.getElementById(
+                        "senha"
+                    ).value;
+
+                mensagemLogin.textContent =
+                    "Entrando...";
+
+                try {
+
+                    const resposta =
+                        await fetch(
+                            `${API}/api/admin/login`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    usuario,
+                                    senha
+                                })
+                            }
+                        );
+
+                    const dados =
+                        await resposta.json();
+
+                    if (!resposta.ok) {
+
+                        mensagemLogin.textContent =
+                            dados.mensagem ||
+                            "Usuário ou senha inválidos.";
+
+                        return;
+
+                    }
+
+                    localStorage.setItem(
+                        "adminToken",
+                        dados.token
+                    );
+
+                    mensagemLogin.textContent = "";
+
+                    mostrarPainel();
+
+                } catch (erro) {
+
+                    console.error(erro);
+
+                    mensagemLogin.textContent =
+                        "Não foi possível conectar ao servidor.";
+
+                }
+
+            }
+        );
+
+
+        // ==========================================
+        // MOSTRAR PAINEL
+        // ==========================================
+
+        function mostrarPainel() {
+
+            loginContainer.style.display =
+                "none";
+
+            painelContainer.style.display =
+                "block";
+
+            carregarSolicitacoes();
+
+        }
+
+
+        // ==========================================
+        // BUSCAR SOLICITAÇÕES
+        // ==========================================
 
         async function carregarSolicitacoes() {
 
-            const status =
-                document.getElementById("status");
+            listaSolicitacoes.innerHTML = `
+                <tr>
+                    <td colspan="9" class="carregando">
+                        🔄 Carregando solicitações...
+                    </td>
+                </tr>
+            `;
 
-            const lista =
-                document.getElementById("listaSolicitacoes");
+            const token =
+                localStorage.getItem(
+                    "adminToken"
+                );
 
+            if (!token) {
 
-            status.textContent =
-                "⏳ Carregando...";
+                sair();
 
+                return;
+
+            }
 
             try {
 
                 const resposta =
-                    await fetch(API_URL);
+                    await fetch(
+                        `${API}/api/solicitacoes`,
+                        {
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
 
+                if (
+                    resposta.status === 401 ||
+                    resposta.status === 403
+                ) {
+
+                    sair();
+
+                    return;
+
+                }
 
                 const dados =
                     await resposta.json();
 
-
-                if (!resposta.ok) {
-
-                    throw new Error(
-                        "Erro ao buscar solicitações"
-                    );
-
-                }
-
-
-                lista.innerHTML = "";
-
+                listaSolicitacoes.innerHTML = "";
 
                 if (
                     !dados.solicitacoes ||
                     dados.solicitacoes.length === 0
                 ) {
 
-                    lista.innerHTML = `
+                    listaSolicitacoes.innerHTML = `
                         <tr>
-                            <td colspan="9" class="vazio">
-                                Nenhuma solicitação recebida ainda.
+                            <td
+                                colspan="9"
+                                class="sem-solicitacoes"
+                            >
+                                📭 Nenhuma solicitação encontrada.
                             </td>
                         </tr>
                     `;
-
-
-                    status.textContent =
-                        "Nenhuma solicitação encontrada.";
 
                     return;
 
                 }
 
-
                 dados.solicitacoes.forEach(
-                    (solicitacao) => {
+                    function (solicitacao) {
 
                         const linha =
-                            document.createElement("tr");
-
-
-                        const data =
-                            solicitacao.criado_em
-                                ? new Date(
-                                    solicitacao.criado_em
-                                ).toLocaleString(
-                                    "pt-BR"
-                                )
-                                : "-";
-
+                            document.createElement(
+                                "tr"
+                            );
 
                         linha.innerHTML = `
 
                             <td>
-                                ${solicitacao.id ?? "-"}
+                                ${solicitacao.id ?? ""}
                             </td>
 
                             <td>
-                                ${solicitacao.nome ?? "-"}
+                                ${solicitacao.nome ?? ""}
                             </td>
 
                             <td>
-                                ${solicitacao.whatsapp ?? "-"}
+                                ${solicitacao.whatsapp ?? ""}
                             </td>
 
                             <td>
-                                ${solicitacao.email ?? "-"}
+                                ${solicitacao.email ?? ""}
                             </td>
 
                             <td>
-                                ${solicitacao.servico ?? "-"}
+                                ${solicitacao.servico ?? ""}
                             </td>
 
                             <td>
-                                ${solicitacao.descricao ?? "-"}
+                                ${solicitacao.descricao ?? ""}
                             </td>
 
                             <td>
-                                ${solicitacao.orcamento ?? "-"}
+                                ${solicitacao.orcamento ?? ""}
                             </td>
 
                             <td>
-                                ${solicitacao.prazo ?? "-"}
+                                ${solicitacao.prazo ?? ""}
                             </td>
 
                             <td>
-                                ${data}
+                                ${
+                                    solicitacao.criado_em
+                                    ? new Date(
+                                        solicitacao.criado_em
+                                      ).toLocaleString(
+                                        "pt-BR"
+                                      )
+                                    : ""
+                                }
                             </td>
 
                         `;
 
-
-                        lista.appendChild(linha);
+                        listaSolicitacoes.appendChild(
+                            linha
+                        );
 
                     }
                 );
 
-
-                status.textContent =
-                    `✅ ${dados.solicitacoes.length} solicitação(ões) encontrada(s).`;
-
-            }
-
-
-            catch (erro) {
+            } catch (erro) {
 
                 console.error(erro);
 
-
-                status.textContent =
-                    "❌ Não foi possível carregar as solicitações.";
+                listaSolicitacoes.innerHTML = `
+                    <tr>
+                        <td
+                            colspan="9"
+                            class="sem-solicitacoes"
+                        >
+                            ❌ Erro ao carregar solicitações.
+                        </td>
+                    </tr>
+                `;
 
             }
 
         }
 
 
-        carregarSolicitacoes();
+        // ==========================================
+        // SAIR
+        // ==========================================
 
+        function sair() {
+
+            localStorage.removeItem(
+                "adminToken"
+            );
+
+            painelContainer.style.display =
+                "none";
+
+            loginContainer.style.display =
+                "flex";
+
+            document.getElementById(
+                "usuario"
+            ).value = "";
+
+            document.getElementById(
+                "senha"
+            ).value = "";
+
+        }
+
+
+        // ==========================================
+        // ATUALIZAÇÃO AUTOMÁTICA
+        // ==========================================
 
         setInterval(
-            carregarSolicitacoes,
+            function () {
+
+                const token =
+                    localStorage.getItem(
+                        "adminToken"
+                    );
+
+                if (token) {
+
+                    carregarSolicitacoes();
+
+                }
+
+            },
             10000
         );
 
