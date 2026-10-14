@@ -1,1553 +1,2897 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
-    <meta name="theme-color" content="#101827">
-    <title>Abreuzin Services | Administração</title>
-
-    <style>
-        :root {
-            color-scheme: dark;
-            --fundo: #101827;
-            --painel: #1d2a40;
-            --painel-secundario: #19253a;
-            --painel-hover: #24344d;
-            --campo: #172338;
-            --borda: #34445c;
-            --texto: #f1f5f9;
-            --texto-secundario: #a7b4c8;
-            --roxo: #6d5dfb;
-            --roxo-hover: #5948e8;
-            --amarelo: #fbbf24;
-            --azul: #60a5fa;
-            --verde: #34d399;
-            --vermelho: #fb7185;
-            --raio: 16px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Inter, "Segoe UI", Arial, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(
-                    ellipse at top left,
-                    rgba(109, 93, 251, .10),
-                    transparent 38%
-                ),
-                var(--fundo);
-            color: var(--texto);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        button:disabled,
-        select:disabled {
-            cursor: wait;
-            opacity: .65;
-        }
-
-        button:focus-visible,
-        input:focus-visible,
-        select:focus-visible {
-            outline: 2px solid var(--roxo);
-            outline-offset: 3px;
-        }
-
-        /* ================================
-           LOGIN
-        ================================= */
-
-        #loginContainer {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            background:
-                radial-gradient(
-                    circle at 50% 35%,
-                    rgba(109, 93, 251, .16),
-                    transparent 42%
-                ),
-                var(--fundo);
-        }
-
-        .login-box {
-            width: 100%;
-            max-width: 410px;
-            padding: 36px;
-            border: 1px solid var(--borda);
-            border-radius: 22px;
-            background: rgba(29, 42, 64, .96);
-            box-shadow: 0 28px 80px rgba(0, 0, 0, .30);
-        }
-
-        .marca {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .marca-icone {
-            width: 54px;
-            height: 54px;
-            display: grid;
-            place-items: center;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #8879ff, var(--roxo));
-            font-size: 27px;
-            font-weight: 900;
-            box-shadow: 0 8px 24px rgba(109, 93, 251, .30);
-        }
-
-        .login-box h1 {
-            text-align: center;
-            font-size: 25px;
-            letter-spacing: -.6px;
-        }
-
-        .login-box p {
-            text-align: center;
-            color: var(--texto-secundario);
-            margin-top: 5px;
-            margin-bottom: 30px;
-        }
-
-        .campo {
-            margin-bottom: 19px;
-        }
-
-        .campo label {
-            display: block;
-            margin-bottom: 8px;
-            color: #d4deed;
-            font-weight: 600;
-        }
-
-        .campo input {
-            width: 100%;
-            padding: 13px 14px;
-            color: white;
-            background: var(--campo);
-            border: 1px solid var(--borda);
-            border-radius: 10px;
-            transition: border-color .2s, box-shadow .2s;
-        }
-
-        .campo input::placeholder {
-            color: #8090a8;
-        }
-
-        .campo input:focus,
-        .filtros-solicitacoes input:focus,
-        .filtros-solicitacoes select:focus,
-        .select-status:focus {
-            outline: none;
-            border-color: var(--roxo);
-            box-shadow: 0 0 0 3px rgba(109, 93, 251, .17);
-        }
-
-        #btnLogin {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: var(--roxo);
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            box-shadow: 0 8px 22px rgba(109, 93, 251, .18);
-            transition: background .2s, transform .2s;
-        }
-
-        #btnLogin:hover {
-            background: var(--roxo-hover);
-            transform: translateY(-1px);
-        }
-
-        #mensagemLogin {
-            margin-top: 15px;
-            color: var(--vermelho);
-            text-align: center;
-        }
-
-        /* ================================
-           PAINEL PRINCIPAL
-        ================================= */
-
-        #painelContainer {
-            display: none;
-            width: 100%;
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 34px;
-        }
-
-        .topo {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 22px;
-            margin-bottom: 32px;
-            padding: 25px;
-            border: 1px solid var(--borda);
-            border-radius: 20px;
-            background: linear-gradient(
-                125deg,
-                var(--painel),
-                var(--painel-secundario)
-            );
-            box-shadow: 0 12px 30px rgba(0, 0, 0, .12);
-        }
-
-        .topo h1 {
-            font-size: clamp(23px, 3vw, 30px);
-            font-weight: 800;
-            letter-spacing: -.8px;
-        }
-
-        .topo p {
-            margin-top: 6px;
-            color: var(--texto-secundario);
-        }
-
-        .botoes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .btn {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            padding: 11px 16px;
-            border: 1px solid transparent;
-            border-radius: 10px;
-            color: white;
-            font-weight: 700;
-            transition: filter .2s, transform .2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.1);
-        }
-
-        .btn-atualizar {
-            background: var(--roxo);
-        }
-
-        .btn-historico {
-            background: #263750;
-            border-color: #3a4d69;
-        }
-
-        .btn-sair {
-            background: rgba(251, 113, 133, .12);
-            border-color: rgba(251, 113, 133, .28);
-            color: #fda4af;
-        }
-
-        /* ================================
-           CARTÕES DE INDICADORES
-        ================================= */
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 20px;
-            margin-bottom: 36px;
-        }
-
-        .card {
-            position: relative;
-            overflow: hidden;
-            min-height: 145px;
-            padding: 25px;
-            border: 1px solid var(--borda);
-            border-radius: var(--raio);
-            background: linear-gradient(
-                145deg,
-                var(--painel),
-                var(--painel-secundario)
-            );
-            box-shadow: 0 10px 26px rgba(0, 0, 0, .10);
-            transition: transform .2s, border-color .2s;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            border-color: #53617b;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--cor-card);
-        }
-
-        .card::after {
-            content: "";
-            position: absolute;
-            right: -35px;
-            bottom: -55px;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: var(--cor-card);
-            opacity: .055;
-            pointer-events: none;
-        }
-
-        .card-pendente {
-            --cor-card: var(--amarelo);
-        }
-
-        .card-andamento {
-            --cor-card: var(--azul);
-        }
-
-        .card-concluido {
-            --cor-card: var(--verde);
-        }
-
-        .card h3 {
-            margin-bottom: 14px;
-            color: var(--texto-secundario);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .card strong {
-            display: block;
-            font-size: 38px;
-            line-height: 1.1;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .card-pendente strong {
-            color: var(--amarelo);
-        }
-
-        .card-andamento strong {
-            color: var(--azul);
-        }
-
-        .card-concluido strong {
-            color: var(--verde);
-        }
-
-        /* ================================
-           SEÇÕES
-        ================================= */
-
-        .secao {
-            margin-bottom: 32px;
-            min-width: 0;
-        }
-
-        .secao-titulo {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 17px;
-        }
-
-        .secao-titulo h2 {
-            font-size: 21px;
-            font-weight: 750;
-            letter-spacing: -.4px;
-        }
-
-        /* ================================
-           PESQUISA E FILTROS
-        ================================= */
-
-        .filtros-solicitacoes {
-            display: grid;
-            grid-template-columns: minmax(200px, 2fr) minmax(190px, 1fr) auto;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 17px;
-            padding: 17px;
-            border: 1px solid var(--borda);
-            border-radius: var(--raio);
-            background: var(--painel);
-        }
-
-        .filtros-solicitacoes input,
-        .filtros-solicitacoes select {
-            width: 100%;
-            min-width: 0;
-            min-height: 44px;
-            padding: 11px 13px;
-            border: 1px solid var(--borda);
-            border-radius: 10px;
-            background: var(--campo);
-            color: var(--texto);
-        }
-
-        .filtros-solicitacoes input::placeholder {
-            color: #8090a8;
-        }
-
-        .filtros-solicitacoes select {
-            cursor: pointer;
-        }
-
-        #contadorResultados {
-            margin-bottom: 7px;
-            color: var(--texto-secundario);
-            font-size: 12px;
-            white-space: nowrap;
-        }
-
-        .btn-limpar {
-            min-height: 39px;
-            padding: 9px 13px;
-            border: 1px solid var(--borda);
-            border-radius: 9px;
-            background: #263750;
-            color: #dbeafe;
-            font-weight: 600;
-            transition: background .2s, border-color .2s;
-        }
-
-        .btn-limpar:hover {
-            border-color: var(--roxo);
-            background: #30405c;
-        }
-
-        /* ================================
-           TABELAS
-        ================================= */
-
-        .tabela-container {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid var(--borda);
-            border-radius: var(--raio);
-            background: var(--painel);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, .10);
-            scrollbar-color: #475775 #172338;
-        }
-
-        table {
-            width: 100%;
-            min-width: 1200px;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        th,
-        td {
-            padding: 16px;
-            border-bottom: 1px solid rgba(71, 85, 105, .45);
-            text-align: left;
-            vertical-align: middle;
-            overflow-wrap: anywhere;
-        }
-
-        th {
-            position: sticky;
-            top: 0;
-            z-index: 1;
-            background: #19253a;
-            color: #c4b5fd;
-            font-size: 12px;
-            font-weight: 750;
-            letter-spacing: .35px;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        td {
-            color: #dbe4f1;
-            font-size: 13px;
-        }
-
-        tbody tr {
-            transition: background .15s;
-        }
-
-        tbody tr:hover {
-            background: rgba(109, 93, 251, .07);
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .protocolo {
-            color: #a99eff;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        /* ================================
-           STATUS
-        ================================= */
-
-        .status {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            padding: 7px 11px;
-            border: 1px solid transparent;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .status-pendente {
-            border-color: rgba(251, 191, 36, .20);
-            background: rgba(251, 191, 36, .12);
-            color: #fcd34d;
-        }
-
-        .status-andamento {
-            border-color: rgba(96, 165, 250, .22);
-            background: rgba(96, 165, 250, .13);
-            color: #93c5fd;
-        }
-
-        .status-concluido {
-            border-color: rgba(52, 211, 153, .22);
-            background: rgba(52, 211, 153, .12);
-            color: #6ee7b7;
-        }
-
-        .select-status {
-            max-width: 180px;
-            min-width: 145px;
-            padding: 9px 10px;
-            border: 1px solid var(--borda);
-            border-radius: 9px;
-            background: var(--campo);
-            color: var(--texto);
-            cursor: pointer;
-        }
-
-        .select-status:focus {
-            outline: none;
-            border-color: var(--roxo);
-            box-shadow: 0 0 0 3px rgba(109, 93, 251, .17);
-        }
-
-        .select-status option {
-            background: var(--campo);
-            color: white;
-        }
-
-        .sem-solicitacoes,
-        .carregando {
-            padding: 42px 20px;
-            color: var(--texto-secundario);
-            text-align: center;
-        }
-
-        .carregando {
-            color: #a99eff;
-        }
-
-        .mensagem-erro {
-            color: #fda4af;
-        }
-
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #475775 #101827;
-        }
-
-        /* ================================
-           RESPONSIVIDADE
-        ================================= */
-
-        @media (max-width: 1100px) {
-            #painelContainer {
-                padding: 22px;
-            }
-
-            .filtros-solicitacoes {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .filtros-solicitacoes > div {
-                grid-column: 1 / -1;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-            }
-
-            #contadorResultados {
-                margin-bottom: 0;
-            }
-        }
-
-        @media (max-width: 760px) {
-            #painelContainer {
-                padding: 14px;
-            }
-
-            .topo {
-                padding: 20px;
-            }
-
-            .topo h1 {
-                font-size: 23px;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-                gap: 13px;
-            }
-
-            .card {
-                min-height: 120px;
-                padding: 21px;
-            }
-
-            .card strong {
-                font-size: 33px;
-            }
-
-            .filtros-solicitacoes {
-                grid-template-columns: 1fr;
-                padding: 13px;
-            }
-
-            .filtros-solicitacoes > div {
-                grid-column: auto;
-            }
-
-            .secao-titulo h2 {
-                font-size: 19px;
-            }
-
-            th,
-            td {
-                padding: 13px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #painelContainer {
-                padding: 10px;
-            }
-
-            .topo {
-                padding: 17px;
-                border-radius: 14px;
-            }
-
-            .topo h1 {
-                font-size: 21px;
-            }
-
-            .botoes {
-                width: 100%;
-            }
-
-            .botoes .btn {
-                flex: 1 1 100%;
-            }
-
-            .login-box {
-                padding: 27px 21px;
-            }
-
-            .login-box h1 {
-                font-size: 24px;
-            }
-
-            .filtros-solicitacoes > div {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            #contadorResultados {
-                white-space: normal;
-            }
-
-            .btn-limpar {
-                width: 100%;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
-                transition-duration: .01ms !important;
-                animation-duration: .01ms !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <title>Abreuzin Services | Painel Administrativo</title>
+
+  <style>
+    :root {
+      --bg: #080c18;
+      --sidebar: #0c1121;
+      --panel: #11182a;
+      --panel-2: #151e32;
+      --border: #263149;
+      --text: #f0f4ff;
+      --muted: #929db5;
+      --purple: #8b5cf6;
+      --purple-light: #a78bfa;
+      --blue: #38bdf8;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #fb7185;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--purple-light);
+      outline-offset: 2px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small {
+      font-size: 12px;
+    }
+
+    .primary-btn {
+      border: 0;
+      background: linear-gradient(135deg, #8b5cf6, #6d4aff);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-weight: 650;
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      filter: brightness(1.13);
+      transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 9px 13px;
+      border-radius: 9px;
+    }
+
+    .secondary-btn:hover {
+      border-color: var(--purple);
+    }
+
+    .danger-btn {
+      border: 1px solid #743246;
+      color: #fda4af;
+      background: #301623;
+      padding: 9px 12px;
+      border-radius: 9px;
+    }
+
+    /* LOGIN */
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(ellipse at top left, #34205d55, transparent 45%),
+        radial-gradient(ellipse at bottom right, #123b6250, transparent 45%),
+        var(--bg);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 410px;
+      background: #101729;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 34px;
+      box-shadow: 0 25px 100px #0007;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: 900;
+      color: white;
+      background: linear-gradient(135deg, #a78bfa, #6d28d9);
+      box-shadow: 0 8px 30px #8b5cf633;
+    }
+
+    .login-card h1 {
+      margin-top: 20px;
+      font-size: 25px;
+    }
+
+    .login-card > p {
+      margin-top: 8px;
+      margin-bottom: 25px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+
+    .field input {
+      width: 100%;
+      background: #0b1120;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px;
+    }
+
+    .field input:focus {
+      border-color: var(--purple);
+    }
+
+    .login-card .primary-btn {
+      width: 100%;
+      padding: 13px;
+      margin-top: 5px;
+    }
+
+    .login-error {
+      margin-top: 14px;
+      color: #fda4af;
+      line-height: 1.5;
+    }
+
+    /* APPLICATION LAYOUT */
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      flex: 0 0 250px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      padding: 23px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 7px;
+    }
+
+    .brand .brand-mark {
+      width: 42px;
+      height: 42px;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .nav-label {
+      color: #69758f;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 0 12px;
+      margin-bottom: 10px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 12px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: #9ca8c0;
+      transition: .18s;
+    }
+
+    .nav-btn .nav-icon {
+      width: 21px;
+      text-align: center;
+      font-size: 17px;
+    }
+
+    .nav-btn:hover {
+      color: white;
+      background: #171f33;
+    }
+
+    .nav-btn.active {
+      color: #c4b5fd;
+      background: #2b1c4d;
+      border-color: #4c3280;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .admin-profile {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 9px 5px 16px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+    }
+
+    .profile-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .profile-role {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .logout-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      color: #fda4af;
+      padding: 11px;
+    }
+
+    .logout-btn:hover {
+      background: #2d1724;
+      border-color: #522335;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      min-height: 79px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 30px;
+      background: #0c1121cc;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar h1 {
+      font-size: 21px;
+      letter-spacing: -.6px;
+    }
+
+    .topbar p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .connection {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .connection-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--yellow);
+    }
+
+    .connection.online .connection-dot {
+      background: var(--green);
+      box-shadow: 0 0 10px #34d39977;
+    }
+
+    .connection.offline .connection-dot {
+      background: var(--red);
+    }
+
+    .mobile-menu {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: white;
+      padding: 8px 10px;
+      border-radius: 9px;
+    }
+
+    .content {
+      max-width: 1700px;
+      margin: auto;
+      padding: 28px 30px 45px;
+    }
+
+    .welcome {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .welcome h2 {
+      font-size: 23px;
+      letter-spacing: -.6px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+
+    .section {
+      margin-bottom: 29px;
+      scroll-margin-top: 20px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .section-heading h3 {
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .section-heading p {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* KPI CARDS */
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: linear-gradient(145deg, #141c30, #101626);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      min-width: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -35px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--glow, #8b5cf6);
+      opacity: .08;
+      filter: blur(25px);
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-label {
+      color: #a5b0c8;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .stat-icon {
+      display: grid;
+      place-items: center;
+      width: 39px;
+      height: 39px;
+      border-radius: 11px;
+      font-size: 18px;
+      background: #8b5cf621;
+      color: var(--purple-light);
+    }
+
+    .stat-value {
+      font-size: 31px;
+      font-weight: 800;
+      margin-top: 19px;
+      letter-spacing: -1px;
+    }
+
+    .stat-foot {
+      font-size: 11px;
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .stat-foot strong {
+      color: var(--green);
+    }
+
+    .stat-card.pending {
+      --glow: #fbbf24;
+    }
+
+    .stat-card.pending .stat-icon {
+      background: #fbbf2418;
+      color: var(--yellow);
+    }
+
+    .stat-card.progress {
+      --glow: #38bdf8;
+    }
+
+    .stat-card.progress .stat-icon {
+      background: #38bdf818;
+      color: var(--blue);
+    }
+
+    .stat-card.completed {
+      --glow: #34d399;
+    }
+
+    .stat-card.completed .stat-icon {
+      background: #34d39918;
+      color: var(--green);
+    }
+
+    /* CHARTS */
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr);
+      gap: 17px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-width: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 19px 20px;
+      border-bottom: 1px solid #26314999;
+    }
+
+    .panel-header h3 {
+      font-size: 14px;
+    }
+
+    .panel-header p {
+      margin-top: 5px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .panel-body {
+      padding: 22px 20px;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .bar-chart {
+      height: 230px;
+      display: flex;
+      align-items: stretch;
+      gap: 14px;
+    }
+
+    .bar-column {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .bar-number {
+      color: #cbd5e1;
+      font-size: 11px;
+    }
+
+    .bar-track {
+      height: 175px;
+      width: 100%;
+      max-width: 43px;
+      display: flex;
+      align-items: flex-end;
+      border-radius: 7px 7px 0 0;
+      background: #1b263b;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 100%;
+      min-height: 3px;
+      border-radius: 7px 7px 0 0;
+      background: linear-gradient(180deg, #a78bfa, #7046e8);
+      transition: height .3s;
+    }
+
+    .bar-label {
+      color: var(--muted);
+      font-size: 10px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .status-chart-wrap {
+      min-height: 220px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .donut {
+      width: 155px;
+      height: 155px;
+      flex: 0 0 155px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(
+        var(--yellow) 0% 0%,
+        var(--blue) 0% 0%,
+        var(--green) 0% 0%,
+        #29334b 0% 100%
+      );
+      position: relative;
+    }
+
+    .donut::before {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      background: var(--panel);
+    }
+
+    .donut-center {
+      z-index: 1;
+      text-align: center;
+    }
+
+    .donut-center strong {
+      font-size: 28px;
+      display: block;
+    }
+
+    .donut-center span {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .status-legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #b6c0d5;
+      font-size: 11px;
+    }
+
+    .status-legend-row strong {
+      margin-left: auto;
+      color: white;
+      padding-left: 8px;
+    }
+
+    .empty-chart {
+      height: 200px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* TABLES */
+
+    .table-tools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .control {
+      background: #0c1323;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 9px;
+      min-height: 39px;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #141d30;
+      color: #9daac3;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      font-weight: 750;
+      text-align: left;
+      padding: 14px 16px;
+    }
+
+    td {
+      padding: 15px 16px;
+      border-top: 1px solid #253047;
+      color: #cbd5e1;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover {
+      background: #182238;
+    }
+
+    .customer-name {
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .customer-detail {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 5px;
+    }
+
+    .service-name {
+      color: #ddd6fe;
+      font-weight: 600;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-pendente {
+      background: #4a3616;
+      color: #fcd34d;
+    }
+
+    .status-em_andamento {
+      background: #12364c;
+      color: #7dd3fc;
+    }
+
+    .status-concluido {
+      background: #123d34;
+      color: #6ee7b7;
+    }
+
+    .status-select {
+      max-width: 155px;
+      background: #0b1220;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 11px;
+    }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .icon-btn {
+      width: 33px;
+      height: 33px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #1c2740;
+      border: 1px solid var(--border);
+      color: #c4b5fd;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--purple);
+      background: #30204e;
+    }
+
+    .table-empty {
+      padding: 35px 20px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .pagination-actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .pagination-actions button:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      text-align: center;
+      color: #64718b;
+      font-size: 11px;
+      padding: 15px 0 0;
+    }
+
+    /* MODAL */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: #0009;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: #111a2d;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      box-shadow: 0 30px 100px #0009;
+    }
+
+    .modal-header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h3 {
+      font-size: 17px;
+    }
+
+    .modal-content {
+      padding: 22px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .detail-item {
+      min-width: 0;
+    }
+
+    .detail-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 7px;
+    }
+
+    .detail-value {
+      color: #f1f5f9;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .toast-container {
+      position: fixed;
+      z-index: 100;
+      right: 20px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      max-width: calc(100vw - 40px);
+    }
+
+    .toast {
+      background: #17243a;
+      border: 1px solid #33415d;
+      color: white;
+      padding: 13px 16px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px #0005;
+      line-height: 1.5;
+    }
+
+    .toast.success {
+      border-color: #237a5b;
+    }
+
+    .toast.error {
+      border-color: #9b344b;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1150px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status-chart-wrap {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        position: fixed;
+        z-index: 40;
+        inset: 0 auto 0 0;
+        height: 100dvh;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        box-shadow: 20px 0 60px #0005;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .topbar {
+        padding: 16px 20px;
+      }
+
+      .content {
+        padding: 22px 20px 35px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .topbar h1 {
+        font-size: 17px;
+      }
+
+      .topbar-actions {
+        align-items: flex-end;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .connection {
+        display: none;
+      }
+
+      .welcome {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .welcome h2 {
+        font-size: 20px;
+      }
+
+      .stats-grid {
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-value {
+        font-size: 27px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+      }
+
+      .stat-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 15px;
+      }
+
+      .status-chart-wrap {
+        flex-direction: column;
+      }
+
+      .status-legend {
+        width: 100%;
+      }
+
+      .bar-chart {
+        gap: 7px;
+      }
+
+      .bar-label {
+        font-size: 9px;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-item.full {
+        grid-column: auto;
+      }
+
+      .pagination {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .table-tools > * {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- LOGIN -->
+  <section id="loginScreen" class="login-screen">
+    <form id="loginForm" class="login-card">
+      <div class="brand-mark">A</div>
 
-    <!-- LOGIN -->
+      <h1>Bem-vindo de volta</h1>
+      <p>
+        Entre na sua conta para administrar as solicitações
+        do Abreuzin Services.
+      </p>
 
-    <div id="loginContainer">
-        <div class="login-box">
+      <div class="field">
+        <label for="usuario">Usuário</label>
+        <input id="usuario" name="usuario" autocomplete="username"
+          placeholder="Seu usuário" required>
+      </div>
 
-            <div class="marca">
-                <div class="marca-icone" aria-hidden="true">A</div>
-            </div>
+      <div class="field">
+        <label for="senha">Senha</label>
+        <input id="senha" name="senha" type="password"
+          autocomplete="current-password" placeholder="Sua senha" required>
+      </div>
 
-            <h1>Administração</h1>
-            <p>Abreuzin Services</p>
+      <button id="loginButton" class="primary-btn" type="submit">
+        Entrar no painel
+      </button>
 
-            <form id="formLogin">
-                <div class="campo">
-                    <label for="usuario">Usuário</label>
-                    <input
-                        type="text"
-                        id="usuario"
-                        placeholder="Digite o usuário"
-                        autocomplete="username"
-                        required
-                    >
-                </div>
+      <p id="loginError" class="login-error hidden" role="alert"></p>
+    </form>
+  </section>
 
-                <div class="campo">
-                    <label for="senha">Senha</label>
-                    <input
-                        type="password"
-                        id="senha"
-                        placeholder="Digite a senha"
-                        autocomplete="current-password"
-                        required
-                    >
-                </div>
+  <!-- APP -->
+  <div id="app" class="app hidden">
 
-                <button type="submit" id="btnLogin">
-                    Entrar no painel
-                </button>
-
-                <div
-                    id="mensagemLogin"
-                    role="status"
-                    aria-live="polite"
-                ></div>
-            </form>
+    <aside id="sidebar" class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div>
+          <div class="brand-name">Abreuzin Services</div>
+          <div class="brand-subtitle">Painel administrativo</div>
         </div>
-    </div>
+      </div>
 
-    <!-- PAINEL ADMINISTRATIVO -->
+      <div>
+        <div class="nav-label">Menu principal</div>
 
-    <main id="painelContainer">
+        <nav class="nav" aria-label="Menu principal">
+          <button class="nav-btn active" data-page="overview">
+            <span class="nav-icon">▦</span>
+            Visão geral
+          </button>
 
-        <header class="topo">
+          <button class="nav-btn" data-page="requests">
+            <span class="nav-icon">▤</span>
+            Solicitações
+          </button>
+
+          <button class="nav-btn" data-page="history">
+            <span class="nav-icon">◷</span>
+            Histórico
+          </button>
+
+          <button class="nav-btn" data-page="clients">
+            <span class="nav-icon">♙</span>
+            Clientes
+          </button>
+
+          <button class="nav-btn" data-page="services">
+            <span class="nav-icon">◇</span>
+            Serviços
+          </button>
+
+          <button class="nav-btn" data-page="settings">
+            <span class="nav-icon">⚙</span>
+            Configurações
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="admin-profile">
+          <div class="avatar">A</div>
+          <div>
+            <div class="profile-name">Administrador</div>
+            <div class="profile-role">Acesso administrativo</div>
+          </div>
+        </div>
+
+        <button id="logoutButton" class="logout-btn">
+          ↪ &nbsp; Sair da conta
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button id="mobileMenu" class="mobile-menu"
+            aria-label="Abrir menu">☰</button>
+
+          <div>
+            <h1 id="pageTitle">Visão geral</h1>
+            <p id="pageSubtitle">Acompanhe o desempenho do seu negócio.</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div id="connection" class="connection">
+            <span class="connection-dot"></span>
+            <span id="connectionText">Conectando...</span>
+          </div>
+
+          <button id="refreshButton" class="secondary-btn">
+            ↻ Atualizar
+          </button>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- OVERVIEW -->
+        <section id="page-overview" class="page active">
+          <div class="welcome">
             <div>
-                <h1>ABREUZIN</h1>
-                <p>Painel administrativo · Gerenciamento de solicitações</p>
+              <h2>Olá, administrador! 👋</h2>
+              <p>
+                Aqui está o resumo das solicitações do Abreuzin Services.
+              </p>
             </div>
 
-            <div class="botoes">
-                <button
-                    class="btn btn-atualizar"
-                    id="btnAtualizar"
-                    type="button"
-                    onclick="carregarSolicitacoes()"
-                >
-                    ↻ Atualizar
-                </button>
+            <button id="newRefreshButton" class="primary-btn">
+              ↻ Atualizar dados
+            </button>
+          </div>
 
-                <button
-                    class="btn btn-historico"
-                    type="button"
-                    onclick="carregarHistorico()"
-                >
-                    ▤ Histórico
-                </button>
-
-                <button
-                    class="btn btn-sair"
-                    type="button"
-                    onclick="sair()"
-                >
-                    ↪ Sair
-                </button>
-            </div>
-        </header>
-
-        <!-- INDICADORES -->
-
-        <section class="cards" aria-label="Resumo das solicitações">
-
-            <article class="card card-pendente">
-                <h3>🟡 Pendentes</h3>
-                <strong id="contadorPendente">0</strong>
-            </article>
-
-            <article class="card card-andamento">
-                <h3>🔵 Em andamento</h3>
-                <strong id="contadorAndamento">0</strong>
-            </article>
-
-            <article class="card card-concluido">
-                <h3>🟢 Concluídos</h3>
-                <strong id="contadorConcluido">0</strong>
-            </article>
-
-        </section>
-
-        <!-- SOLICITAÇÕES -->
-
-        <section class="secao">
-
-            <div class="secao-titulo">
-                <h2>Solicitações</h2>
+          <section class="section">
+            <div class="section-heading">
+              <div>
+                <h3>Indicadores gerais</h3>
+                <p>Resumo atualizado a partir dos dados disponíveis na API.</p>
+              </div>
             </div>
 
-            <!-- PESQUISA E FILTROS -->
+            <div class="stats-grid">
+              <article class="stat-card">
+                <div class="stat-top">
+                  <span class="stat-label">Total de solicitações</span>
+                  <span class="stat-icon">▤</span>
+                </div>
+                <div id="totalStat" class="stat-value">—</div>
+                <div class="stat-foot">Solicitações registradas</div>
+              </article>
 
-            <div class="filtros-solicitacoes">
+              <article class="stat-card pending">
+                <div class="stat-top">
+                  <span class="stat-label">Pendentes</span>
+                  <span class="stat-icon">◷</span>
+                </div>
+                <div id="pendingStat" class="stat-value">—</div>
+                <div class="stat-foot">Aguardando atendimento</div>
+              </article>
 
-                <input
-                    type="search"
-                    id="pesquisaSolicitacoes"
-                    placeholder="Buscar por nome, protocolo, e-mail ou serviço..."
-                    aria-label="Buscar solicitações"
-                >
+              <article class="stat-card progress">
+                <div class="stat-top">
+                  <span class="stat-label">Em andamento</span>
+                  <span class="stat-icon">↻</span>
+                </div>
+                <div id="progressStat" class="stat-value">—</div>
+                <div class="stat-foot">Em execução</div>
+              </article>
 
-                <select id="filtroStatus" aria-label="Filtrar por status">
-                    <option value="todos">Todos os pedidos ativos</option>
-                    <option value="pendente">Pendentes</option>
-                    <option value="em_andamento">Em andamento</option>
-                </select>
+              <article class="stat-card completed">
+                <div class="stat-top">
+                  <span class="stat-label">Concluídas</span>
+                  <span class="stat-icon">✓</span>
+                </div>
+                <div id="completedStat" class="stat-value">—</div>
+                <div class="stat-foot">Atendimentos finalizados</div>
+              </article>
+            </div>
+          </section>
 
-                <div>
-                    <div id="contadorResultados" aria-live="polite">
-                        0 solicitações
+          <section class="section">
+            <div class="section-heading">
+              <div>
+                <h3>Visão analítica</h3>
+                <p>Distribuição e evolução das solicitações recebidas.</p>
+              </div>
+            </div>
+
+            <div class="charts-grid">
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Solicitações por mês</h3>
+                    <p>Últimos seis meses com dados disponíveis</p>
+                  </div>
+                  <span class="muted small">Mensal</span>
+                </div>
+
+                <div class="panel-body">
+                  <div id="monthlyChart" class="bar-chart">
+                    <div class="empty-chart">Carregando dados...</div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Distribuição por status</h3>
+                    <p>Situação das solicitações</p>
+                  </div>
+                </div>
+
+                <div class="panel-body">
+                  <div class="status-chart-wrap">
+                    <div id="statusDonut" class="donut">
+                      <div class="donut-center">
+                        <strong id="donutTotal">—</strong>
+                        <span>Solicitações</span>
+                      </div>
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn-limpar"
-                        id="limparFiltros"
-                    >
-                        Limpar filtros
-                    </button>
+                    <div class="status-legend">
+                      <div class="status-legend-row">
+                        <span class="legend-dot" style="background:var(--yellow)"></span>
+                        Pendentes
+                        <strong id="legendPending">—</strong>
+                      </div>
+
+                      <div class="status-legend-row">
+                        <span class="legend-dot" style="background:var(--blue)"></span>
+                        Em andamento
+                        <strong id="legendProgress">—</strong>
+                      </div>
+
+                      <div class="status-legend-row">
+                        <span class="legend-dot" style="background:var(--green)"></span>
+                        Concluídas
+                        <strong id="legendCompleted">—</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-heading">
+              <div>
+                <h3>Solicitações recentes</h3>
+                <p>Os pedidos mais recentes que ainda precisam de acompanhamento.</p>
+              </div>
+
+              <button class="secondary-btn" data-goto="requests">
+                Ver todas →
+              </button>
+            </div>
+
+            <div class="panel">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cliente</th>
+                      <th>Serviço</th>
+                      <th>Data</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentTable"></tbody>
+                </table>
+              </div>
+
+              <div id="recentEmpty" class="table-empty hidden">
+                Nenhuma solicitação encontrada.
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <!-- REQUESTS -->
+        <section id="page-requests" class="page">
+          <div class="welcome">
+            <div>
+              <h2>Todas as solicitações</h2>
+              <p>Pesquise pedidos, consulte detalhes e atualize seus status.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Gerenciamento de solicitações</h3>
+                <p>Os pedidos concluídos continuam no banco de dados.</p>
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-tools">
+                <input id="searchInput" class="control search-box"
+                  placeholder="Pesquisar por nome, e-mail, protocolo ou serviço..."
+                  aria-label="Pesquisar solicitações">
+
+                <select id="statusFilter" class="control"
+                  aria-label="Filtrar por status">
+                  <option value="">Todos os status</option>
+                  <option value="pendente">Pendente</option>
+                  <option value="em_andamento">Em andamento</option>
+                  <option value="concluido">Concluído</option>
+                </select>
+
+                <select id="serviceFilter" class="control"
+                  aria-label="Filtrar por serviço">
+                  <option value="">Todos os serviços</option>
+                </select>
+
+                <button id="clearFilters" class="secondary-btn">
+                  Limpar filtros
+                </button>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Protocolo</th>
+                      <th>Cliente</th>
+                      <th>Serviço</th>
+                      <th>Data</th>
+                      <th>Orçamento</th>
+                      <th>Prazo</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="requestsTable"></tbody>
+                </table>
+              </div>
+
+              <div id="requestsEmpty" class="table-empty hidden">
+                Nenhuma solicitação corresponde aos filtros.
+              </div>
+
+              <div class="pagination">
+                <span id="paginationInfo">Carregando...</span>
+
+                <div class="pagination-actions">
+                  <button id="prevPage" class="secondary-btn">← Anterior</button>
+                  <button id="nextPage" class="secondary-btn">Próxima →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HISTORY -->
+        <section id="page-history" class="page">
+          <div class="welcome">
+            <div>
+              <h2>Histórico de concluídos</h2>
+              <p>Consulte os atendimentos finalizados sem apagar seus registros.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Solicitações concluídas</h3>
+                <p>Registros obtidos pelo endpoint de histórico da API.</p>
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-tools">
+                <input id="historySearch" class="control search-box"
+                  placeholder="Pesquisar no histórico..."
+                  aria-label="Pesquisar histórico">
+
+                <button id="historyRefresh" class="secondary-btn">
+                  ↻ Atualizar histórico
+                </button>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Protocolo</th>
+                      <th>Cliente</th>
+                      <th>Serviço</th>
+                      <th>Data de criação</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTable"></tbody>
+                </table>
+              </div>
+
+              <div id="historyEmpty" class="table-empty hidden">
+                Nenhuma solicitação concluída encontrada.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CLIENTS -->
+        <section id="page-clients" class="page">
+          <div class="welcome">
+            <div>
+              <h2>Clientes</h2>
+              <p>Consulte os clientes que aparecem nas solicitações recebidas.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Clientes identificados</h3>
+                <p>Lista construída a partir das solicitações da API.</p>
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-tools">
+                <input id="clientSearch" class="control search-box"
+                  placeholder="Pesquisar clientes por nome ou e-mail..."
+                  aria-label="Pesquisar clientes">
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cliente</th>
+                      <th>E-mail</th>
+                      <th>WhatsApp</th>
+                      <th>Solicitações</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="clientsTable"></tbody>
+                </table>
+              </div>
+
+              <div id="clientsEmpty" class="table-empty hidden">
+                Nenhum cliente encontrado.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="page-services" class="page">
+          <div class="welcome">
+            <div>
+              <h2>Serviços</h2>
+              <p>Visualize os serviços registrados nas solicitações recebidas.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Serviços solicitados</h3>
+                <p>Resumo calculado com os registros disponíveis.</p>
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-tools">
+                <input id="serviceSearch" class="control search-box"
+                  placeholder="Pesquisar serviços..."
+                  aria-label="Pesquisar serviços">
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Serviço</th>
+                      <th>Total de solicitações</th>
+                      <th>Pendentes</th>
+                      <th>Em andamento</th>
+                      <th>Concluídas</th>
+                    </tr>
+                  </thead>
+                  <tbody id="servicesTable"></tbody>
+                </table>
+              </div>
+
+              <div id="servicesEmpty" class="table-empty hidden">
+                Nenhum serviço encontrado.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section id="page-settings" class="page">
+          <div class="welcome">
+            <div>
+              <h2>Configurações</h2>
+              <p>Preferências locais deste painel administrativo.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Preferências do painel</h3>
+                <p>Configurações da interface no navegador atual.</p>
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+                <div>
+                  <strong>Atualização automática</strong>
+                  <p class="muted small" style="margin-top:7px">
+                    Atualiza os dados periodicamente enquanto você estiver conectado.
+                  </p>
                 </div>
 
+                <label style="display:flex;align-items:center;gap:9px">
+                  <input type="checkbox" id="autoRefreshToggle" checked>
+                  <span>Ativada</span>
+                </label>
+              </div>
+
+              <div style="height:1px;background:var(--border);margin:23px 0"></div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+                <div>
+                  <strong>Intervalo de atualização</strong>
+                  <p class="muted small" style="margin-top:7px">
+                    Escolha com que frequência o painel consulta a API.
+                  </p>
+                </div>
+
+                <select id="refreshInterval" class="control">
+                  <option value="10000">10 segundos</option>
+                  <option value="15000">15 segundos</option>
+                  <option value="30000" selected>30 segundos</option>
+                  <option value="60000">1 minuto</option>
+                </select>
+              </div>
+
+              <div style="height:1px;background:var(--border);margin:23px 0"></div>
+
+              <div>
+                <strong>Conexão com a API</strong>
+                <p class="muted small" style="margin-top:7px">
+                  Endereço usado pelo painel para consultar os dados.
+                </p>
+                <code id="apiAddress" style="display:block;margin-top:12px;color:var(--purple-light);overflow-wrap:anywhere"></code>
+              </div>
+
+              <div style="margin-top:22px">
+                <button id="saveSettings" class="primary-btn">
+                  Salvar preferências
+                </button>
+              </div>
             </div>
-
-            <!-- TABELA DE SOLICITAÇÕES -->
-
-            <div class="tabela-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Protocolo</th>
-                            <th>Nome</th>
-                            <th>WhatsApp</th>
-                            <th>E-mail</th>
-                            <th>Serviço</th>
-                            <th>Descrição</th>
-                            <th>Orçamento</th>
-                            <th>Prazo</th>
-                            <th>Status</th>
-                            <th>Alterar</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="listaSolicitacoes">
-                        <tr>
-                            <td colspan="11" class="carregando">
-                                Entre no painel para carregar as solicitações.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+          </div>
         </section>
 
-        <!-- HISTÓRICO DE CONCLUÍDOS -->
-
-        <section
-            class="secao"
-            id="secaoHistorico"
-            style="display: none;"
-        >
-
-            <div class="secao-titulo">
-                <h2>Histórico de concluídos</h2>
-            </div>
-
-            <div class="tabela-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Protocolo</th>
-                            <th>Nome</th>
-                            <th>Serviço</th>
-                            <th>Status</th>
-                            <th>Criado em</th>
-                            <th>Atualizado em</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="listaHistorico">
-                        <tr>
-                            <td colspan="6" class="sem-solicitacoes">
-                                Nenhum histórico carregado.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </section>
-
+        <footer class="footer">
+          Abreuzin Services · Painel administrativo
+        </footer>
+      </div>
     </main>
+  </div>
 
-    <script>
-        // ==========================================
-        // CONFIGURAÇÃO DA API
-        // ==========================================
+  <!-- MODAL DE DETALHES -->
+  <div id="detailsModal" class="modal-overlay hidden"
+    role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Detalhes da solicitação</h3>
+        <button id="closeModal" class="secondary-btn"
+          aria-label="Fechar detalhes">✕</button>
+      </div>
+      <div id="modalContent" class="modal-content"></div>
+    </div>
+  </div>
 
-        const API = "https://abreuzin-services.onrender.com";
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-        const loginContainer = document.getElementById("loginContainer");
-        const painelContainer = document.getElementById("painelContainer");
-        const formLogin = document.getElementById("formLogin");
-        const mensagemLogin = document.getElementById("mensagemLogin");
-        const btnLogin = document.getElementById("btnLogin");
-        const btnAtualizar = document.getElementById("btnAtualizar");
+  <script>
+    "use strict";
 
-        const listaSolicitacoes = document.getElementById("listaSolicitacoes");
-        const listaHistorico = document.getElementById("listaHistorico");
-        const secaoHistorico = document.getElementById("secaoHistorico");
+    // =====================================================
+    // CONFIGURAÇÃO
+    // Mantém o endereço e os endpoints do projeto atual.
+    // =====================================================
 
-        const pesquisaSolicitacoes = document.getElementById("pesquisaSolicitacoes");
-        const filtroStatus = document.getElementById("filtroStatus");
-        const contadorResultados = document.getElementById("contadorResultados");
-        const limparFiltros = document.getElementById("limparFiltros");
+    const API_URL = "https://abreuzin-services.onrender.com";
+    const TOKEN_KEY = "adminToken";
 
-        let solicitacoesAtuais = [];
-        let carregandoSolicitacoes = false;
-        let atualizacaoPendente = false;
+    const PAGE_SIZE = 10;
 
-        // ==========================================
-        // FUNÇÕES AUXILIARES
-        // ==========================================
+    const PAGE_INFO = {
+      overview: ["Visão geral", "Acompanhe o desempenho do seu negócio."],
+      requests: ["Solicitações", "Pesquise e gerencie os pedidos recebidos."],
+      history: ["Histórico", "Consulte os atendimentos finalizados."],
+      clients: ["Clientes", "Consulte os clientes identificados nos pedidos."],
+      services: ["Serviços", "Visualize os serviços solicitados."],
+      settings: ["Configurações", "Preferências do painel administrativo."]
+    };
 
-        function escaparHTML(valor) {
-            return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;"
-            })[caractere]);
+    let token = localStorage.getItem(TOKEN_KEY);
+    let solicitacoesAtuais = [];
+    let historicoConcluidas = [];
+    let paginaAtual = 1;
+    let carregando = false;
+    let autoRefreshTimer = null;
+    let requestController = null;
+
+    let preferencias = {
+      autoRefresh: true,
+      intervalo: 30000
+    };
+
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem("adminPreferences") || "{}"
+      );
+
+      preferencias = {
+        ...preferencias,
+        ...saved
+      };
+    } catch {
+      // Mantém as preferências padrão se houver dados inválidos.
+    }
+
+    const $ = id => document.getElementById(id);
+
+    // =====================================================
+    // FUNÇÕES UTILITÁRIAS
+    // =====================================================
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function normalize(value) {
+      return String(value ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return String(value);
+      }
+
+      return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "—";
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return String(value);
+      }
+
+      return date.toLocaleString("pt-BR");
+    }
+
+    function formatCurrency(value) {
+      if (value === null || value === undefined || value === "") {
+        return "Não informado";
+      }
+
+      const number = Number(value);
+
+      if (!Number.isFinite(number)) {
+        return String(value);
+      }
+
+      return number.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function getStatusLabel(status) {
+      const labels = {
+        pendente: "Pendente",
+        em_andamento: "Em andamento",
+        concluido: "Concluído"
+      };
+
+      return labels[status] || status || "Não informado";
+    }
+
+    function statusBadge(status) {
+      const validStatuses = [
+        "pendente",
+        "em_andamento",
+        "concluido"
+      ];
+
+      const safeStatus = validStatuses.includes(status)
+        ? status
+        : "pendente";
+
+      return `
+        <span class="status-badge status-${safeStatus}">
+          ${escapeHTML(getStatusLabel(safeStatus))}
+        </span>
+      `;
+    }
+
+    function getRequestId(item) {
+      return item?.id ?? item?.protocolo ?? "";
+    }
+
+    function getRequestDate(item) {
+      return item?.criado_em ?? item?.created_at ?? item?.data ?? null;
+    }
+
+    function getRequestSearchText(item) {
+      return normalize([
+        getRequestId(item),
+        item?.nome,
+        item?.whatsapp,
+        item?.email,
+        item?.servico,
+        item?.descricao,
+        item?.orcamento,
+        item?.prazo,
+        item?.status
+      ].join(" "));
+    }
+
+    function sortNewest(items) {
+      return [...items].sort((a, b) => {
+        const da = new Date(getRequestDate(a) || 0).getTime();
+        const db = new Date(getRequestDate(b) || 0).getTime();
+
+        return db - da;
+      });
+    }
+
+    function toast(message, type = "success") {
+      const el = document.createElement("div");
+      el.className = `toast ${type}`;
+      el.textContent = message;
+
+      $("toastContainer").appendChild(el);
+
+      setTimeout(() => el.remove(), 4500);
+    }
+
+    function showConnection(online, message) {
+      $("connection").classList.toggle("online", online);
+      $("connection").classList.toggle("offline", !online);
+      $("connectionText").textContent = message;
+    }
+
+    // =====================================================
+    // REQUISIÇÕES À API
+    // =====================================================
+
+    async function apiRequest(path, options = {}) {
+      const headers = {
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.headers || {})
+      };
+
+      const response = await fetch(`${API_URL}${path}`, {
+        ...options,
+        headers
+      });
+
+      let data = {};
+
+      try {
+        data = await response.json();
+      } catch {
+        // Resposta sem JSON.
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        if (path !== "/api/admin/login") {
+          logout(false);
+          throw new Error(
+            "Sua sessão expirou ou você não tem autorização. Entre novamente."
+          );
         }
+      }
 
-        function formatarData(valor) {
-            if (!valor) return "-";
+      if (!response.ok) {
+        throw new Error(
+          data?.mensagem ||
+          data?.message ||
+          data?.erro ||
+          `Erro HTTP ${response.status}`
+        );
+      }
 
-            const data = new Date(valor);
+      return data;
+    }
 
-            if (Number.isNaN(data.getTime())) {
-                return "-";
-            }
+    // =====================================================
+    // LOGIN E SESSÃO
+    // =====================================================
 
-            return data.toLocaleString("pt-BR");
-        }
+    $("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
 
-        function normalizar(valor) {
-            return String(valor ?? "")
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .trim();
-        }
+      const button = $("loginButton");
+      const errorBox = $("loginError");
 
-        async function lerResposta(resposta) {
-            const texto = await resposta.text();
+      button.disabled = true;
+      button.textContent = "Entrando...";
+      errorBox.classList.add("hidden");
 
-            try {
-                return texto ? JSON.parse(texto) : {};
-            } catch {
-                return {
-                    mensagem: "O servidor retornou uma resposta inválida."
-                };
-            }
-        }
-
-        function obterToken() {
-            return localStorage.getItem("adminToken");
-        }
-
-        // ==========================================
-        // LOGIN
-        // ==========================================
-
-        formLogin.addEventListener("submit", async function(event) {
-            event.preventDefault();
-
-            const usuario = document.getElementById("usuario").value.trim();
-            const senha = document.getElementById("senha").value;
-
-            btnLogin.disabled = true;
-            btnLogin.textContent = "Entrando...";
-            mensagemLogin.textContent = "";
-
-            try {
-                const resposta = await fetch(`${API}/api/admin/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ usuario, senha })
-                });
-
-                const dados = await lerResposta(resposta);
-
-                if (!resposta.ok || !dados.token) {
-                    mensagemLogin.textContent =
-                        dados.mensagem || "Usuário ou senha inválidos.";
-                    return;
-                }
-
-                localStorage.setItem("adminToken", dados.token);
-                document.getElementById("senha").value = "";
-
-                mostrarPainel();
-
-            } catch (erro) {
-                console.error("Erro no login:", erro);
-
-                mensagemLogin.textContent =
-                    "Não foi possível conectar ao servidor.";
-
-            } finally {
-                btnLogin.disabled = false;
-                btnLogin.textContent = "Entrar no painel";
-            }
+      try {
+        const data = await apiRequest("/api/admin/login", {
+          method: "POST",
+          body: JSON.stringify({
+            usuario: $("usuario").value.trim(),
+            senha: $("senha").value
+          })
         });
 
-        function mostrarPainel() {
-            if (!obterToken()) {
-                sair();
-                return;
-            }
-
-            loginContainer.style.display = "none";
-            painelContainer.style.display = "block";
-
-            carregarSolicitacoes();
+        if (!data.token && !data.dados?.token) {
+          throw new Error(
+            "A API não retornou um token de autenticação."
+          );
         }
 
-        // ==========================================
-        // CARREGAR SOLICITAÇÕES
-        // ==========================================
+        token = data.token || data.dados.token;
+        localStorage.setItem(TOKEN_KEY, token);
 
-        async function carregarSolicitacoes() {
-            if (carregandoSolicitacoes) {
-                atualizacaoPendente = true;
-                return;
-            }
+        $("senha").value = "";
+        showApp();
+        await refreshAll(true);
 
-            const token = obterToken();
+        toast("Login realizado com sucesso!");
+      } catch (error) {
+        errorBox.textContent =
+          error.message || "Não foi possível entrar.";
+        errorBox.classList.remove("hidden");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Entrar no painel";
+      }
+    });
 
-            if (!token) {
-                sair();
-                return;
-            }
+    function showApp() {
+      $("loginScreen").classList.add("hidden");
+      $("app").classList.remove("hidden");
+      $("apiAddress").textContent = API_URL;
 
-            carregandoSolicitacoes = true;
-            atualizacaoPendente = false;
+      $("autoRefreshToggle").checked = preferencias.autoRefresh;
+      $("refreshInterval").value = String(preferencias.intervalo);
 
-            if (btnAtualizar) {
-                btnAtualizar.disabled = true;
-            }
+      configureAutoRefresh();
+    }
 
-            if (solicitacoesAtuais.length === 0) {
-                listaSolicitacoes.innerHTML = `
-                    <tr>
-                        <td colspan="11" class="carregando">
-                            ↻ Carregando solicitações...
-                        </td>
-                    </tr>
-                `;
-            }
+    function logout(showMessage = true) {
+      token = null;
 
-            try {
-                const resposta = await fetch(`${API}/api/solicitacoes`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
+      localStorage.removeItem(TOKEN_KEY);
 
-                if (resposta.status === 401 || resposta.status === 403) {
-                    sair();
-                    return;
-                }
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+      }
 
-                const dados = await lerResposta(resposta);
+      if (requestController) {
+        requestController.abort();
+        requestController = null;
+      }
 
-                if (!resposta.ok) {
-                    throw new Error(
-                        dados.mensagem || "Falha ao carregar solicitações."
-                    );
-                }
+      $("app").classList.add("hidden");
+      $("loginScreen").classList.remove("hidden");
+      $("loginError").classList.add("hidden");
 
-                if (!Array.isArray(dados.solicitacoes)) {
-                    throw new Error(
-                        "A API não retornou uma lista de solicitações."
-                    );
-                }
+      solicitacoesAtuais = [];
+      historicoConcluidas = [];
 
-                solicitacoesAtuais = dados.solicitacoes;
+      if (showMessage) {
+        toast("Você saiu da conta.");
+      }
+    }
 
-                atualizarIndicadores();
-                renderizarSolicitacoes();
+    $("logoutButton").addEventListener("click", () => logout());
 
-            } catch (erro) {
-                console.error("Erro ao carregar solicitações:", erro);
+    // =====================================================
+    // NAVEGAÇÃO
+    // =====================================================
 
-                listaSolicitacoes.innerHTML = `
-                    <tr>
-                        <td colspan="11" class="sem-solicitacoes mensagem-erro">
-                            Erro ao carregar solicitações. Clique em Atualizar para tentar novamente.
-                        </td>
-                    </tr>
-                `;
+    function navigate(page) {
+      if (!PAGE_INFO[page]) return;
 
-            } finally {
-                carregandoSolicitacoes = false;
+      document.querySelectorAll(".page").forEach(el => {
+        el.classList.remove("active");
+      });
 
-                if (btnAtualizar) {
-                    btnAtualizar.disabled = false;
-                }
+      $(`page-${page}`).classList.add("active");
 
-                if (atualizacaoPendente && obterToken()) {
-                    atualizacaoPendente = false;
-                    carregarSolicitacoes();
-                }
-            }
+      document.querySelectorAll(".nav-btn").forEach(button => {
+        button.classList.toggle("active", button.dataset.page === page);
+      });
+
+      $("pageTitle").textContent = PAGE_INFO[page][0];
+      $("pageSubtitle").textContent = PAGE_INFO[page][1];
+
+      $("sidebar").classList.remove("open");
+
+      if (page === "history") {
+        loadHistory();
+      }
+
+      if (page === "clients") {
+        renderClients();
+      }
+
+      if (page === "services") {
+        renderServices();
+      }
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        navigate(button.dataset.page);
+      });
+    });
+
+    document.querySelectorAll("[data-goto]").forEach(button => {
+      button.addEventListener("click", () => {
+        navigate(button.dataset.goto);
+      });
+    });
+
+    $("mobileMenu").addEventListener("click", () => {
+      $("sidebar").classList.toggle("open");
+    });
+
+    document.addEventListener("click", event => {
+      if (
+        window.innerWidth <= 850 &&
+        !$("sidebar").contains(event.target) &&
+        !$("mobileMenu").contains(event.target)
+      ) {
+        $("sidebar").classList.remove("open");
+      }
+    });
+
+    // =====================================================
+    // CARREGAMENTO DE SOLICITAÇÕES
+    // =====================================================
+
+    async function refreshAll(silent = false) {
+      if (!token || carregando) return;
+
+      carregando = true;
+
+      if (!silent) {
+        $("refreshButton").disabled = true;
+        $("refreshButton").textContent = "Atualizando...";
+      }
+
+      try {
+        const data = await apiRequest("/api/solicitacoes");
+
+        const requests = data.solicitacoes ??
+          data.dados?.solicitacoes ??
+          (Array.isArray(data) ? data : null);
+
+        if (!Array.isArray(requests)) {
+          throw new Error(
+            "A API não retornou uma lista de solicitações válida."
+          );
         }
 
-        // ==========================================
-        // INDICADORES
-        // ==========================================
+        solicitacoesAtuais = requests;
 
-        function atualizarIndicadores() {
-            const pendentes = solicitacoesAtuais.filter(
-                item => item.status === "pendente"
-            ).length;
+        showConnection(true, "API conectada");
 
-            const andamento = solicitacoesAtuais.filter(
-                item => item.status === "em_andamento"
-            ).length;
+        renderAll();
 
-            const concluidos = solicitacoesAtuais.filter(
-                item => item.status === "concluido"
-            ).length;
+        if (!silent) {
+          toast("Dados atualizados.");
+        }
+      } catch (error) {
+        showConnection(false, "Erro de conexão");
 
-            document.getElementById("contadorPendente").textContent = pendentes;
-            document.getElementById("contadorAndamento").textContent = andamento;
-            document.getElementById("contadorConcluido").textContent = concluidos;
+        if (!silent) {
+          toast(error.message || "Erro ao carregar dados.", "error");
+        }
+      } finally {
+        carregando = false;
+        $("refreshButton").disabled = false;
+        $("refreshButton").textContent = "↻ Atualizar";
+      }
+    }
+
+    async function loadHistory(silent = true) {
+      if (!token) return;
+
+      try {
+        const data = await apiRequest("/api/solicitacoes/concluidas");
+
+        const requests = data.solicitacoes ??
+          data.dados?.solicitacoes ??
+          (Array.isArray(data) ? data : null);
+
+        if (!Array.isArray(requests)) {
+          throw new Error("Formato de histórico inválido.");
         }
 
-        // ==========================================
-        // PESQUISA E FILTROS
-        // ==========================================
+        historicoConcluidas = requests;
 
-        function renderizarSolicitacoes() {
-            const termo = normalizar(pesquisaSolicitacoes.value);
-            const statusEscolhido = filtroStatus.value;
-
-            // Os concluídos saem da lista principal, mas continuam no banco.
-            const ativas = solicitacoesAtuais.filter(
-                item => item.status !== "concluido"
-            );
-
-            const filtradas = ativas.filter(item => {
-                const correspondeStatus =
-                    statusEscolhido === "todos" ||
-                    item.status === statusEscolhido;
-
-                const camposPesquisa = [
-                    item.protocolo,
-                    item.nome,
-                    item.email,
-                    item.servico
-                ];
-
-                const correspondePesquisa =
-                    !termo ||
-                    camposPesquisa.some(campo =>
-                        normalizar(campo).includes(termo)
-                    );
-
-                return correspondeStatus && correspondePesquisa;
-            });
-
-            contadorResultados.textContent =
-                `${filtradas.length} ${
-                    filtradas.length === 1
-                        ? "solicitação encontrada"
-                        : "solicitações encontradas"
-                }`;
-
-            listaSolicitacoes.innerHTML = "";
-
-            if (filtradas.length === 0) {
-                listaSolicitacoes.innerHTML = `
-                    <tr>
-                        <td colspan="11" class="sem-solicitacoes">
-                            Nenhuma solicitação corresponde à pesquisa.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            filtradas.forEach(solicitacao => {
-                const linha = document.createElement("tr");
-
-                const opcoesStatus = [
-                    { valor: "pendente", texto: "🟡 Pendente" },
-                    { valor: "em_andamento", texto: "🔵 Em andamento" },
-                    { valor: "concluido", texto: "🟢 Concluído" }
-                ];
-
-                const opcoesHTML = opcoesStatus.map(opcao => `
-                    <option
-                        value="${opcao.valor}"
-                        ${solicitacao.status === opcao.valor ? "selected" : ""}
-                    >${opcao.texto}</option>
-                `).join("");
-
-                linha.innerHTML = `
-                    <td class="protocolo">
-                        ${escaparHTML(solicitacao.protocolo || "-")}
-                    </td>
-                    <td>${escaparHTML(solicitacao.nome)}</td>
-                    <td>${escaparHTML(solicitacao.whatsapp)}</td>
-                    <td>${escaparHTML(solicitacao.email)}</td>
-                    <td>${escaparHTML(solicitacao.servico)}</td>
-                    <td>${escaparHTML(solicitacao.descricao)}</td>
-                    <td>${escaparHTML(solicitacao.orcamento)}</td>
-                    <td>${escaparHTML(solicitacao.prazo)}</td>
-                    <td>${criarStatus(solicitacao.status)}</td>
-                    <td>
-                        <select
-                            class="select-status"
-                            aria-label="Alterar status da solicitação"
-                            data-id="${escaparHTML(solicitacao.id)}"
-                        >
-                            ${opcoesHTML}
-                        </select>
-                    </td>
-                    <td>${escaparHTML(formatarData(solicitacao.criado_em))}</td>
-                `;
-
-                const seletor = linha.querySelector(".select-status");
-
-                seletor.addEventListener("change", async function() {
-                    const id = this.dataset.id;
-                    const novoStatus = this.value;
-
-                    this.disabled = true;
-
-                    try {
-                        await alterarStatus(id, novoStatus);
-                    } finally {
-                        this.disabled = false;
-                    }
-                });
-
-                listaSolicitacoes.appendChild(linha);
-            });
+        renderHistory();
+        updateStats();
+        renderCharts();
+      } catch (error) {
+        if (!silent) {
+          toast(
+            "Não foi possível atualizar o histórico: " + error.message,
+            "error"
+          );
         }
+      }
+    }
 
-        pesquisaSolicitacoes.addEventListener(
-            "input",
-            renderizarSolicitacoes
+    async function refreshHistoryButton() {
+      $("historyRefresh").disabled = true;
+      $("historyRefresh").textContent = "Carregando...";
+
+      try {
+        await loadHistory(false);
+        toast("Histórico atualizado.");
+      } finally {
+        $("historyRefresh").disabled = false;
+        $("historyRefresh").textContent = "↻ Atualizar histórico";
+      }
+    }
+
+    $("refreshButton").addEventListener("click", () => refreshAll(false));
+    $("newRefreshButton").addEventListener("click", () => refreshAll(false));
+    $("historyRefresh").addEventListener("click", refreshHistoryButton);
+
+    // =====================================================
+    // INDICADORES
+    // =====================================================
+
+    function getStatusCounts() {
+      const counts = {
+        pendente: 0,
+        em_andamento: 0,
+        concluido: 0
+      };
+
+      solicitacoesAtuais.forEach(item => {
+        const status = item.status || "pendente";
+
+        if (Object.hasOwn(counts, status)) {
+          counts[status]++;
+        }
+      });
+
+      return counts;
+    }
+
+    function getAllKnownCompleted() {
+      const byId = new Map();
+
+      solicitacoesAtuais
+        .filter(item => item.status === "concluido")
+        .forEach(item => byId.set(String(getRequestId(item)), item));
+
+      historicoConcluidas.forEach(item => {
+        const id = getRequestId(item);
+
+        if (id !== "") {
+          byId.set(String(id), item);
+        }
+      });
+
+      return [...byId.values()];
+    }
+
+    function updateStats() {
+      const counts = getStatusCounts();
+
+      // A lista principal determina o total, evitando somar duas vezes
+      // os registros que também aparecem no endpoint de histórico.
+      const total = solicitacoesAtuais.length;
+      const completed = Math.max(
+        counts.concluido,
+        getAllKnownCompleted().length
+      );
+
+      $("totalStat").textContent = total;
+      $("pendingStat").textContent = counts.pendente;
+      $("progressStat").textContent = counts.em_andamento;
+      $("completedStat").textContent = completed;
+
+      $("donutTotal").textContent = total;
+      $("legendPending").textContent = counts.pendente;
+      $("legendProgress").textContent = counts.em_andamento;
+      $("legendCompleted").textContent = completed;
+
+      const denominator = counts.pendente +
+        counts.em_andamento + completed;
+
+      if (denominator === 0) {
+        $("statusDonut").style.background =
+          "conic-gradient(#29334b 0% 100%)";
+      } else {
+        const pendingPercent = counts.pendente / denominator * 100;
+        const progressPercent =
+          (counts.pendente + counts.em_andamento) / denominator * 100;
+
+        $("statusDonut").style.background = `
+          conic-gradient(
+            var(--yellow) 0% ${pendingPercent}%,
+            var(--blue) ${pendingPercent}% ${progressPercent}%,
+            var(--green) ${progressPercent}% 100%
+          )
+        `;
+      }
+    }
+
+    // =====================================================
+    // GRÁFICOS DINÂMICOS
+    // =====================================================
+
+    function renderCharts() {
+      const months = [];
+      const now = new Date();
+
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(
+          now.getFullYear(),
+          now.getMonth() - i,
+          1
         );
 
-        filtroStatus.addEventListener(
-            "change",
-            renderizarSolicitacoes
-        );
-
-        limparFiltros.addEventListener("click", function() {
-            pesquisaSolicitacoes.value = "";
-            filtroStatus.value = "todos";
-
-            renderizarSolicitacoes();
-            pesquisaSolicitacoes.focus();
+        months.push({
+          year: date.getFullYear(),
+          month: date.getMonth(),
+          label: date.toLocaleDateString("pt-BR", {
+            month: "short"
+          }).replace(".", ""),
+          count: 0
         });
+      }
 
-        // ==========================================
-        // STATUS VISUAL
-        // ==========================================
+      solicitacoesAtuais.forEach(item => {
+        const value = getRequestDate(item);
+        if (!value) return;
 
-        function criarStatus(status) {
-            if (status === "em_andamento") {
-                return `
-                    <span class="status status-andamento">
-                        🔵 Em andamento
-                    </span>
-                `;
-            }
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return;
 
-            if (status === "concluido") {
-                return `
-                    <span class="status status-concluido">
-                        🟢 Concluído
-                    </span>
-                `;
-            }
+        const month = months.find(m =>
+          m.year === date.getFullYear() &&
+          m.month === date.getMonth()
+        );
 
-            return `
-                <span class="status status-pendente">
-                    🟡 Pendente
-                </span>
-            `;
+        if (month) month.count++;
+      });
+
+      const chart = $("monthlyChart");
+      const max = Math.max(...months.map(m => m.count), 1);
+
+      chart.innerHTML = months.map(month => {
+        const height = month.count === 0
+          ? 2
+          : Math.max(5, month.count / max * 100);
+
+        return `
+          <div class="bar-column"
+            title="${escapeHTML(month.label)}: ${month.count} solicitações">
+            <span class="bar-number">${month.count}</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="height:${height}%"></div>
+            </div>
+            <span class="bar-label">${escapeHTML(month.label)}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // =====================================================
+    // TABELA DE SOLICITAÇÕES
+    // =====================================================
+
+    function renderAll() {
+      updateStats();
+      renderCharts();
+      populateServiceFilter();
+      renderRequests();
+      renderRecent();
+      renderHistory();
+      renderClients();
+      renderServices();
+    }
+
+    function getRequestStatusOptions(item) {
+      const current = item.status || "pendente";
+
+      return `
+        <option value="pendente" ${current === "pendente" ? "selected" : ""}>
+          Pendente
+        </option>
+        <option value="em_andamento" ${current === "em_andamento" ? "selected" : ""}>
+          Em andamento
+        </option>
+        <option value="concluido" ${current === "concluido" ? "selected" : ""}>
+          Concluído
+        </option>
+      `;
+    }
+
+    function renderRequestRow(item, compact = false) {
+      const id = getRequestId(item);
+      const date = formatDate(getRequestDate(item));
+      const status = item.status || "pendente";
+
+      return `
+        <tr>
+          ${compact ? "" : `<td>#${escapeHTML(id)}</td>`}
+
+          <td>
+            <div class="customer-name">${escapeHTML(item.nome || "Sem nome")}</div>
+            <div class="customer-detail">${escapeHTML(item.email || item.whatsapp || "Sem contato")}</div>
+          </td>
+
+          <td>
+            <span class="service-name">${escapeHTML(item.servico || "Não informado")}</span>
+          </td>
+
+          <td>${escapeHTML(date)}</td>
+
+          ${compact ? "" : `
+            <td>${escapeHTML(formatCurrency(item.orcamento))}</td>
+            <td>${escapeHTML(item.prazo || "Não informado")}</td>
+          `}
+
+          <td>${statusBadge(status)}</td>
+
+          <td>
+            <div class="action-group">
+              <button class="icon-btn" data-action="details"
+                data-id="${escapeHTML(id)}" title="Ver detalhes"
+                aria-label="Ver detalhes da solicitação ${escapeHTML(id)}">⌕</button>
+
+              <select class="status-select"
+                data-action="status"
+                data-id="${escapeHTML(id)}"
+                aria-label="Alterar status da solicitação ${escapeHTML(id)}">
+                ${getRequestStatusOptions(item)}
+              </select>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    function getFilteredRequests() {
+      const query = normalize($("searchInput").value);
+      const status = $("statusFilter").value;
+      const service = $("serviceFilter").value;
+
+      return sortNewest(solicitacoesAtuais.filter(item => {
+        const matchesSearch =
+          !query || getRequestSearchText(item).includes(query);
+
+        const matchesStatus = !status ||
+          (item.status || "pendente") === status;
+
+        const matchesService = !service || item.servico === service;
+
+        return matchesSearch && matchesStatus && matchesService;
+      }));
+    }
+
+    function renderRequests() {
+      const filtered = getFilteredRequests();
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+
+      paginaAtual = Math.min(paginaAtual, totalPages);
+
+      const start = (paginaAtual - 1) * PAGE_SIZE;
+      const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+      $("requestsTable").innerHTML = pageItems.map(item =>
+        renderRequestRow(item, false)
+      ).join("");
+
+      $("requestsEmpty").classList.toggle("hidden", pageItems.length !== 0);
+
+      $("paginationInfo").textContent = filtered.length
+        ? `Mostrando ${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)} de ${filtered.length} solicitações`
+        : "Nenhuma solicitação";
+
+      $("prevPage").disabled = paginaAtual <= 1;
+      $("nextPage").disabled = paginaAtual >= totalPages;
+    }
+
+    function renderRecent() {
+      const recent = sortNewest(solicitacoesAtuais)
+        .filter(item => item.status !== "concluido")
+        .slice(0, 5);
+
+      $("recentTable").innerHTML = recent.map(item =>
+        renderRequestRow(item, true)
+      ).join("");
+
+      $("recentEmpty").classList.toggle("hidden", recent.length !== 0);
+    }
+
+    function populateServiceFilter() {
+      const select = $("serviceFilter");
+      const current = select.value;
+
+      const services = [...new Set(
+        solicitacoesAtuais
+          .map(item => item.servico)
+          .filter(Boolean)
+      )].sort((a, b) => String(a).localeCompare(String(b), "pt-BR"));
+
+      select.innerHTML =
+        '<option value="">Todos os serviços</option>' +
+        services.map(service => `
+          <option value="${escapeHTML(service)}">
+            ${escapeHTML(service)}
+          </option>
+        `).join("");
+
+      if (services.includes(current)) {
+        select.value = current;
+      }
+    }
+
+    $("searchInput").addEventListener("input", () => {
+      paginaAtual = 1;
+      renderRequests();
+    });
+
+    $("statusFilter").addEventListener("change", () => {
+      paginaAtual = 1;
+      renderRequests();
+    });
+
+    $("serviceFilter").addEventListener("change", () => {
+      paginaAtual = 1;
+      renderRequests();
+    });
+
+    $("clearFilters").addEventListener("click", () => {
+      $("searchInput").value = "";
+      $("statusFilter").value = "";
+      $("serviceFilter").value = "";
+      paginaAtual = 1;
+      renderRequests();
+    });
+
+    $("prevPage").addEventListener("click", () => {
+      if (paginaAtual > 1) {
+        paginaAtual--;
+        renderRequests();
+      }
+    });
+
+    $("nextPage").addEventListener("click", () => {
+      const total = getFilteredRequests().length;
+      const maxPage = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+      if (paginaAtual < maxPage) {
+        paginaAtual++;
+        renderRequests();
+      }
+    });
+
+    // =====================================================
+    // ALTERAR STATUS
+    // =====================================================
+
+    document.addEventListener("change", async event => {
+      const select = event.target.closest(
+        'select[data-action="status"]'
+      );
+
+      if (!select) return;
+
+      const id = select.dataset.id;
+      const newStatus = select.value;
+
+      const item = solicitacoesAtuais.find(
+        request => String(getRequestId(request)) === String(id)
+      );
+
+      if (!item) {
+        toast("Não foi possível localizar essa solicitação.", "error");
+        return;
+      }
+
+      const oldStatus = item.status || "pendente";
+
+      if (newStatus === oldStatus) return;
+
+      select.disabled = true;
+
+      try {
+        await apiRequest(
+          `/api/solicitacoes/${encodeURIComponent(id)}/status`,
+          {
+            method: "PATCH",
+            body: JSON.stringify({ status: newStatus })
+          }
+        );
+
+        // Atualiza a interface somente após a confirmação da API.
+        item.status = newStatus;
+
+        await refreshAll(true);
+        await loadHistory();
+
+        toast(`Solicitação #${id} atualizada para "${getStatusLabel(newStatus)}".`);
+      } catch (error) {
+        select.value = oldStatus;
+
+        toast(
+          "Não foi possível alterar o status: " + error.message,
+          "error"
+        );
+      } finally {
+        select.disabled = false;
+      }
+    });
+
+    // =====================================================
+    // DETALHES DA SOLICITAÇÃO
+    // =====================================================
+
+    function detailItem(label, value, full = false) {
+      return `
+        <div class="detail-item ${full ? "full" : ""}">
+          <div class="detail-label">${escapeHTML(label)}</div>
+          <div class="detail-value">${escapeHTML(value || "Não informado")}</div>
+        </div>
+      `;
+    }
+
+    function showDetails(id) {
+      const item = solicitacoesAtuais.find(
+        request => String(getRequestId(request)) === String(id)
+      ) || historicoConcluidas.find(
+        request => String(getRequestId(request)) === String(id)
+      );
+
+      if (!item) {
+        toast("Solicitação não encontrada.", "error");
+        return;
+      }
+
+      $("modalTitle").textContent =
+        `Solicitação #${getRequestId(item)}`;
+
+      $("modalContent").innerHTML = `
+        <div class="detail-grid">
+          ${detailItem("Protocolo", getRequestId(item))}
+          ${detailItem("Cliente", item.nome)}
+          ${detailItem("WhatsApp", item.whatsapp)}
+          ${detailItem("E-mail", item.email)}
+          ${detailItem("Serviço", item.servico)}
+          ${detailItem("Orçamento", formatCurrency(item.orcamento))}
+          ${detailItem("Prazo", item.prazo)}
+          ${detailItem("Data de criação", formatDateTime(getRequestDate(item)))}
+          <div class="detail-item full">
+            <div class="detail-label">Status</div>
+            <div class="detail-value">${statusBadge(item.status || "pendente")}</div>
+          </div>
+          ${detailItem("Descrição", item.descricao, true)}
+        </div>
+      `;
+
+      $("detailsModal").classList.remove("hidden");
+    }
+
+    document.addEventListener("click", event => {
+      const button = event.target.closest(
+        'button[data-action="details"]'
+      );
+
+      if (button) {
+        showDetails(button.dataset.id);
+      }
+    });
+
+    $("closeModal").addEventListener("click", () => {
+      $("detailsModal").classList.add("hidden");
+    });
+
+    $("detailsModal").addEventListener("click", event => {
+      if (event.target === $("detailsModal")) {
+        $("detailsModal").classList.add("hidden");
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        $("detailsModal").classList.add("hidden");
+        $("sidebar").classList.remove("open");
+      }
+    });
+
+    // =====================================================
+    // HISTÓRICO
+    // =====================================================
+
+    function renderHistory() {
+      const query = normalize($("historySearch").value);
+
+      const completed = sortNewest(historicoConcluidas).filter(item => {
+        return !query || getRequestSearchText(item).includes(query);
+      });
+
+      $("historyTable").innerHTML = completed.map(item => `
+        <tr>
+          <td>#${escapeHTML(getRequestId(item))}</td>
+
+          <td>
+            <div class="customer-name">${escapeHTML(item.nome || "Sem nome")}</div>
+            <div class="customer-detail">${escapeHTML(item.email || item.whatsapp || "Sem contato")}</div>
+          </td>
+
+          <td><span class="service-name">${escapeHTML(item.servico || "Não informado")}</span></td>
+
+          <td>${escapeHTML(formatDate(getRequestDate(item)))}</td>
+
+          <td>${statusBadge(item.status || "concluido")}</td>
+
+          <td>
+            <button class="icon-btn" data-action="details"
+              data-id="${escapeHTML(getRequestId(item))}"
+              title="Ver detalhes">⌕</button>
+          </td>
+        </tr>
+      `).join("");
+
+      $("historyEmpty").classList.toggle("hidden", completed.length !== 0);
+    }
+
+    $("historySearch").addEventListener("input", renderHistory);
+
+    // =====================================================
+    // CLIENTES
+    // =====================================================
+
+    function getClients() {
+      const clients = new Map();
+
+      solicitacoesAtuais.forEach(item => {
+        const key = normalize(item.email || item.whatsapp || item.nome);
+
+        if (!key) return;
+
+        if (!clients.has(key)) {
+          clients.set(key, {
+            nome: item.nome || "Sem nome",
+            email: item.email || "",
+            whatsapp: item.whatsapp || "",
+            solicitacoes: []
+          });
         }
 
-        // ==========================================
-        // ALTERAR STATUS
-        // ==========================================
+        clients.get(key).solicitacoes.push(item);
+      });
 
-        async function alterarStatus(id, novoStatus) {
-            const token = obterToken();
+      return [...clients.values()].sort((a, b) =>
+        a.nome.localeCompare(b.nome, "pt-BR")
+      );
+    }
 
-            if (!token) {
-                sair();
-                return;
-            }
+    function renderClients() {
+      if (!$("clientsTable")) return;
 
-            try {
-                const resposta = await fetch(
-                    `${API}/api/solicitacoes/${encodeURIComponent(id)}/status`,
-                    {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ status: novoStatus })
-                    }
-                );
+      const query = normalize($("clientSearch").value);
 
-                const dados = await lerResposta(resposta);
+      const clients = getClients().filter(client => {
+        return normalize([
+          client.nome,
+          client.email,
+          client.whatsapp
+        ].join(" ")).includes(query);
+      });
 
-                if (resposta.status === 401 || resposta.status === 403) {
-                    sair();
-                    return;
-                }
+      $("clientsTable").innerHTML = clients.map(client => `
+        <tr>
+          <td><span class="customer-name">${escapeHTML(client.nome)}</span></td>
+          <td>${escapeHTML(client.email || "—")}</td>
+          <td>${escapeHTML(client.whatsapp || "—")}</td>
+          <td>${client.solicitacoes.length}</td>
+          <td>
+            <button class="secondary-btn"
+              data-client-email="${escapeHTML(client.email)}"
+              data-client-phone="${escapeHTML(client.whatsapp)}">
+              Ver contato
+            </button>
+          </td>
+        </tr>
+      `).join("");
 
-                if (!resposta.ok) {
-                    alert(dados.mensagem || "Erro ao alterar status.");
-                    await carregarSolicitacoes();
-                    return;
-                }
+      $("clientsEmpty").classList.toggle("hidden", clients.length !== 0);
+    }
 
-                // Atualiza a lista depois da confirmação do servidor.
-                await carregarSolicitacoes();
+    $("clientSearch").addEventListener("input", renderClients);
 
-                // Atualiza o histórico quando o pedido for concluído.
-                if (novoStatus === "concluido") {
-                    await carregarHistorico();
-                }
+    document.addEventListener("click", event => {
+      const button = event.target.closest("[data-client-email]");
 
-            } catch (erro) {
-                console.error("Erro ao alterar status:", erro);
+      if (!button) return;
 
-                alert(
-                    "Não foi possível alterar o status. Confira sua conexão."
-                );
+      const email = button.dataset.clientEmail;
+      const phone = button.dataset.clientPhone;
 
-                await carregarSolicitacoes();
-            }
+      toast(
+        `E-mail: ${email || "Não informado"} | WhatsApp: ${phone || "Não informado"}`,
+        "success"
+      );
+    });
+
+    // =====================================================
+    // SERVIÇOS
+    // =====================================================
+
+    function renderServices() {
+      if (!$("servicesTable")) return;
+
+      const query = normalize($("serviceSearch").value);
+      const groups = new Map();
+
+      solicitacoesAtuais.forEach(item => {
+        const service = item.servico || "Não informado";
+
+        if (!groups.has(service)) {
+          groups.set(service, {
+            nome: service,
+            total: 0,
+            pendente: 0,
+            em_andamento: 0,
+            concluido: 0
+          });
         }
 
-        // ==========================================
-        // HISTÓRICO DE CONCLUÍDOS
-        // ==========================================
+        const group = groups.get(service);
+        group.total++;
 
-        async function carregarHistorico() {
-            const token = obterToken();
+        const status = item.status || "pendente";
 
-            if (!token) {
-                sair();
-                return;
-            }
-
-            secaoHistorico.style.display = "block";
-
-            listaHistorico.innerHTML = `
-                <tr>
-                    <td colspan="6" class="carregando">
-                        ↻ Carregando histórico...
-                    </td>
-                </tr>
-            `;
-
-            try {
-                const resposta = await fetch(
-                    `${API}/api/solicitacoes/concluidas`,
-                    {
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
-                );
-
-                if (resposta.status === 401 || resposta.status === 403) {
-                    sair();
-                    return;
-                }
-
-                const dados = await lerResposta(resposta);
-
-                if (!resposta.ok) {
-                    throw new Error(
-                        dados.mensagem || "Erro ao carregar histórico."
-                    );
-                }
-
-                if (!Array.isArray(dados.solicitacoes)) {
-                    throw new Error("Resposta inválida do histórico.");
-                }
-
-                listaHistorico.innerHTML = "";
-
-                if (dados.solicitacoes.length === 0) {
-                    listaHistorico.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="sem-solicitacoes">
-                                Nenhuma solicitação concluída.
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                dados.solicitacoes.forEach(solicitacao => {
-                    const linha = document.createElement("tr");
-
-                    linha.innerHTML = `
-                        <td class="protocolo">
-                            ${escaparHTML(solicitacao.protocolo || "-")}
-                        </td>
-                        <td>${escaparHTML(solicitacao.nome)}</td>
-                        <td>${escaparHTML(solicitacao.servico)}</td>
-                        <td>${criarStatus("concluido")}</td>
-                        <td>${escaparHTML(formatarData(solicitacao.criado_em))}</td>
-                        <td>${escaparHTML(formatarData(solicitacao.atualizado_em))}</td>
-                    `;
-
-                    listaHistorico.appendChild(linha);
-                });
-
-            } catch (erro) {
-                console.error("Erro ao carregar histórico:", erro);
-
-                listaHistorico.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="sem-solicitacoes mensagem-erro">
-                            Erro ao carregar histórico.
-                        </td>
-                    </tr>
-                `;
-            }
+        if (Object.hasOwn(group, status)) {
+          group[status]++;
         }
+      });
 
-        // ==========================================
-        // SAIR DO PAINEL
-        // ==========================================
+      const services = [...groups.values()]
+        .filter(service => normalize(service.nome).includes(query))
+        .sort((a, b) => b.total - a.total);
 
-        function sair() {
-            localStorage.removeItem("adminToken");
+      $("servicesTable").innerHTML = services.map(service => `
+        <tr>
+          <td><span class="service-name">${escapeHTML(service.nome)}</span></td>
+          <td>${service.total}</td>
+          <td>${service.pendente}</td>
+          <td>${service.em_andamento}</td>
+          <td>${service.concluido}</td>
+        </tr>
+      `).join("");
 
-            painelContainer.style.display = "none";
-            loginContainer.style.display = "flex";
+      $("servicesEmpty").classList.toggle("hidden", services.length !== 0);
+    }
 
-            document.getElementById("usuario").value = "";
-            document.getElementById("senha").value = "";
-            mensagemLogin.textContent = "";
+    $("serviceSearch").addEventListener("input", renderServices);
 
-            solicitacoesAtuais = [];
-            atualizarIndicadores();
+    // =====================================================
+    // CONFIGURAÇÕES E ATUALIZAÇÃO AUTOMÁTICA
+    // =====================================================
 
-            pesquisaSolicitacoes.value = "";
-            filtroStatus.value = "todos";
-            renderizarSolicitacoes();
+    function configureAutoRefresh() {
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+      }
 
-            secaoHistorico.style.display = "none";
+      if (!token || !preferencias.autoRefresh) return;
 
-            listaHistorico.innerHTML = `
-                <tr>
-                    <td colspan="6" class="sem-solicitacoes">
-                        Nenhum histórico carregado.
-                    </td>
-                </tr>
-            `;
-        }
+      autoRefreshTimer = setInterval(() => {
+        refreshAll(true);
+      }, Number(preferencias.intervalo) || 30000);
+    }
 
-        // ==========================================
-        // ATUALIZAÇÃO AUTOMÁTICA
-        // ==========================================
+    $("saveSettings").addEventListener("click", () => {
+      preferencias.autoRefresh = $("autoRefreshToggle").checked;
+      preferencias.intervalo = Number($("refreshInterval").value) || 30000;
 
-        setInterval(function() {
-            if (
-                obterToken() &&
-                painelContainer.style.display !== "none"
-            ) {
-                carregarSolicitacoes();
-            }
-        }, 10000);
+      localStorage.setItem(
+        "adminPreferences",
+        JSON.stringify(preferencias)
+      );
 
-        // ==========================================
-        // INICIALIZAÇÃO
-        // ==========================================
+      configureAutoRefresh();
+      toast("Preferências salvas neste navegador.");
+    });
 
-        if (obterToken()) {
-            mostrarPainel();
-        }
-    </script>
+    // =====================================================
+    // INICIALIZAÇÃO
+    // =====================================================
 
+    async function initialize() {
+      if (!token) return;
+
+      showApp();
+
+      // Confirma a sessão consultando a API.
+      await refreshAll(true);
+
+      if (token) {
+        await loadHistory();
+      }
+    }
+
+    initialize();
+  </script>
 </body>
 </html>
