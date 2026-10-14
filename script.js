@@ -587,3 +587,11 @@ if (formularioConsulta) {
 ========================================== */
 
 console.log("Abreuzin Services: script.js carregado.");
+window.addEventListener("load", () => {
+    const formulario = document.getElementById("contratacaoForm");
+
+    console.log(
+        "Formulário encontrado:",
+        formulario ? "SIM" : "NÃO"
+    );
+});
