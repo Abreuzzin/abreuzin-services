@@ -3,7 +3,9 @@ const cors = require("cors");
 const { Pool } = require("pg");
 const jwt = require("jsonwebtoken");
 
-require("dotenv").config();
+require("dotenv").config({
+    path: require("path").join(__dirname, "..", ".env")
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;

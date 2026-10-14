@@ -1,1314 +1,1000 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#08060f">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Abreuzin Services | Soluções Digitais</title>
+    <meta name="description" content="Criação de sites, landing pages, planilhas, suporte técnico, lojas online e automações com a Abreuzin Services.">
 
-    <title>
-        Abreuzin Services | Soluções Digitais
-    </title>
-
-    <link
-        rel="icon"
-        type="image/png"
-        href="favicon.png"
-    >
-
-    <meta
-        name="description"
-        content="Abreuzin Services | Soluções digitais, criação de sites, suporte, automações e muito mais."
-    >
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
-
-
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
+    <!-- CABEÇALHO -->
     <header class="header">
-
         <div class="header-container">
-
-            <a
-                href="#inicio"
-                class="logo"
-                data-tab="inicio"
-            >
-                <span>
-                    Abreuzin Services
-                </span>
+            <a href="#inicio" class="logo" data-tab="inicio" aria-label="Abreuzin Services, início">
+                <span class="logo-mark">A</span>
+                <span>Abreuzin <strong>Services</strong></span>
             </a>
 
-
-            <nav class="nav">
-
-                <a
-                    href="#inicio"
-                    class="nav-link active"
-                    data-tab="inicio"
-                >
-                    Início
-                </a>
-
-                <a
-                    href="#servicos"
-                    class="nav-link"
-                    data-tab="servicos"
-                >
-                    Serviços
-                </a>
-
-                <a
-                    href="#sobre"
-                    class="nav-link"
-                    data-tab="sobre"
-                >
-                    Sobre
-                </a>
-
-                <a
-                    href="#formulario"
-                    class="nav-link"
-                    data-tab="formulario"
-                >
-                    Orçamento
-                </a>
-
-                <a
-                    href="#acompanhar"
-                    class="nav-link"
-                    data-tab="acompanhar"
-                >
-                    Acompanhar
-                </a>
-
-                <a
-                    href="#contato"
-                    class="nav-link"
-                    data-tab="contato"
-                >
-                    Contato
-                </a>
-
-            </nav>
-
-
-            <button
-                class="header-button"
-                data-tab="formulario"
-            >
-                Solicitar orçamento
+            <button class="menu-toggle" id="menuToggle" type="button"
+                aria-label="Abrir menu" aria-expanded="false" aria-controls="mainNav">
+                <span></span><span></span><span></span>
             </button>
 
-        </div>
+            <nav class="nav" id="mainNav" aria-label="Navegação principal">
+                <a href="#inicio" class="nav-link active" data-tab="inicio">Início</a>
+                <a href="#servicos" class="nav-link" data-tab="servicos">Serviços</a>
+                <a href="#sobre" class="nav-link" data-tab="sobre">Sobre</a>
+                <a href="#formulario" class="nav-link" data-tab="formulario">Orçamento</a>
+                <a href="#acompanhar" class="nav-link" data-tab="acompanhar">Acompanhar</a>
+                <a href="#contato" class="nav-link" data-tab="contato">Contato</a>
 
+                <button class="mobile-budget" data-tab="formulario" type="button">
+                    Solicitar orçamento <span aria-hidden="true">↗</span>
+                </button>
+            </nav>
+
+            <button class="header-button" data-tab="formulario" type="button">
+                Solicitar orçamento <span aria-hidden="true">↗</span>
+            </button>
+        </div>
     </header>
 
-
-
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
     <main>
-
-
-        <!-- =================================================
-             INÍCIO
-        ================================================== -->
-
-        <section
-            id="inicio"
-            class="page-section active-section"
-        >
-
-            <div class="hero">
+        <!-- INÍCIO -->
+        <section id="inicio" class="page-section active-section">
+            <div class="hero hero-premium">
+                <div class="hero-grid-glow" aria-hidden="true"></div>
 
                 <div class="hero-content">
-
                     <span class="hero-tag">
-                        SOLUÇÕES DIGITAIS
+                        <span class="hero-tag-dot"></span>
+                        SOLUÇÕES DIGITAIS PERSONALIZADAS
                     </span>
 
-
-                    <h1>
-                        Tecnologia que
-
-                        <span>
-                            transforma ideias.
-                        </span>
-                    </h1>
-
+                    <h1>Do seu sonho <span>ao mundo digital.</span></h1>
 
                     <p>
-                        Criamos soluções digitais modernas
-                        para pessoas, empresas e projetos
-                        que querem crescer no mundo digital.
+                        Sites, landing pages e soluções digitais criadas
+                        para dar vida às suas ideias. Um visual moderno,
+                        uma experiência simples e um projeto feito para você.
                     </p>
-
 
                     <div class="hero-buttons">
-
-                        <button
-                            class="primary-button"
-                            data-tab="servicos"
-                        >
-                            Conhecer serviços
-
-                            <span>
-                                →
-                            </span>
+                        <button class="primary-button" data-tab="formulario" type="button">
+                            Solicitar orçamento <span aria-hidden="true">↗</span>
                         </button>
 
-
-                        <button
-                            class="secondary-button"
-                            data-tab="formulario"
-                        >
-                            Solicitar orçamento
+                        <button class="secondary-button" data-tab="servicos" type="button">
+                            Conhecer serviços <span aria-hidden="true">→</span>
                         </button>
-
                     </div>
-
 
                     <div class="hero-info">
+                        <div><strong>✦</strong><span>FEITO SOB MEDIDA</span></div>
+                        <div><strong>◎</strong><span>VISUAL MODERNO</span></div>
+                        <div><strong>↗</strong><span>FOCO NO SEU PROJETO</span></div>
+                    </div>
+                </div>
 
-                        <div>
+                <div class="hero-visual" aria-label="Ilustração de um site em notebook e celular">
+                    <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+                    <div class="hero-orbit orbit-two" aria-hidden="true"></div>
+                    <div class="hero-glow-ball" aria-hidden="true"></div>
 
-                            <strong>
-                                06+
-                            </strong>
+                    <div class="hero-laptop">
+                        <div class="laptop-screen">
+                            <div class="mock-browser">
+                                <div class="browser-dots">
+                                    <span></span><span></span><span></span>
+                                </div>
+                                <span class="browser-address">abreuzin.services</span>
+                                <span class="browser-lock">⌑</span>
+                            </div>
 
-                            <span>
-                                SERVIÇOS
-                            </span>
+                            <div class="mock-site">
+                                <div class="mock-site-nav">
+                                    <div class="mock-site-logo"><span>A</span> ABREUZIN</div>
+                                    <div class="mock-nav-lines"><i></i><i></i><i></i></div>
+                                </div>
 
+                                <div class="mock-content">
+                                    <div class="mock-copy">
+                                        <small>SUA IDEIA MERECE</small>
+                                        <strong>Um espaço <span>no digital.</span></strong>
+                                        <p>Presença online com a sua identidade.</p>
+                                        <div class="mock-cta">Começar projeto <span>↗</span></div>
+                                    </div>
+
+                                    <div class="mock-art" aria-hidden="true">
+                                        <div class="mock-art-ring ring-one"></div>
+                                        <div class="mock-art-ring ring-two"></div>
+                                        <div class="mock-art-core">A</div>
+                                        <span class="mock-art-spark spark-one">✦</span>
+                                        <span class="mock-art-spark spark-two">✧</span>
+                                    </div>
+                                </div>
+
+                                <div class="mock-stats">
+                                    <span>✦ Design exclusivo</span>
+                                    <span>⌘ Sob medida</span>
+                                    <span>↗ Responsivo</span>
+                                </div>
+                            </div>
                         </div>
 
-
-                        <div>
-
-                            <strong>
-                                100%
-                            </strong>
-
-                            <span>
-                                DIGITAL
-                            </span>
-
-                        </div>
-
-
-                        <div>
-
-                            <strong>
-                                24h
-                            </strong>
-
-                            <span>
-                                ATENDIMENTO
-                            </span>
-
-                        </div>
-
+                        <div class="laptop-base"><div class="laptop-notch"></div></div>
                     </div>
 
+                    <div class="hero-phone">
+                        <div class="phone-frame">
+                            <div class="phone-speaker"></div>
+                            <div class="phone-screen">
+                                <div class="phone-status"><span>9:41</span><span>● ▰</span></div>
+                                <div class="phone-brand">
+                                    <span class="phone-brand-icon">A</span>
+                                    <span>Abreuzin</span>
+                                    <span class="phone-menu">☰</span>
+                                </div>
+                                <div class="phone-hero-copy">
+                                    <small>SUA IDEIA,</small>
+                                    <strong>NO DIGITAL.</strong>
+                                    <p>Um site com a sua identidade.</p>
+                                </div>
+                                <div class="phone-art" aria-hidden="true">
+                                    <div class="phone-art-ring"></div>
+                                    <div class="phone-art-core">A</div>
+                                </div>
+                                <div class="phone-cta">Solicitar orçamento <span>↗</span></div>
+                                <div class="phone-bottom-lines"><i></i><i></i><i></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-feature-card feature-card-top">
+                        <span class="feature-card-icon">✦</span>
+                        <span><small>DESIGN</small><strong>Exclusivo</strong></span>
+                        <span class="feature-check">✓</span>
+                    </div>
+
+                    <div class="hero-feature-card feature-card-bottom">
+                        <span class="feature-online-dot"></span>
+                        <span><small>SEU PROJETO</small><strong>Feito para você</strong></span>
+                    </div>
+
+                    <div class="hero-note">
+                        <span class="hero-note-line"></span>
+                        Seu projeto<br>do jeito que<br><strong>você imagina.</strong>
+                    </div>
                 </div>
-
             </div>
-
         </section>
 
+        <!-- SERVIÇOS PREMIUM -->
+        <section id="servicos" class="page-section">
+            <div class="section-container services-premium">
 
-
-        <!-- =================================================
-             SERVIÇOS
-        ================================================== -->
-
-        <section
-            id="servicos"
-            class="page-section"
-        >
-
-            <div class="section-container">
-
-                <div class="section-heading">
-
-                    <span class="section-tag">
-                        NOSSOS SERVIÇOS
-                    </span>
-
-
-                    <h2>
-                        Escolha a solução
-
-                        <span>
-                            ideal para você.
+                <div class="services-intro">
+                    <div class="services-intro-copy">
+                        <span class="section-tag">
+                            <span class="services-live-dot"></span>
+                            SOLUÇÕES PARA SEU PROJETO
                         </span>
-                    </h2>
 
+                        <h2>Ideias grandes.<br><span>Soluções digitais à altura.</span></h2>
 
-                    <p>
-                        Serviços digitais pensados
-                        para ajudar seu projeto a crescer.
-                    </p>
+                        <p>
+                            Escolha o serviço que combina com seu objetivo.
+                            Cada projeto é pensado para suas necessidades,
+                            com atenção aos detalhes e uma experiência profissional.
+                        </p>
+                    </div>
 
+                    <div class="services-intro-note">
+                        <span class="services-note-icon">✳</span>
+                        <span>Seu projeto começa<br><strong>com uma boa ideia.</strong></span>
+                    </div>
                 </div>
 
+                <div class="services-premium-grid">
 
-                <div class="services-grid">
-
-
-                    <article
-                        class="service-card"
+                    <article class="service-card service-card-premium service-card-featured"
+                        role="button" tabindex="0"
                         onclick="abrirFormulario('Criação de Sites')"
-                    >
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Criação de Sites')}">
 
-                        <div class="service-icon">
-                            🌐
+                        <div class="service-card-top">
+                            <span class="service-number">01 / WEB</span>
+                            <span class="service-badge">MAIS COMPLETO</span>
                         </div>
 
-                        <h3>
-                            Criação de Sites
-                        </h3>
+                        <div class="service-icon service-icon-premium">⌘</div>
+                        <h3>Criação de Sites</h3>
 
                         <p>
-                            Desenvolvimento de sites modernos,
-                            responsivos e personalizados.
+                            Uma presença digital profissional, responsiva e personalizada
+                            para apresentar sua marca e conquistar clientes.
                         </p>
 
-                        <strong>
-                            A partir de R$ 400
-                        </strong>
+                        <div class="service-card-bottom">
+                            <div class="service-price">
+                                <small>Projetos a partir de</small>
+                                <strong>R$ 400</strong>
+                            </div>
+                            <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
+                        </div>
 
+                        <span class="service-corner" aria-hidden="true">↗</span>
                     </article>
 
-
-
-                    <article
-                        class="service-card"
+                    <article class="service-card service-card-premium"
+                        role="button" tabindex="0"
                         onclick="abrirFormulario('Landing Pages')"
-                    >
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Landing Pages')}">
 
-                        <div class="service-icon">
-                            📄
+                        <div class="service-card-top">
+                            <span class="service-number">02 / CONVERSÃO</span>
+                            <span class="service-corner-small">↗</span>
                         </div>
 
-                        <h3>
-                            Landing Pages
-                        </h3>
+                        <div class="service-icon service-icon-premium">↗</div>
+                        <h3>Landing Pages</h3>
 
                         <p>
-                            Páginas profissionais para divulgação
-                            de produtos, serviços e campanhas.
+                            Páginas objetivas para divulgar produtos, serviços e campanhas,
+                            com foco na apresentação da sua oferta.
                         </p>
 
-                        <strong>
-                            A partir de R$ 250
-                        </strong>
-
+                        <div class="service-card-bottom">
+                            <div class="service-price">
+                                <small>Projetos a partir de</small>
+                                <strong>R$ 250</strong>
+                            </div>
+                            <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
+                        </div>
                     </article>
 
-
-
-                    <article
-                        class="service-card"
+                    <article class="service-card service-card-premium"
+                        role="button" tabindex="0"
                         onclick="abrirFormulario('Suporte Técnico')"
-                    >
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Suporte Técnico')}">
 
-                        <div class="service-icon">
-                            🛠️
+                        <div class="service-card-top">
+                            <span class="service-number">03 / TECNOLOGIA</span>
+                            <span class="service-corner-small">↗</span>
                         </div>
 
-                        <h3>
-                            Suporte Técnico
-                        </h3>
+                        <div class="service-icon service-icon-premium">⌘</div>
+                        <h3>Suporte Técnico</h3>
 
                         <p>
-                            Auxílio com computadores,
-                            sistemas e problemas técnicos.
+                            Ajuda com computadores, programas, configurações e
+                            dificuldades técnicas do dia a dia.
                         </p>
 
-                        <strong>
-                            A partir de R$ 80
-                        </strong>
-
+                        <div class="service-card-bottom">
+                            <div class="service-price">
+                                <small>Atendimentos a partir de</small>
+                                <strong>R$ 80</strong>
+                            </div>
+                            <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
+                        </div>
                     </article>
 
-
-
-                    <article
-                        class="service-card"
+                    <article class="service-card service-card-premium"
+                        role="button" tabindex="0"
                         onclick="abrirFormulario('Planilhas')"
-                    >
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Planilhas')}">
 
-                        <div class="service-icon">
-                            📊
+                        <div class="service-card-top">
+                            <span class="service-number">04 / ORGANIZAÇÃO</span>
+                            <span class="service-corner-small">↗</span>
                         </div>
 
-                        <h3>
-                            Planilhas
-                        </h3>
+                        <div class="service-icon service-icon-premium">▦</div>
+                        <h3>Planilhas</h3>
 
                         <p>
-                            Planilhas personalizadas
-                            para organização e controle.
+                            Planilhas personalizadas para organizar informações,
+                            controlar despesas e facilitar tarefas.
                         </p>
 
-                        <strong>
-                            A partir de R$ 100
-                        </strong>
-
+                        <div class="service-card-bottom">
+                            <div class="service-price">
+                                <small>Projetos a partir de</small>
+                                <strong>R$ 100</strong>
+                            </div>
+                            <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
+                        </div>
                     </article>
 
-
-
-                    <article
-                        class="service-card"
+                    <article class="service-card service-card-premium"
+                        role="button" tabindex="0"
                         onclick="abrirFormulario('Loja Online')"
-                    >
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Loja Online')}">
 
-                        <div class="service-icon">
-                            🛒
+                        <div class="service-card-top">
+                            <span class="service-number">05 / E-COMMERCE</span>
+                            <span class="service-corner-small">↗</span>
                         </div>
 
-                        <h3>
-                            Loja Online
-                        </h3>
+                        <div class="service-icon service-icon-premium">▤</div>
+                        <h3>Loja Online</h3>
 
                         <p>
-                            Estrutura digital para
-                            vendas pela internet.
+                            Estrutura digital para apresentar produtos e começar
+                            a vender pela internet.
                         </p>
 
-                        <strong>
-                            A partir de R$ 300
-                        </strong>
-
+                        <div class="service-card-bottom">
+                            <div class="service-price">
+                                <small>Projetos a partir de</small>
+                                <strong>R$ 300</strong>
+                            </div>
+                            <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
+                        </div>
                     </article>
 
-
-
-                    <article
-                        class="service-card"
+                    <article class="service-card service-card-premium"
+                        role="button" tabindex="0"
                         onclick="abrirFormulario('Automações')"
-                    >
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Automações')}">
 
-                        <div class="service-icon">
-                            ⚡
+                        <div class="service-card-top">
+                            <span class="service-number">06 / PRODUTIVIDADE</span>
+                            <span class="service-corner-small">↗</span>
                         </div>
 
-                        <h3>
-                            Automações
-                        </h3>
+                        <div class="service-icon service-icon-premium">ϟ</div>
+                        <h3>Automações</h3>
 
                         <p>
-                            Automatização de tarefas
-                            e processos digitais.
+                            Automatização de tarefas repetitivas para tornar
+                            processos digitais mais práticos.
                         </p>
 
-                        <strong>
-                            A partir de R$ 300
-                        </strong>
-
+                        <div class="service-card-bottom">
+                            <div class="service-price">
+                                <small>Projetos a partir de</small>
+                                <strong>R$ 150</strong>
+                            </div>
+                            <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
+                        </div>
                     </article>
 
+                    <article class="service-card service-card-premium"
+                        role="button" tabindex="0"
+                        onclick="abrirFormulario('Outro')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Outro')}">
 
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             SOBRE
-        ================================================== -->
-
-        <section
-            id="sobre"
-            class="page-section"
-        >
-
-            <div class="section-container about-section">
-
-                <div class="section-heading about-heading">
-
-                    <h2>
-                        Tecnologia simples,
-
-                        <span>
-                            soluções eficientes.
-                        </span>
-                    </h2>
-
-                </div>
-
-
-                <div class="about-box">
-
-                    <div class="about-content">
-
-                        <p>
-                            A Abreuzin Services nasceu
-                            com o objetivo de oferecer
-                            soluções digitais acessíveis,
-                            modernas e funcionais.
-                        </p>
-
-
-                        <p>
-                            Trabalhamos com desenvolvimento
-                            de sites, sistemas, automações,
-                            planilhas, suporte técnico e
-                            soluções para negócios digitais.
-                        </p>
-
-
-                        <p>
-                            Nosso foco é entender o que
-                            o cliente precisa e transformar
-                            essa necessidade em uma solução
-                            prática.
-                        </p>
-
-                    </div>
-
-
-                    <div class="about-visual">
-
-                        <div class="about-number">
-
-                            <strong>
-                                ABS
-                            </strong>
-
-                            <span>
-                                Abreuzin Services
-                            </span>
-
+                        <div class="service-card-top">
+                            <span class="service-number">07 / PERSONALIZADO</span>
+                            <span class="service-corner-small">↗</span>
                         </div>
 
-                    </div>
+                        <div class="service-icon service-icon-premium">✳</div>
+                        <h3>Outro projeto</h3>
+
+                        <p>
+                            Tem uma necessidade diferente? Conte sua ideia
+                            e vamos avaliar uma solução personalizada.
+                        </p>
+
+                        <div class="service-card-bottom">
+                            <div class="service-price">
+                                <small>Orçamento</small>
+                                <strong>Sob consulta</strong>
+                            </div>
+                            <span class="service-cta-label">Conversar sobre ideia <b>↗</b></span>
+                        </div>
+                    </article>
 
                 </div>
 
+                <div class="services-footer-note">
+                    <span class="services-footer-symbol">✦</span>
+                    <p>Não encontrou exatamente o que precisa? <strong>Vamos conversar sobre sua ideia.</strong></p>
+                    <button class="secondary-button" type="button" data-tab="formulario">
+                        Solicitar orçamento <span aria-hidden="true">↗</span>
+                    </button>
+                </div>
             </div>
-
         </section>
 
-
-
-        <!-- =================================================
-             FORMULÁRIO
-        ================================================== -->
-
-        <section
-            id="formulario"
-            class="page-section"
-        >
-
-            <div class="section-container">
-
-                <div class="form-header">
-
+        <!-- SOBRE -->
+        <section id="sobre" class="page-section">
+            <div class="section-container about-redesign">
+                <div class="about-heading">
                     <span class="section-tag">
-                        SOLICITE UM ORÇAMENTO
+                        <span class="about-tag-dot"></span>
+                        CONHEÇA A ABREUZIN
                     </span>
 
-                    <h2>
-                        Conte-nos sobre
+                    <h2>Tecnologia simples, <span>soluções eficientes.</span></h2>
 
-                        <span>
-                            seu projeto.
-                        </span>
-                    </h2>
-
-                    <p>
-                        Preencha o formulário e nossa equipe
-                        analisará sua solicitação.
+                    <p class="about-intro">
+                        Transformamos necessidades em soluções digitais práticas,
+                        modernas e feitas para você.
                     </p>
-
                 </div>
 
+                <div class="about-box about-box-redesign">
+                    <div class="about-content">
+                        <span class="about-kicker">QUEM SOMOS</span>
+                        <h3>Sua ideia merece <span>ir mais longe.</span></h3>
+
+                        <p>
+                            A Abreuzin Services nasceu com o objetivo de oferecer
+                            soluções digitais acessíveis, modernas e funcionais.
+                        </p>
+
+                        <p>
+                            Trabalhamos com desenvolvimento de sites, sistemas,
+                            automações, planilhas, suporte técnico e soluções
+                            para negócios digitais.
+                        </p>
+
+                        <p>
+                            Nosso foco é entender o que cada cliente precisa e
+                            transformar essa necessidade em uma solução prática,
+                            com atenção aos detalhes.
+                        </p>
+
+                        <a class="primary-button about-cta"
+                            href="https://wa.me/554999118663?text=Ol%C3%A1!%20Vim%20pelo%20site%20Abreuzin%20Services%20e%20gostaria%20de%20conversar%20sobre%20um%20servi%C3%A7o."
+                            target="_blank" rel="noopener noreferrer">
+                            Vamos conversar <span aria-hidden="true">↗</span>
+                        </a>
+                    </div>
+
+                    <div class="about-visual about-visual-redesign">
+                        <div class="about-orbit about-orbit-one"></div>
+                        <div class="about-orbit about-orbit-two"></div>
+
+                        <div class="about-logo-card">
+                            <div class="about-logo-mark">A</div>
+                            <strong>ABS</strong>
+                            <span>ABREUZIN SERVICES</span>
+                            <div class="about-logo-line"></div>
+                            <small>SOLUÇÕES DIGITAIS</small>
+                        </div>
+
+                        <div class="about-floating about-floating-top">
+                            <span>✦</span> Design moderno
+                        </div>
+
+                        <div class="about-floating about-floating-bottom">
+                            <span class="about-status-dot"></span>
+                            Feito para você
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-values">
+                    <article class="about-value">
+                        <span class="about-value-icon">✦</span>
+                        <div>
+                            <h4>Personalização</h4>
+                            <p>Soluções pensadas para cada projeto.</p>
+                        </div>
+                    </article>
+
+                    <article class="about-value">
+                        <span class="about-value-icon">◎</span>
+                        <div>
+                            <h4>Praticidade</h4>
+                            <p>Tecnologia para facilitar o dia a dia.</p>
+                        </div>
+                    </article>
+
+                    <article class="about-value">
+                        <span class="about-value-icon">↗</span>
+                        <div>
+                            <h4>Compromisso</h4>
+                            <p>Foco nas necessidades do cliente.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ORÇAMENTO -->
+        <section id="formulario" class="page-section">
+            <div class="section-container">
+                <div class="form-header">
+                    <span class="section-tag">SOLICITE UM ORÇAMENTO</span>
+                    <h2>Conte-nos sobre <span>seu projeto.</span></h2>
+                    <p>Preencha o formulário para solicitar uma análise do seu projeto.</p>
+                </div>
 
                 <div class="formulario-container">
-
                     <form id="contratacaoForm">
-
                         <div class="form-row">
-
                             <div class="form-group">
-
-                                <label for="nome">
-                                    Nome
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="nome"
-                                    name="nome"
-                                    placeholder="Seu nome"
-                                    required
-                                >
-
+                                <label for="nome">Nome</label>
+                                <input type="text" id="nome" name="nome"
+                                    placeholder="Seu nome" autocomplete="name" required>
                             </div>
 
-
                             <div class="form-group">
-
-                                <label for="whatsapp">
-                                    WhatsApp
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="whatsapp"
-                                    name="whatsapp"
-                                    placeholder="(00) 00000-0000"
-                                    required
-                                >
-
+                                <label for="whatsapp">WhatsApp</label>
+                                <input type="text" id="whatsapp" name="whatsapp"
+                                    placeholder="(00) 00000-0000" autocomplete="tel" required>
                             </div>
-
                         </div>
 
-
                         <div class="form-row">
-
                             <div class="form-group">
-
-                                <label for="email">
-                                    E-mail
-                                </label>
-
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    placeholder="seuemail@email.com"
-                                    required
-                                >
-
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" name="email"
+                                    placeholder="seuemail@email.com" autocomplete="email" required>
                             </div>
 
-
                             <div class="form-group">
-
-                                <label for="servico">
-                                    Serviço
-                                </label>
-
-                                <select
-                                    id="servico"
-                                    name="servico"
-                                    required
-                                >
-
-                                    <option value="">
-                                        Selecione um serviço
-                                    </option>
-
-                                    <option value="Criação de Sites">
-                                        Criação de Sites
-                                    </option>
-
-                                    <option value="Landing Pages">
-                                        Landing Pages
-                                    </option>
-
-                                    <option value="Suporte Técnico">
-                                        Suporte Técnico
-                                    </option>
-
-                                    <option value="Planilhas">
-                                        Planilhas
-                                    </option>
-
-                                    <option value="Loja Online">
-                                        Loja Online
-                                    </option>
-
-                                    <option value="Automações">
-                                        Automações
-                                    </option>
-
-                                    <option value="Outro">
-                                        Outro
-                                    </option>
-
+                                <label for="servico">Serviço</label>
+                                <select id="servico" name="servico" required>
+                                    <option value="">Selecione um serviço</option>
+                                    <option value="Criação de Sites">Criação de Sites</option>
+                                    <option value="Landing Pages">Landing Pages</option>
+                                    <option value="Suporte Técnico">Suporte Técnico</option>
+                                    <option value="Planilhas">Planilhas</option>
+                                    <option value="Loja Online">Loja Online</option>
+                                    <option value="Automações">Automações</option>
+                                    <option value="Outro">Outro</option>
                                 </select>
-
                             </div>
-
                         </div>
-
 
                         <div class="form-group">
-
-                            <label for="descricao">
-                                Descrição do projeto
-                            </label>
-
-                            <textarea
-                                id="descricao"
-                                name="descricao"
-                                rows="6"
-                                placeholder="Explique o que você precisa..."
-                                required
-                            ></textarea>
-
+                            <label for="descricao">Descrição do projeto</label>
+                            <textarea id="descricao" name="descricao" rows="6"
+                                placeholder="Explique o que você precisa..." required></textarea>
                         </div>
-
 
                         <div class="form-row">
-
                             <div class="form-group">
-
-                                <label for="orcamento">
-                                    Orçamento disponível
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="orcamento"
-                                    name="orcamento"
-                                    placeholder="Ex: R$ 500"
-                                >
-
+                                <label for="orcamento">Orçamento disponível</label>
+                                <input type="text" id="orcamento" name="orcamento"
+                                    placeholder="Ex.: R$ 500">
                             </div>
 
-
                             <div class="form-group">
-
-                                <label for="prazo">
-                                    Prazo desejado
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="prazo"
-                                    name="prazo"
-                                    placeholder="Ex: 15 dias"
-                                >
-
+                                <label for="prazo">Prazo desejado</label>
+                                <input type="text" id="prazo" name="prazo"
+                                    placeholder="Ex.: 15 dias">
                             </div>
-
                         </div>
 
-
-                        <button
-                            type="submit"
-                            class="submit-button"
-                        >
-                            Enviar solicitação
-
-                            <span>
-                                →
-                            </span>
+                        <button type="submit" class="submit-button">
+                            Enviar solicitação <span aria-hidden="true">→</span>
                         </button>
-
                     </form>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- =================================================
-             ACOMPANHAR
-        ================================================== -->
-
-        <section
-            id="acompanhar"
-            class="page-section"
-        >
-
-            <div class="section-container tracking-section">
+        <!-- ACOMPANHAMENTO PREMIUM -->
+        <section id="acompanhar" class="page-section">
+            <div class="section-container tracking-section tracking-premium">
 
                 <div class="tracking-heading">
-
                     <span class="section-tag">
-                        ACOMPANHAMENTO
+                        <span class="tracking-live-dot"></span>
+                        CENTRAL DE ACOMPANHAMENTO
                     </span>
 
-                    <h2>
-                        Acompanhe sua
-
-                        <span>
-                            solicitação.
-                        </span>
-                    </h2>
+                    <h2>Seu projeto, <span>passo a passo.</span></h2>
 
                     <p>
-                        Digite seu protocolo para consultar
-                        o andamento do atendimento.
+                        Acompanhe a evolução da sua solicitação com transparência.
+                        Informe seu protocolo e veja os detalhes do atendimento.
                     </p>
-
                 </div>
 
+                <div class="tracking-layout">
 
-                <div class="tracking-box">
+                    <!-- PAINEL DE CONSULTA -->
+                    <aside class="tracking-search-card">
+                        <div class="tracking-search-icon" aria-hidden="true">⌕</div>
 
-                    <form id="consultaForm">
+                        <span class="tracking-eyebrow">CONSULTA DE PROTOCOLO</span>
+                        <h3>Vamos localizar seu projeto?</h3>
 
-                        <div class="form-group">
+                        <p>
+                            Digite o número recebido ao enviar sua solicitação.
+                        </p>
 
-                            <label for="protocolo">
-                                Número do protocolo
-                            </label>
+                        <form id="consultaForm">
+                            <div class="form-group tracking-input-group">
+                                <label for="protocolo">Número do protocolo</label>
 
-                            <input
-                                type="text"
-                                id="protocolo"
-                                name="protocolo"
-                                placeholder="Ex: ABS-000001"
-                                required
-                            >
+                                <div class="tracking-input-wrap">
+                                    <span aria-hidden="true">#</span>
+                                    <input
+                                        type="text"
+                                        id="protocolo"
+                                        name="protocolo"
+                                        placeholder="ABS-000001"
+                                        autocomplete="off"
+                                        required
+                                    >
+                                </div>
+                            </div>
 
+                            <button type="submit" class="submit-button tracking-submit">
+                                Consultar solicitação
+                                <span aria-hidden="true">↗</span>
+                            </button>
+                        </form>
+
+                        <div id="erroConsulta" class="tracking-error" style="display:none" role="alert">
+                            <span aria-hidden="true">!</span>
+                            Protocolo não encontrado. Confira o número e tente novamente.
                         </div>
 
+                        <div class="tracking-security-note">
+                            <span aria-hidden="true">♧</span>
+                            <span>Consulte usando o protocolo da sua solicitação.</span>
+                        </div>
+                    </aside>
 
-                        <button
-                            type="submit"
-                            class="submit-button"
-                        >
-                            Consultar protocolo
+                    <!-- RESULTADO DA CONSULTA -->
+                    <div class="tracking-result-card">
 
-                            <span>
-                                🔎
-                            </span>
-                        </button>
-
-                    </form>
-
-
-                    <div
-                        id="resultadoConsulta"
-                        class="tracking-result"
-                        style="display: none;"
-                    >
-
-                        <div class="tracking-details">
-
-                            <div>
-                                <span>
-                                    PROTOCOLO
-                                </span>
-
-                                <strong id="consultaProtocolo">
-                                    -
-                                </strong>
+                        <!-- VISÍVEL ANTES DA CONSULTA -->
+                        <div class="tracking-result-placeholder" id="trackingPlaceholder">
+                            <div class="tracking-placeholder-art">
+                                <div class="tracking-placeholder-ring"></div>
+                                <div class="tracking-placeholder-icon">⌕</div>
                             </div>
 
+                            <span class="tracking-eyebrow">SEU ESPAÇO DE ACOMPANHAMENTO</span>
+                            <h3>Tudo começa pelo protocolo.</h3>
 
-                            <div>
-                                <span>
-                                    SERVIÇO
-                                </span>
+                            <p>
+                                Quando você consultar sua solicitação, os dados
+                                do atendimento aparecerão nesta área.
+                            </p>
 
-                                <strong id="consultaServico">
-                                    -
-                                </strong>
+                            <div class="tracking-placeholder-steps">
+                                <span><i>01</i> Consultar</span>
+                                <span><i>02</i> Acompanhar</span>
+                                <span><i>03</i> Concluir</span>
+                            </div>
+                        </div>
+
+                        <!-- RESULTADO REAL VINDO DO SCRIPT -->
+                        <div id="resultadoConsulta" class="tracking-result" style="display:none">
+
+                            <div class="tracking-result-header">
+                                <div>
+                                    <span class="tracking-eyebrow">DETALHES DO PROJETO</span>
+                                    <h3>Sua solicitação</h3>
+                                </div>
+
+                                <div class="tracking-status-pill">
+                                    <span class="tracking-status-dot"></span>
+                                    <strong id="consultaStatus">-</strong>
+                                </div>
                             </div>
 
+                            <div class="tracking-protocol-banner">
+                                <div class="tracking-protocol-symbol">A</div>
 
-                            <div>
-                                <span>
-                                    STATUS
-                                </span>
+                                <div>
+                                    <span>SEU PROTOCOLO</span>
+                                    <strong id="consultaProtocolo">-</strong>
+                                </div>
 
-                                <strong id="consultaStatus">
-                                    -
-                                </strong>
+                                <span class="tracking-protocol-decoration" aria-hidden="true">✦</span>
                             </div>
 
+                            <div class="tracking-details">
+                                <div class="tracking-detail-item">
+                                    <span class="tracking-detail-icon" aria-hidden="true">⌘</span>
+                                    <div>
+                                        <span>SERVIÇO SOLICITADO</span>
+                                        <strong id="consultaServico">-</strong>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <span>
-                                    CRIADO EM
-                                </span>
+                                <div class="tracking-detail-item">
+                                    <span class="tracking-detail-icon" aria-hidden="true">◷</span>
+                                    <div>
+                                        <span>DATA DA SOLICITAÇÃO</span>
+                                        <strong id="consultaCriado">-</strong>
+                                    </div>
+                                </div>
 
-                                <strong id="consultaCriado">
-                                    -
-                                </strong>
+                                <div class="tracking-detail-item tracking-detail-full">
+                                    <span class="tracking-detail-icon" aria-hidden="true">↻</span>
+                                    <div>
+                                        <span>ÚLTIMA ATUALIZAÇÃO</span>
+                                        <strong id="consultaAtualizado">-</strong>
+                                    </div>
+                                </div>
                             </div>
 
+                            <!-- LINHA DO TEMPO VISUAL -->
+                            <div class="tracking-timeline">
+                                <div class="tracking-timeline-heading">
+                                    <div>
+                                        <span class="tracking-eyebrow">EVOLUÇÃO</span>
+                                        <h4>Etapas do atendimento</h4>
+                                    </div>
 
-                            <div>
-                                <span>
-                                    ATUALIZADO EM
-                                </span>
+                                    <span class="tracking-timeline-symbol" aria-hidden="true">✳</span>
+                                </div>
 
-                                <strong id="consultaAtualizado">
-                                    -
-                                </strong>
+                                <div class="tracking-timeline-list" id="trackingTimeline">
+                                    <div class="tracking-timeline-item" data-step="recebida">
+                                        <span class="tracking-timeline-marker">1</span>
+                                        <div>
+                                            <strong>Solicitação recebida</strong>
+                                            <p>Seu pedido foi registrado no sistema.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="tracking-timeline-item" data-step="analise">
+                                        <span class="tracking-timeline-marker">2</span>
+                                        <div>
+                                            <strong>Em análise</strong>
+                                            <p>Os detalhes da solicitação estão sendo avaliados.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="tracking-timeline-item" data-step="execucao">
+                                        <span class="tracking-timeline-marker">3</span>
+                                        <div>
+                                            <strong>Em execução</strong>
+                                            <p>O trabalho está em andamento.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="tracking-timeline-item" data-step="concluida">
+                                        <span class="tracking-timeline-marker">4</span>
+                                        <div>
+                                            <strong>Projeto concluído</strong>
+                                            <p>O atendimento foi finalizado.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tracking-message">
+                                <span class="tracking-message-icon" aria-hidden="true">✦</span>
+                                <div>
+                                    <strong>Mensagem sobre sua solicitação</strong>
+                                    <p id="consultaMensagem"></p>
+                                </div>
                             </div>
 
                         </div>
-
-
-                        <div class="tracking-message">
-
-                            <p id="consultaMensagem"></p>
-
-                        </div>
-
                     </div>
+                </div>
 
+                <div class="tracking-footer">
+                    <span class="tracking-footer-icon" aria-hidden="true">✦</span>
 
-                    <div
-                        id="erroConsulta"
-                        class="tracking-error"
-                        style="display: none;"
-                    >
-                        ❌ Protocolo não encontrado.
+                    <p>
+                        Precisa de ajuda?
+                        <strong>Entre em contato com a Abreuzin Services.</strong>
+                    </p>
 
-                        Verifique o número informado
-                        e tente novamente.
-                    </div>
-
+                    <a href="https://wa.me/554999118663"
+                       target="_blank" rel="noopener noreferrer">
+                        Falar pelo WhatsApp <span aria-hidden="true">↗</span>
+                    </a>
                 </div>
 
             </div>
-
         </section>
 
-
-
-        <!-- =================================================
-             CONTATO
-        ================================================== -->
-
-        <section
-            id="contato"
-            class="page-section"
-        >
-
+        <!-- CONTATO -->
+        <section id="contato" class="page-section">
             <div class="section-container">
-
                 <div class="contact-section">
+                    <div class="contact-glow" aria-hidden="true"></div>
 
-                    <div class="contact-glow"></div>
-
-                    <span class="section-tag">
-                        FALE CONOSCO
-                    </span>
-
-                    <h2>
-                        Tem um projeto
-
-                        <span>
-                            em mente?
-                        </span>
-                    </h2>
+                    <span class="section-tag">FALE CONOSCO</span>
+                    <h2>Tem um projeto <span>em mente?</span></h2>
 
                     <p>
-                        Conte sua ideia para a Abreuzin Services
-                        e vamos encontrar a melhor solução.
+                        Conte sua ideia para a Abreuzin Services e vamos encontrar
+                        a melhor solução para você.
                     </p>
-
 
                     <div class="contact-options">
-
-
-                        <a
-                            href="https://wa.me/554999118663"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="contact-card"
-                        >
-
-                            <div class="contact-icon whatsapp-icon">
-                                📱
-                            </div>
-
+                        <a href="https://wa.me/554999118663"
+                            target="_blank" rel="noopener noreferrer" class="contact-card">
+                            <div class="contact-icon whatsapp-icon">📱</div>
                             <div class="contact-card-info">
-
-                                <span>
-                                    WHATSAPP
-                                </span>
-
-                                <strong>
-                                    Fale conosco pelo WhatsApp
-                                </strong>
-
-                                <small>
-                                    Clique para iniciar uma conversa
-                                </small>
-
+                                <span>WHATSAPP</span>
+                                <strong>Fale conosco pelo WhatsApp</strong>
+                                <small>Clique para iniciar uma conversa</small>
                             </div>
-
-                            <div class="contact-arrow">
-                                ↗
-                            </div>
-
+                            <div class="contact-arrow">↗</div>
                         </a>
 
-
-
-                        <a
-                            href="mailto:abreubusines@gmail.com"
-                            class="contact-card"
-                        >
-
-                            <div class="contact-icon email-icon">
-                                ✉️
-                            </div>
-
+                        <a href="mailto:abreubusines@gmail.com" class="contact-card">
+                            <div class="contact-icon email-icon">✉️</div>
                             <div class="contact-card-info">
-
-                                <span>
-                                    E-MAIL
-                                </span>
-
-                                <strong>
-                                    Entre em contato por e-mail
-                                </strong>
-
-                                <small>
-                                    Clique para enviar sua mensagem
-                                </small>
-
+                                <span>E-MAIL</span>
+                                <strong>Entre em contato por e-mail</strong>
+                                <small>Clique para enviar sua mensagem</small>
                             </div>
-
-                            <div class="contact-arrow">
-                                ↗
-                            </div>
-
+                            <div class="contact-arrow">↗</div>
                         </a>
-
                     </div>
 
-
-                    <button
-                        class="primary-button"
-                        onclick="abrirFormulario('Orçamento')"
-                    >
-                        Solicitar orçamento
-
-                        <span>
-                            →
-                        </span>
+                    <button class="primary-button" type="button" data-tab="formulario">
+                        Solicitar orçamento <span aria-hidden="true">→</span>
                     </button>
-
                 </div>
-
             </div>
-
         </section>
-
-
     </main>
 
-
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
+    <!-- RODAPÉ -->
     <footer class="footer">
-
         <div class="footer-container">
-
-
             <div class="footer-brand">
-
-                <a
-                    href="#inicio"
-                    class="logo"
-                    data-tab="inicio"
-                >
-                    <span>
-                        Abreuzin Services
-                    </span>
+                <a href="#inicio" class="logo" data-tab="inicio">
+                    <span class="logo-mark">A</span>
+                    <span>Abreuzin <strong>Services</strong></span>
                 </a>
-
-
-                <p>
-                    Soluções digitais para transformar
-                    ideias em realidade.
-                </p>
-
+                <p>Soluções digitais para transformar ideias em realidade.</p>
             </div>
-
 
             <div class="footer-column">
-
-                <h4>
-                    Empresa
-                </h4>
-
-                <a
-                    href="#sobre"
-                    data-tab="sobre"
-                >
-                    Sobre
-                </a>
-
-                <a
-                    href="#servicos"
-                    data-tab="servicos"
-                >
-                    Serviços
-                </a>
-
-                <a
-                    href="#contato"
-                    data-tab="contato"
-                >
-                    Contato
-                </a>
-
+                <h4>Empresa</h4>
+                <a href="#sobre" data-tab="sobre">Sobre</a>
+                <a href="#servicos" data-tab="servicos">Serviços</a>
+                <a href="#contato" data-tab="contato">Contato</a>
             </div>
-
 
             <div class="footer-column">
-
-                <h4>
-                    Atendimento
-                </h4>
-
-                <a
-                    href="#formulario"
-                    data-tab="formulario"
-                >
-                    Solicitar orçamento
-                </a>
-
-                <a
-                    href="#acompanhar"
-                    data-tab="acompanhar"
-                >
-                    Acompanhar protocolo
-                </a>
-
+                <h4>Atendimento</h4>
+                <a href="#formulario" data-tab="formulario">Solicitar orçamento</a>
+                <a href="#acompanhar" data-tab="acompanhar">Acompanhar protocolo</a>
             </div>
-
 
             <div class="footer-column">
-
-                <h4>
-                    Informações
-                </h4>
-
-                <a href="mailto:abreubusines@gmail.com">
-                    E-mail
-                </a>
-
-                <a
-                    href="https://wa.me/554999118663"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    WhatsApp
-                </a>
-
+                <h4>Informações</h4>
+                <a href="mailto:abreubusines@gmail.com">E-mail</a>
+                <a href="https://wa.me/554999118663"
+                    target="_blank" rel="noopener noreferrer">WhatsApp</a>
             </div>
-
         </div>
-
 
         <div class="footer-bottom">
-
-            <span>
-                © 2026 Abreuzin Services.
-                Todos os direitos reservados.
-            </span>
-
-            <span>
-                Soluções digitais e tecnologia
-            </span>
-
+            <span>© 2026 Abreuzin Services. Todos os direitos reservados.</span>
+            <span>Soluções digitais e tecnologia</span>
         </div>
-
     </footer>
 
-
-
-    <!-- =====================================================
-         NAVEGAÇÃO
-    ====================================================== -->
-
+    <!-- NAVEGAÇÃO ENTRE ABAS -->
     <script>
+        (() => {
+            const elementosAbas = document.querySelectorAll("[data-tab]");
+            const secoes = document.querySelectorAll(".page-section");
+            const linksMenu = document.querySelectorAll(".nav-link");
+            const nav = document.getElementById("mainNav");
+            const menuToggle = document.getElementById("menuToggle");
 
-        const elementosAbas =
-            document.querySelectorAll(
-                "[data-tab]"
-            );
-
-
-        const secoes =
-            document.querySelectorAll(
-                ".page-section"
-            );
-
-
-        const linksMenu =
-            document.querySelectorAll(
-                ".nav-link"
-            );
-
-
-        function abrirAba(nomeAba) {
-
-            secoes.forEach(
-                function (secao) {
-
-                    secao.classList.remove(
-                        "active-section"
-                    );
-
-                }
-            );
-
-
-            const secaoAtiva =
-                document.getElementById(
-                    nomeAba
-                );
-
-
-            if (secaoAtiva) {
-
-                secaoAtiva.classList.add(
-                    "active-section"
-                );
-
+            function fecharMenu() {
+                nav.classList.remove("nav-open");
+                menuToggle.classList.remove("menu-open");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.setAttribute("aria-label", "Abrir menu");
             }
 
+            function abrirAba(nomeAba) {
+                const secaoAtiva = document.getElementById(nomeAba);
 
-            linksMenu.forEach(
-                function (link) {
-
-                    link.classList.remove(
-                        "active"
-                    );
-
-
-                    if (
-                        link.dataset.tab ===
-                        nomeAba
-                    ) {
-
-                        link.classList.add(
-                            "active"
-                        );
-
-                    }
-
+                if (!secaoAtiva || !secaoAtiva.classList.contains("page-section")) {
+                    return;
                 }
-            );
 
+                secoes.forEach(secao => secao.classList.remove("active-section"));
+                secaoAtiva.classList.add("active-section");
 
-            window.scrollTo({
+                linksMenu.forEach(link => {
+                    link.classList.toggle("active", link.dataset.tab === nomeAba);
+                });
 
-                top: 0,
+                fecharMenu();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                history.replaceState(null, "", "#" + nomeAba);
+            }
 
-                behavior: "smooth"
+            elementosAbas.forEach(elemento => {
+                elemento.addEventListener("click", event => {
+                    const aba = elemento.dataset.tab;
+                    if (!aba) return;
 
+                    event.preventDefault();
+                    abrirAba(aba);
+                });
             });
 
+            menuToggle.addEventListener("click", () => {
+                const aberto = nav.classList.toggle("nav-open");
 
-            history.replaceState(
-                null,
-                "",
-                "#" + nomeAba
-            );
-
-        }
-
-
-        elementosAbas.forEach(
-            function (elemento) {
-
-                elemento.addEventListener(
-                    "click",
-                    function (event) {
-
-                        const aba =
-                            elemento.dataset.tab;
-
-
-                        if (!aba) {
-                            return;
-                        }
-
-
-                        event.preventDefault();
-
-
-                        abrirAba(aba);
-
-                    }
+                menuToggle.classList.toggle("menu-open", aberto);
+                menuToggle.setAttribute("aria-expanded", String(aberto));
+                menuToggle.setAttribute(
+                    "aria-label",
+                    aberto ? "Fechar menu" : "Abrir menu"
                 );
+            });
 
-            }
-        );
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape") fecharMenu();
+            });
 
+            function carregarAbaInicial() {
+                const hash = window.location.hash.slice(1);
+                const secao = document.getElementById(hash);
 
-        function carregarAbaInicial() {
-
-            const hash =
-                window.location.hash.replace(
-                    "#",
-                    ""
-                );
-
-
-            const abaInicial =
-                document.getElementById(
-                    hash
-                );
-
-
-            if (
-                hash &&
-                abaInicial &&
-                abaInicial.classList.contains(
-                    "page-section"
-                )
-            ) {
-
-                abrirAba(hash);
-
-            } else {
-
-                abrirAba("inicio");
-
+                if (hash && secao && secao.classList.contains("page-section")) {
+                    abrirAba(hash);
+                } else {
+                    abrirAba("inicio");
+                }
             }
 
-        }
-
-
-        carregarAbaInicial();
-
+            carregarAbaInicial();
+        })();
     </script>
 
+    <!-- MOSTRAR O PAINEL CERTO NO ACOMPANHAMENTO -->
+    <script>
+        (() => {
+            const resultado = document.getElementById("resultadoConsulta");
+            const placeholder = document.getElementById("trackingPlaceholder");
+            const erro = document.getElementById("erroConsulta");
+            const formulario = document.getElementById("consultaForm");
 
+            function atualizarPainelAcompanhamento() {
+                const resultadoVisivel =
+                    resultado &&
+                    window.getComputedStyle(resultado).display !== "none";
 
+                if (placeholder) {
+                    placeholder.style.display = resultadoVisivel ? "none" : "flex";
+                }
+
+                if (resultadoVisivel && erro) {
+                    erro.style.display = "none";
+                }
+            }
+
+            if (resultado && placeholder) {
+                const observador = new MutationObserver(atualizarPainelAcompanhamento);
+
+                observador.observe(resultado, {
+                    attributes: true,
+                    attributeFilter: ["style", "class"]
+                });
+
+                atualizarPainelAcompanhamento();
+            }
+
+            if (formulario && erro) {
+                formulario.addEventListener("input", () => {
+                    erro.style.display = "none";
+                });
+            }
+        })();
+    </script>
+
+    <!-- JAVASCRIPT DOS FORMULÁRIOS E DA API -->
     <script src="script.js"></script>
-
-
 </body>
-
 </html>
