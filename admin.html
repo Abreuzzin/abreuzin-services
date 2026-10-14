@@ -1,1858 +1,1553 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        Abreuzin Services | Administração
-    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#101827">
+    <title>Abreuzin Services | Administração</title>
 
     <style>
+        :root {
+            color-scheme: dark;
+            --fundo: #101827;
+            --painel: #1d2a40;
+            --painel-secundario: #19253a;
+            --painel-hover: #24344d;
+            --campo: #172338;
+            --borda: #34445c;
+            --texto: #f1f5f9;
+            --texto-secundario: #a7b4c8;
+            --roxo: #6d5dfb;
+            --roxo-hover: #5948e8;
+            --amarelo: #fbbf24;
+            --azul: #60a5fa;
+            --verde: #34d399;
+            --vermelho: #fb7185;
+            --raio: 16px;
+        }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
         }
 
         body {
-
-            background: #0f172a;
-
-            color: white;
-
             min-height: 100vh;
-
+            background:
+                radial-gradient(
+                    ellipse at top left,
+                    rgba(109, 93, 251, .10),
+                    transparent 38%
+                ),
+                var(--fundo);
+            color: var(--texto);
+            font-size: 14px;
+            line-height: 1.5;
         }
 
-        /* =========================
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:disabled,
+        select:disabled {
+            cursor: wait;
+            opacity: .65;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--roxo);
+            outline-offset: 3px;
+        }
+
+        /* ================================
            LOGIN
-        ========================= */
+        ================================= */
 
         #loginContainer {
-
             min-height: 100vh;
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
-            padding: 20px;
-
+            padding: 24px;
+            background:
+                radial-gradient(
+                    circle at 50% 35%,
+                    rgba(109, 93, 251, .16),
+                    transparent 42%
+                ),
+                var(--fundo);
         }
 
         .login-box {
-
             width: 100%;
+            max-width: 410px;
+            padding: 36px;
+            border: 1px solid var(--borda);
+            border-radius: 22px;
+            background: rgba(29, 42, 64, .96);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, .30);
+        }
 
-            max-width: 400px;
+        .marca {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
 
-            background: #1e293b;
-
-            padding: 35px;
-
-            border-radius: 15px;
-
-            box-shadow:
-                0 20px 50px
-                rgba(0, 0, 0, 0.4);
-
+        .marca-icone {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #8879ff, var(--roxo));
+            font-size: 27px;
+            font-weight: 900;
+            box-shadow: 0 8px 24px rgba(109, 93, 251, .30);
         }
 
         .login-box h1 {
-
             text-align: center;
-
-            margin-bottom: 10px;
-
+            font-size: 25px;
+            letter-spacing: -.6px;
         }
 
         .login-box p {
-
             text-align: center;
-
-            color: #94a3b8;
-
+            color: var(--texto-secundario);
+            margin-top: 5px;
             margin-bottom: 30px;
-
         }
 
         .campo {
-
-            margin-bottom: 18px;
-
+            margin-bottom: 19px;
         }
 
         .campo label {
-
             display: block;
-
-            margin-bottom: 7px;
-
-            color: #cbd5e1;
-
+            margin-bottom: 8px;
+            color: #d4deed;
+            font-weight: 600;
         }
 
         .campo input {
-
             width: 100%;
-
-            padding: 13px;
-
-            border:
-                1px solid #475569;
-
-            border-radius: 8px;
-
-            background: #0f172a;
-
+            padding: 13px 14px;
             color: white;
-
-            outline: none;
-
+            background: var(--campo);
+            border: 1px solid var(--borda);
+            border-radius: 10px;
+            transition: border-color .2s, box-shadow .2s;
         }
 
-        .campo input:focus {
+        .campo input::placeholder {
+            color: #8090a8;
+        }
 
-            border-color: #38bdf8;
-
+        .campo input:focus,
+        .filtros-solicitacoes input:focus,
+        .filtros-solicitacoes select:focus,
+        .select-status:focus {
+            outline: none;
+            border-color: var(--roxo);
+            box-shadow: 0 0 0 3px rgba(109, 93, 251, .17);
         }
 
         #btnLogin {
-
             width: 100%;
-
-            padding: 13px;
-
+            padding: 14px;
             border: none;
-
-            border-radius: 8px;
-
-            background: #2563eb;
-
+            border-radius: 10px;
+            background: var(--roxo);
             color: white;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
+            font-size: 15px;
+            font-weight: 700;
+            box-shadow: 0 8px 22px rgba(109, 93, 251, .18);
+            transition: background .2s, transform .2s;
         }
 
         #btnLogin:hover {
-
-            background: #1d4ed8;
-
+            background: var(--roxo-hover);
+            transform: translateY(-1px);
         }
 
         #mensagemLogin {
-
             margin-top: 15px;
-
+            color: var(--vermelho);
             text-align: center;
-
-            color: #f87171;
-
         }
 
-        /* =========================
-           PAINEL
-        ========================= */
+        /* ================================
+           PAINEL PRINCIPAL
+        ================================= */
 
         #painelContainer {
-
             display: none;
-
-            padding: 30px;
-
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 34px;
         }
 
         .topo {
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
-            margin-bottom: 30px;
-
-            gap: 20px;
-
+            flex-wrap: wrap;
+            gap: 22px;
+            margin-bottom: 32px;
+            padding: 25px;
+            border: 1px solid var(--borda);
+            border-radius: 20px;
+            background: linear-gradient(
+                125deg,
+                var(--painel),
+                var(--painel-secundario)
+            );
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .12);
         }
 
         .topo h1 {
-
-            font-size: 28px;
-
+            font-size: clamp(23px, 3vw, 30px);
+            font-weight: 800;
+            letter-spacing: -.8px;
         }
 
         .topo p {
-
-            color: #94a3b8;
-
-            margin-top: 5px;
-
+            margin-top: 6px;
+            color: var(--texto-secundario);
         }
 
         .botoes {
-
             display: flex;
-
-            gap: 10px;
-
             flex-wrap: wrap;
-
+            gap: 10px;
         }
 
         .btn {
-
-            border: none;
-
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
             padding: 11px 16px;
-
-            border-radius: 8px;
-
-            cursor: pointer;
-
+            border: 1px solid transparent;
+            border-radius: 10px;
             color: white;
+            font-weight: 700;
+            transition: filter .2s, transform .2s;
+        }
 
-            font-weight: bold;
-
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
         }
 
         .btn-atualizar {
-
-            background: #2563eb;
-
+            background: var(--roxo);
         }
 
         .btn-historico {
-
-            background: #475569;
-
+            background: #263750;
+            border-color: #3a4d69;
         }
 
         .btn-sair {
-
-            background: #dc2626;
-
+            background: rgba(251, 113, 133, .12);
+            border-color: rgba(251, 113, 133, .28);
+            color: #fda4af;
         }
 
-        /* =========================
-           CARDS
-        ========================= */
+        /* ================================
+           CARTÕES DE INDICADORES
+        ================================= */
 
         .cards {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    minmax(0, 1fr)
-                );
-
-            gap: 15px;
-
-            margin-bottom: 30px;
-
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 36px;
         }
 
         .card {
+            position: relative;
+            overflow: hidden;
+            min-height: 145px;
+            padding: 25px;
+            border: 1px solid var(--borda);
+            border-radius: var(--raio);
+            background: linear-gradient(
+                145deg,
+                var(--painel),
+                var(--painel-secundario)
+            );
+            box-shadow: 0 10px 26px rgba(0, 0, 0, .10);
+            transition: transform .2s, border-color .2s;
+        }
 
-            background: #1e293b;
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #53617b;
+        }
 
-            padding: 20px;
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--cor-card);
+        }
 
-            border-radius: 12px;
+        .card::after {
+            content: "";
+            position: absolute;
+            right: -35px;
+            bottom: -55px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: var(--cor-card);
+            opacity: .055;
+            pointer-events: none;
+        }
 
+        .card-pendente {
+            --cor-card: var(--amarelo);
+        }
+
+        .card-andamento {
+            --cor-card: var(--azul);
+        }
+
+        .card-concluido {
+            --cor-card: var(--verde);
         }
 
         .card h3 {
-
-            color: #94a3b8;
-
+            margin-bottom: 14px;
+            color: var(--texto-secundario);
             font-size: 14px;
-
-            margin-bottom: 10px;
-
+            font-weight: 600;
         }
 
         .card strong {
-
-            font-size: 30px;
-
+            display: block;
+            font-size: 38px;
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -1px;
         }
 
         .card-pendente strong {
-
-            color: #facc15;
-
+            color: var(--amarelo);
         }
 
         .card-andamento strong {
-
-            color: #38bdf8;
-
+            color: var(--azul);
         }
 
         .card-concluido strong {
-
-            color: #4ade80;
-
+            color: var(--verde);
         }
 
-        /* =========================
-           SEÇÃO
-        ========================= */
+        /* ================================
+           SEÇÕES
+        ================================= */
 
         .secao {
-
-            margin-bottom: 30px;
-
+            margin-bottom: 32px;
+            min-width: 0;
         }
 
         .secao-titulo {
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
-            margin-bottom: 15px;
-
+            gap: 12px;
+            margin-bottom: 17px;
         }
 
         .secao-titulo h2 {
-
             font-size: 21px;
-
+            font-weight: 750;
+            letter-spacing: -.4px;
         }
 
-        /* =========================
-           TABELA
-        ========================= */
+        /* ================================
+           PESQUISA E FILTROS
+        ================================= */
+
+        .filtros-solicitacoes {
+            display: grid;
+            grid-template-columns: minmax(200px, 2fr) minmax(190px, 1fr) auto;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 17px;
+            padding: 17px;
+            border: 1px solid var(--borda);
+            border-radius: var(--raio);
+            background: var(--painel);
+        }
+
+        .filtros-solicitacoes input,
+        .filtros-solicitacoes select {
+            width: 100%;
+            min-width: 0;
+            min-height: 44px;
+            padding: 11px 13px;
+            border: 1px solid var(--borda);
+            border-radius: 10px;
+            background: var(--campo);
+            color: var(--texto);
+        }
+
+        .filtros-solicitacoes input::placeholder {
+            color: #8090a8;
+        }
+
+        .filtros-solicitacoes select {
+            cursor: pointer;
+        }
+
+        #contadorResultados {
+            margin-bottom: 7px;
+            color: var(--texto-secundario);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .btn-limpar {
+            min-height: 39px;
+            padding: 9px 13px;
+            border: 1px solid var(--borda);
+            border-radius: 9px;
+            background: #263750;
+            color: #dbeafe;
+            font-weight: 600;
+            transition: background .2s, border-color .2s;
+        }
+
+        .btn-limpar:hover {
+            border-color: var(--roxo);
+            background: #30405c;
+        }
+
+        /* ================================
+           TABELAS
+        ================================= */
 
         .tabela-container {
-
+            width: 100%;
             overflow-x: auto;
-
-            background: #1e293b;
-
-            border-radius: 12px;
-
+            border: 1px solid var(--borda);
+            border-radius: var(--raio);
+            background: var(--painel);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .10);
+            scrollbar-color: #475775 #172338;
         }
 
         table {
-
             width: 100%;
-
-            border-collapse: collapse;
-
             min-width: 1200px;
-
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         th,
         td {
-
-            padding: 14px;
-
-            border-bottom:
-                1px solid #334155;
-
+            padding: 16px;
+            border-bottom: 1px solid rgba(71, 85, 105, .45);
             text-align: left;
-
             vertical-align: middle;
-
+            overflow-wrap: anywhere;
         }
 
         th {
-
-            background: #172033;
-
-            color: #38bdf8;
-
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #19253a;
+            color: #c4b5fd;
+            font-size: 12px;
+            font-weight: 750;
+            letter-spacing: .35px;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
 
         td {
-
-            color: #e2e8f0;
-
+            color: #dbe4f1;
+            font-size: 13px;
         }
 
-        /* =========================
-           PROTOCOLO
-        ========================= */
+        tbody tr {
+            transition: background .15s;
+        }
+
+        tbody tr:hover {
+            background: rgba(109, 93, 251, .07);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
 
         .protocolo {
-
-            font-weight: bold;
-
-            color: #38bdf8;
-
+            color: #a99eff;
+            font-weight: 800;
             white-space: nowrap;
-
         }
 
-        /* =========================
+        /* ================================
            STATUS
-        ========================= */
+        ================================= */
 
         .status {
-
-            display: inline-block;
-
-            padding: 6px 10px;
-
-            border-radius: 20px;
-
-            font-size: 12px;
-
-            font-weight: bold;
-
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 11px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
             white-space: nowrap;
-
         }
 
         .status-pendente {
-
-            background: #854d0e;
-
-            color: #fef08a;
-
+            border-color: rgba(251, 191, 36, .20);
+            background: rgba(251, 191, 36, .12);
+            color: #fcd34d;
         }
 
         .status-andamento {
-
-            background: #075985;
-
-            color: #bae6fd;
-
+            border-color: rgba(96, 165, 250, .22);
+            background: rgba(96, 165, 250, .13);
+            color: #93c5fd;
         }
 
         .status-concluido {
-
-            background: #166534;
-
-            color: #bbf7d0;
-
+            border-color: rgba(52, 211, 153, .22);
+            background: rgba(52, 211, 153, .12);
+            color: #6ee7b7;
         }
 
-        /* =========================
-           SELECT STATUS
-        ========================= */
-
         .select-status {
-
-            padding: 8px;
-
-            border:
-                1px solid #475569;
-
-            border-radius: 7px;
-
-            background: #0f172a;
-
-            color: white;
-
+            max-width: 180px;
+            min-width: 145px;
+            padding: 9px 10px;
+            border: 1px solid var(--borda);
+            border-radius: 9px;
+            background: var(--campo);
+            color: var(--texto);
             cursor: pointer;
-
         }
 
         .select-status:focus {
-
             outline: none;
-
-            border-color: #38bdf8;
-
+            border-color: var(--roxo);
+            box-shadow: 0 0 0 3px rgba(109, 93, 251, .17);
         }
 
-        /* =========================
-           MENSAGENS
-        ========================= */
+        .select-status option {
+            background: var(--campo);
+            color: white;
+        }
 
-        .sem-solicitacoes {
-
+        .sem-solicitacoes,
+        .carregando {
+            padding: 42px 20px;
+            color: var(--texto-secundario);
             text-align: center;
-
-            padding: 40px;
-
-            color: #94a3b8;
-
         }
 
         .carregando {
-
-            text-align: center;
-
-            padding: 40px;
-
-            color: #38bdf8;
-
+            color: #a99eff;
         }
 
-        /* =========================
-           RESPONSIVO
-        ========================= */
+        .mensagem-erro {
+            color: #fda4af;
+        }
 
-        @media (max-width: 800px) {
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #475775 #101827;
+        }
 
+        /* ================================
+           RESPONSIVIDADE
+        ================================= */
+
+        @media (max-width: 1100px) {
             #painelContainer {
+                padding: 22px;
+            }
 
-                padding: 15px;
+            .filtros-solicitacoes {
+                grid-template-columns: 1fr 1fr;
+            }
 
+            .filtros-solicitacoes > div {
+                grid-column: 1 / -1;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+            }
+
+            #contadorResultados {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 760px) {
+            #painelContainer {
+                padding: 14px;
             }
 
             .topo {
+                padding: 20px;
+            }
 
-                flex-direction: column;
-
-                align-items: flex-start;
-
+            .topo h1 {
+                font-size: 23px;
             }
 
             .cards {
-
                 grid-template-columns: 1fr;
-
+                gap: 13px;
             }
 
+            .card {
+                min-height: 120px;
+                padding: 21px;
+            }
+
+            .card strong {
+                font-size: 33px;
+            }
+
+            .filtros-solicitacoes {
+                grid-template-columns: 1fr;
+                padding: 13px;
+            }
+
+            .filtros-solicitacoes > div {
+                grid-column: auto;
+            }
+
+            .secao-titulo h2 {
+                font-size: 19px;
+            }
+
+            th,
+            td {
+                padding: 13px;
+            }
         }
 
-    </style>
+        @media (max-width: 480px) {
+            #painelContainer {
+                padding: 10px;
+            }
 
+            .topo {
+                padding: 17px;
+                border-radius: 14px;
+            }
+
+            .topo h1 {
+                font-size: 21px;
+            }
+
+            .botoes {
+                width: 100%;
+            }
+
+            .botoes .btn {
+                flex: 1 1 100%;
+            }
+
+            .login-box {
+                padding: 27px 21px;
+            }
+
+            .login-box h1 {
+                font-size: 24px;
+            }
+
+            .filtros-solicitacoes > div {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            #contadorResultados {
+                white-space: normal;
+            }
+
+            .btn-limpar {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
+    <!-- LOGIN -->
 
-<!-- ==========================================
-     LOGIN
-========================================== -->
+    <div id="loginContainer">
+        <div class="login-box">
 
-<div id="loginContainer">
+            <div class="marca">
+                <div class="marca-icone" aria-hidden="true">A</div>
+            </div>
 
-    <div class="login-box">
+            <h1>Administração</h1>
+            <p>Abreuzin Services</p>
 
-        <h1>
-            🔐 Administração
-        </h1>
+            <form id="formLogin">
+                <div class="campo">
+                    <label for="usuario">Usuário</label>
+                    <input
+                        type="text"
+                        id="usuario"
+                        placeholder="Digite o usuário"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
 
-        <p>
-            Abreuzin Services
-        </p>
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input
+                        type="password"
+                        id="senha"
+                        placeholder="Digite a senha"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
 
-        <form id="formLogin">
+                <button type="submit" id="btnLogin">
+                    Entrar no painel
+                </button>
 
-            <div class="campo">
+                <div
+                    id="mensagemLogin"
+                    role="status"
+                    aria-live="polite"
+                ></div>
+            </form>
+        </div>
+    </div>
 
-                <label for="usuario">
-                    Usuário
-                </label>
+    <!-- PAINEL ADMINISTRATIVO -->
+
+    <main id="painelContainer">
+
+        <header class="topo">
+            <div>
+                <h1>ABREUZIN</h1>
+                <p>Painel administrativo · Gerenciamento de solicitações</p>
+            </div>
+
+            <div class="botoes">
+                <button
+                    class="btn btn-atualizar"
+                    id="btnAtualizar"
+                    type="button"
+                    onclick="carregarSolicitacoes()"
+                >
+                    ↻ Atualizar
+                </button>
+
+                <button
+                    class="btn btn-historico"
+                    type="button"
+                    onclick="carregarHistorico()"
+                >
+                    ▤ Histórico
+                </button>
+
+                <button
+                    class="btn btn-sair"
+                    type="button"
+                    onclick="sair()"
+                >
+                    ↪ Sair
+                </button>
+            </div>
+        </header>
+
+        <!-- INDICADORES -->
+
+        <section class="cards" aria-label="Resumo das solicitações">
+
+            <article class="card card-pendente">
+                <h3>🟡 Pendentes</h3>
+                <strong id="contadorPendente">0</strong>
+            </article>
+
+            <article class="card card-andamento">
+                <h3>🔵 Em andamento</h3>
+                <strong id="contadorAndamento">0</strong>
+            </article>
+
+            <article class="card card-concluido">
+                <h3>🟢 Concluídos</h3>
+                <strong id="contadorConcluido">0</strong>
+            </article>
+
+        </section>
+
+        <!-- SOLICITAÇÕES -->
+
+        <section class="secao">
+
+            <div class="secao-titulo">
+                <h2>Solicitações</h2>
+            </div>
+
+            <!-- PESQUISA E FILTROS -->
+
+            <div class="filtros-solicitacoes">
 
                 <input
-                    type="text"
-                    id="usuario"
-                    placeholder="Digite o usuário"
-                    required
+                    type="search"
+                    id="pesquisaSolicitacoes"
+                    placeholder="Buscar por nome, protocolo, e-mail ou serviço..."
+                    aria-label="Buscar solicitações"
                 >
+
+                <select id="filtroStatus" aria-label="Filtrar por status">
+                    <option value="todos">Todos os pedidos ativos</option>
+                    <option value="pendente">Pendentes</option>
+                    <option value="em_andamento">Em andamento</option>
+                </select>
+
+                <div>
+                    <div id="contadorResultados" aria-live="polite">
+                        0 solicitações
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-limpar"
+                        id="limparFiltros"
+                    >
+                        Limpar filtros
+                    </button>
+                </div>
 
             </div>
 
+            <!-- TABELA DE SOLICITAÇÕES -->
 
-            <div class="campo">
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Protocolo</th>
+                            <th>Nome</th>
+                            <th>WhatsApp</th>
+                            <th>E-mail</th>
+                            <th>Serviço</th>
+                            <th>Descrição</th>
+                            <th>Orçamento</th>
+                            <th>Prazo</th>
+                            <th>Status</th>
+                            <th>Alterar</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
 
-                <label for="senha">
-                    Senha
-                </label>
-
-                <input
-                    type="password"
-                    id="senha"
-                    placeholder="Digite a senha"
-                    required
-                >
-
+                    <tbody id="listaSolicitacoes">
+                        <tr>
+                            <td colspan="11" class="carregando">
+                                Entre no painel para carregar as solicitações.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-
-            <button
-                type="submit"
-                id="btnLogin"
-            >
-                Entrar
-            </button>
-
-
-            <div
-                id="mensagemLogin"
-            ></div>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- ==========================================
-     PAINEL
-========================================== -->
-
-<div id="painelContainer">
-
-
-    <!-- TOPO -->
-
-    <div class="topo">
-
-        <div>
-
-            <h1>
-                📋 Painel Administrativo
-            </h1>
-
-            <p>
-                Abreuzin Services
-            </p>
-
-        </div>
-
-
-        <div class="botoes">
-
-            <button
-                class="btn btn-atualizar"
-                onclick="carregarSolicitacoes()"
-            >
-                🔄 Atualizar
-            </button>
-
-            <button
-                class="btn btn-historico"
-                onclick="carregarHistorico()"
-            >
-                📚 Histórico
-            </button>
-
-            <button
-                class="btn btn-sair"
-                onclick="sair()"
-            >
-                🚪 Sair
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- CARDS -->
-
-    <div class="cards">
-
-        <div class="card card-pendente">
-
-            <h3>
-                🟡 Pendentes
-            </h3>
-
-            <strong
-                id="contadorPendente"
-            >
-                0
-            </strong>
-
-        </div>
-
-
-        <div class="card card-andamento">
-
-            <h3>
-                🔵 Em andamento
-            </h3>
-
-            <strong
-                id="contadorAndamento"
-            >
-                0
-            </strong>
-
-        </div>
-
-
-        <div class="card card-concluido">
-
-            <h3>
-                🟢 Concluídos
-            </h3>
-
-            <strong
-                id="contadorConcluido"
-            >
-                0
-            </strong>
-
-        </div>
-
-    </div>
-
-
-    <!-- SOLICITAÇÕES -->
-
-    <div class="secao">
-
-        <div class="secao-titulo">
-
-            <h2>
-                📋 Solicitações
-            </h2>
-
-        </div>
-
-
-        <div class="tabela-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Protocolo
-                        </th>
-
-                        <th>
-                            Nome
-                        </th>
-
-                        <th>
-                            WhatsApp
-                        </th>
-
-                        <th>
-                            Email
-                        </th>
-
-                        <th>
-                            Serviço
-                        </th>
-
-                        <th>
-                            Descrição
-                        </th>
-
-                        <th>
-                            Orçamento
-                        </th>
-
-                        <th>
-                            Prazo
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Alterar
-                        </th>
-
-                        <th>
-                            Data
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody
-                    id="listaSolicitacoes"
-                >
-
-                    <tr>
-
-                        <td
-                            colspan="11"
-                            class="carregando"
-                        >
-                            Carregando...
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-    <!-- HISTÓRICO -->
-
-    <div
-        class="secao"
-        id="secaoHistorico"
-        style="display:none;"
-    >
-
-        <div class="secao-titulo">
-
-            <h2>
-                📚 Histórico de concluídos
-            </h2>
-
-        </div>
-
-
-        <div class="tabela-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Protocolo
-                        </th>
-
-                        <th>
-                            Nome
-                        </th>
-
-                        <th>
-                            Serviço
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Criado em
-                        </th>
-
-                        <th>
-                            Atualizado em
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody
-                    id="listaHistorico"
-                >
-
-                    <tr>
-
-                        <td
-                            colspan="6"
-                            class="sem-solicitacoes"
-                        >
-                            Nenhum histórico carregado.
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-
-
-// ==========================================
-// API
-// ==========================================
-
-const API =
-    "https://abreuzin-services.onrender.com";
-
-
-// ==========================================
-// ELEMENTOS
-// ==========================================
-
-const loginContainer =
-    document.getElementById(
-        "loginContainer"
-    );
-
-const painelContainer =
-    document.getElementById(
-        "painelContainer"
-    );
-
-const formLogin =
-    document.getElementById(
-        "formLogin"
-    );
-
-const mensagemLogin =
-    document.getElementById(
-        "mensagemLogin"
-    );
-
-const listaSolicitacoes =
-    document.getElementById(
-        "listaSolicitacoes"
-    );
-
-const listaHistorico =
-    document.getElementById(
-        "listaHistorico"
-    );
-
-const secaoHistorico =
-    document.getElementById(
-        "secaoHistorico"
-    );
-
-
-// ==========================================
-// LOGIN SALVO
-// ==========================================
-
-const tokenSalvo =
-    localStorage.getItem(
-        "adminToken"
-    );
-
-if (tokenSalvo) {
-
-    mostrarPainel();
-
-}
-
-
-// ==========================================
-// LOGIN
-// ==========================================
-
-formLogin.addEventListener(
-    "submit",
-    async function(event) {
-
-        event.preventDefault();
-
-
-        const usuario =
-            document.getElementById(
-                "usuario"
-            ).value;
-
-        const senha =
-            document.getElementById(
-                "senha"
-            ).value;
-
-
-        mensagemLogin.textContent =
-            "Entrando...";
-
-
-        try {
-
-            const resposta =
-                await fetch(
-                    `${API}/api/admin/login`,
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                usuario,
-                                senha
-
-                            })
-
-                    }
-                );
-
-
-            const dados =
-                await resposta.json();
-
-
-            if (!resposta.ok) {
+        </section>
+
+        <!-- HISTÓRICO DE CONCLUÍDOS -->
+
+        <section
+            class="secao"
+            id="secaoHistorico"
+            style="display: none;"
+        >
+
+            <div class="secao-titulo">
+                <h2>Histórico de concluídos</h2>
+            </div>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Protocolo</th>
+                            <th>Nome</th>
+                            <th>Serviço</th>
+                            <th>Status</th>
+                            <th>Criado em</th>
+                            <th>Atualizado em</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="listaHistorico">
+                        <tr>
+                            <td colspan="6" class="sem-solicitacoes">
+                                Nenhum histórico carregado.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // CONFIGURAÇÃO DA API
+        // ==========================================
+
+        const API = "https://abreuzin-services.onrender.com";
+
+        const loginContainer = document.getElementById("loginContainer");
+        const painelContainer = document.getElementById("painelContainer");
+        const formLogin = document.getElementById("formLogin");
+        const mensagemLogin = document.getElementById("mensagemLogin");
+        const btnLogin = document.getElementById("btnLogin");
+        const btnAtualizar = document.getElementById("btnAtualizar");
+
+        const listaSolicitacoes = document.getElementById("listaSolicitacoes");
+        const listaHistorico = document.getElementById("listaHistorico");
+        const secaoHistorico = document.getElementById("secaoHistorico");
+
+        const pesquisaSolicitacoes = document.getElementById("pesquisaSolicitacoes");
+        const filtroStatus = document.getElementById("filtroStatus");
+        const contadorResultados = document.getElementById("contadorResultados");
+        const limparFiltros = document.getElementById("limparFiltros");
+
+        let solicitacoesAtuais = [];
+        let carregandoSolicitacoes = false;
+        let atualizacaoPendente = false;
+
+        // ==========================================
+        // FUNÇÕES AUXILIARES
+        // ==========================================
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[caractere]);
+        }
+
+        function formatarData(valor) {
+            if (!valor) return "-";
+
+            const data = new Date(valor);
+
+            if (Number.isNaN(data.getTime())) {
+                return "-";
+            }
+
+            return data.toLocaleString("pt-BR");
+        }
+
+        function normalizar(valor) {
+            return String(valor ?? "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim();
+        }
+
+        async function lerResposta(resposta) {
+            const texto = await resposta.text();
+
+            try {
+                return texto ? JSON.parse(texto) : {};
+            } catch {
+                return {
+                    mensagem: "O servidor retornou uma resposta inválida."
+                };
+            }
+        }
+
+        function obterToken() {
+            return localStorage.getItem("adminToken");
+        }
+
+        // ==========================================
+        // LOGIN
+        // ==========================================
+
+        formLogin.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const usuario = document.getElementById("usuario").value.trim();
+            const senha = document.getElementById("senha").value;
+
+            btnLogin.disabled = true;
+            btnLogin.textContent = "Entrando...";
+            mensagemLogin.textContent = "";
+
+            try {
+                const resposta = await fetch(`${API}/api/admin/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ usuario, senha })
+                });
+
+                const dados = await lerResposta(resposta);
+
+                if (!resposta.ok || !dados.token) {
+                    mensagemLogin.textContent =
+                        dados.mensagem || "Usuário ou senha inválidos.";
+                    return;
+                }
+
+                localStorage.setItem("adminToken", dados.token);
+                document.getElementById("senha").value = "";
+
+                mostrarPainel();
+
+            } catch (erro) {
+                console.error("Erro no login:", erro);
 
                 mensagemLogin.textContent =
-                    dados.mensagem ||
-                    "Usuário ou senha inválidos.";
+                    "Não foi possível conectar ao servidor.";
 
+            } finally {
+                btnLogin.disabled = false;
+                btnLogin.textContent = "Entrar no painel";
+            }
+        });
+
+        function mostrarPainel() {
+            if (!obterToken()) {
+                sair();
                 return;
-
             }
 
-
-            localStorage.setItem(
-                "adminToken",
-                dados.token
-            );
-
-
-            mensagemLogin.textContent =
-                "";
-
-
-            mostrarPainel();
-
-        }
-
-        catch (erro) {
-
-            console.error(
-                erro
-            );
-
-            mensagemLogin.textContent =
-                "Não foi possível conectar ao servidor.";
-
-        }
-
-    }
-);
-
-
-// ==========================================
-// MOSTRAR PAINEL
-// ==========================================
-
-function mostrarPainel() {
-
-    loginContainer.style.display =
-        "none";
-
-    painelContainer.style.display =
-        "block";
-
-    carregarSolicitacoes();
-
-}
-
-
-// ==========================================
-// CARREGAR SOLICITAÇÕES
-// ==========================================
-
-async function carregarSolicitacoes() {
-
-    listaSolicitacoes.innerHTML = `
-
-        <tr>
-
-            <td
-                colspan="11"
-                class="carregando"
-            >
-                🔄 Carregando solicitações...
-            </td>
-
-        </tr>
-
-    `;
-
-
-    const token =
-        localStorage.getItem(
-            "adminToken"
-        );
-
-
-    if (!token) {
-
-        sair();
-
-        return;
-
-    }
-
-
-    try {
-
-        const resposta =
-            await fetch(
-                `${API}/api/solicitacoes`,
-                {
-
-                    headers: {
-
-                        "Authorization":
-                            `Bearer ${token}`
-
-                    }
-
-                }
-            );
-
-
-        if (
-            resposta.status === 401 ||
-            resposta.status === 403
-        ) {
-
-            sair();
-
-            return;
-
-        }
-
-
-        const dados =
-            await resposta.json();
-
-
-        if (
-            !dados.solicitacoes
-        ) {
-
-            throw new Error(
-                "Resposta inválida da API."
-            );
-
-        }
-
-
-        listaSolicitacoes.innerHTML =
-            "";
-
-
-        let pendentes = 0;
-
-        let andamento = 0;
-
-        let concluidos = 0;
-
-
-        dados.solicitacoes.forEach(
-            function(solicitacao) {
-
-
-                if (
-                    solicitacao.status ===
-                    "pendente"
-                ) {
-
-                    pendentes++;
-
-                }
-
-
-                if (
-                    solicitacao.status ===
-                    "em_andamento"
-                ) {
-
-                    andamento++;
-
-                }
-
-
-                if (
-                    solicitacao.status ===
-                    "concluido"
-                ) {
-
-                    concluidos++;
-
-                }
-
-
-                // Solicitações concluídas
-                // não aparecem na lista principal
-
-                if (
-                    solicitacao.status ===
-                    "concluido"
-                ) {
-
-                    return;
-
-                }
-
-
-                const linha =
-                    document.createElement(
-                        "tr"
-                    );
-
-
-                linha.innerHTML = `
-
-                    <td class="protocolo">
-
-                        ${solicitacao.protocolo ?? "-"}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.nome ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.whatsapp ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.email ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.servico ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.descricao ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.orcamento ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.prazo ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${criarStatus(
-                            solicitacao.status
-                        )}
-
-                    </td>
-
-
-                    <td>
-
-                        <select
-                            class="select-status"
-                            onchange="alterarStatus(
-                                ${solicitacao.id},
-                                this.value
-                            )"
-                        >
-
-                            <option
-                                value="pendente"
-                                ${
-                                    solicitacao.status ===
-                                    "pendente"
-                                    ? "selected"
-                                    : ""
-                                }
-                            >
-                                🟡 Pendente
-                            </option>
-
-
-                            <option
-                                value="em_andamento"
-                                ${
-                                    solicitacao.status ===
-                                    "em_andamento"
-                                    ? "selected"
-                                    : ""
-                                }
-                            >
-                                🔵 Em andamento
-                            </option>
-
-
-                            <option
-                                value="concluido"
-                            >
-                                🟢 Concluído
-                            </option>
-
-                        </select>
-
-                    </td>
-
-
-                    <td>
-
-                        ${
-                            solicitacao.criado_em
-                            ? new Date(
-                                solicitacao.criado_em
-                              ).toLocaleString(
-                                "pt-BR"
-                              )
-                            : "-"
-                        }
-
-                    </td>
-
-                `;
-
-
-                listaSolicitacoes.appendChild(
-                    linha
-                );
-
-            }
-        );
-
-
-        if (
-            listaSolicitacoes.children.length ===
-            0
-        ) {
-
-            listaSolicitacoes.innerHTML = `
-
-                <tr>
-
-                    <td
-                        colspan="11"
-                        class="sem-solicitacoes"
-                    >
-                        📭 Nenhuma solicitação pendente.
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-
-
-        document.getElementById(
-            "contadorPendente"
-        ).textContent =
-            pendentes;
-
-
-        document.getElementById(
-            "contadorAndamento"
-        ).textContent =
-            andamento;
-
-
-        document.getElementById(
-            "contadorConcluido"
-        ).textContent =
-            concluidos;
-
-    }
-
-    catch (erro) {
-
-        console.error(
-            erro
-        );
-
-
-        listaSolicitacoes.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="11"
-                    class="sem-solicitacoes"
-                >
-                    ❌ Erro ao carregar solicitações.
-                </td>
-
-            </tr>
-
-        `;
-
-    }
-
-}
-
-
-// ==========================================
-// CRIAR STATUS VISUAL
-// ==========================================
-
-function criarStatus(
-    status
-) {
-
-
-    if (
-        status ===
-        "em_andamento"
-    ) {
-
-        return `
-
-            <span
-                class="status status-andamento"
-            >
-                🔵 Em andamento
-            </span>
-
-        `;
-
-    }
-
-
-    if (
-        status ===
-        "concluido"
-    ) {
-
-        return `
-
-            <span
-                class="status status-concluido"
-            >
-                🟢 Concluído
-            </span>
-
-        `;
-
-    }
-
-
-    return `
-
-        <span
-            class="status status-pendente"
-        >
-            🟡 Pendente
-        </span>
-
-    `;
-
-}
-
-
-// ==========================================
-// ALTERAR STATUS
-// ==========================================
-
-async function alterarStatus(
-    id,
-    novoStatus
-) {
-
-
-    const token =
-        localStorage.getItem(
-            "adminToken"
-        );
-
-
-    if (!token) {
-
-        sair();
-
-        return;
-
-    }
-
-
-    try {
-
-        const resposta =
-            await fetch(
-                `${API}/api/solicitacoes/${id}/status`,
-                {
-
-                    method: "PATCH",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json",
-
-                        "Authorization":
-                            `Bearer ${token}`
-
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            status:
-                                novoStatus
-
-                        })
-
-                }
-            );
-
-
-        const dados =
-            await resposta.json();
-
-
-        if (
-            !resposta.ok
-        ) {
-
-            alert(
-                dados.mensagem ||
-                "Erro ao alterar status."
-            );
-
-            return;
-
-        }   
-
-
-        await carregarSolicitacoes();
-
-
-        if (
-            novoStatus ===
-            "concluido"
-        ) {
-
-            await carregarHistorico();
-
-        }
-
-    }
-
-    catch (erro) {
-
-        console.error(
-            erro
-        );
-
-        alert(
-            "Erro ao alterar status."
-        );
-
-    }
-
-}
-
-
-// ==========================================
-// HISTÓRICO
-// ==========================================
-
-async function carregarHistorico() {
-
-    const token =
-        localStorage.getItem(
-            "adminToken"
-        );
-
-
-    if (!token) {
-
-        sair();
-
-        return;
-
-    }
-
-
-    secaoHistorico.style.display =
-        "block";
-
-
-    listaHistorico.innerHTML = `
-
-        <tr>
-
-            <td
-                colspan="6"
-                class="carregando"
-            >
-                🔄 Carregando histórico...
-            </td>
-
-        </tr>
-
-    `;
-
-
-    try {
-
-        const resposta =
-            await fetch(
-                `${API}/api/solicitacoes/concluidas`,
-                {
-
-                    headers: {
-
-                        "Authorization":
-                            `Bearer ${token}`
-
-                    }
-
-                }
-            );
-
-
-        if (
-            resposta.status === 401 ||
-            resposta.status === 403
-        ) {
-
-            sair();
-
-            return;
-
-        }
-
-
-        const dados =
-            await resposta.json();
-
-
-        listaHistorico.innerHTML =
-            "";
-
-
-        if (
-            !dados.solicitacoes ||
-            dados.solicitacoes.length === 0
-        ) {
-
-            listaHistorico.innerHTML = `
-
-                <tr>
-
-                    <td
-                        colspan="6"
-                        class="sem-solicitacoes"
-                    >
-                        📭 Nenhuma solicitação concluída.
-                    </td>
-
-                </tr>
-
-            `;
-
-            return;
-
-        }
-
-
-        dados.solicitacoes.forEach(
-            function(solicitacao) {
-
-                const linha =
-                    document.createElement(
-                        "tr"
-                    );
-
-
-                linha.innerHTML = `
-
-                    <td class="protocolo">
-
-                        ${solicitacao.protocolo ?? "-"}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.nome ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${solicitacao.servico ?? ""}
-
-                    </td>
-
-
-                    <td>
-
-                        ${criarStatus(
-                            "concluido"
-                        )}
-
-                    </td>
-
-
-                    <td>
-
-                        ${
-                            solicitacao.criado_em
-                            ? new Date(
-                                solicitacao.criado_em
-                              ).toLocaleString(
-                                "pt-BR"
-                              )
-                            : "-"
-                        }
-
-                    </td>
-
-
-                    <td>
-
-                        ${
-                            solicitacao.atualizado_em
-                            ? new Date(
-                                solicitacao.atualizado_em
-                              ).toLocaleString(
-                                "pt-BR"
-                              )
-                            : "-"
-                        }
-
-                    </td>
-
-                `;
-
-
-                listaHistorico.appendChild(
-                    linha
-                );
-
-            }
-        );
-
-    }
-
-    catch (erro) {
-
-        console.error(
-            erro
-        );
-
-
-        listaHistorico.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="6"
-                    class="sem-solicitacoes"
-                >
-                    ❌ Erro ao carregar histórico.
-                </td>
-
-            </tr>
-
-        `;
-
-    }
-
-}
-
-
-// ==========================================
-// SAIR
-// ==========================================
-
-function sair() {
-
-    localStorage.removeItem(
-        "adminToken"
-    );
-
-
-    painelContainer.style.display =
-        "none";
-
-
-    loginContainer.style.display =
-        "flex";
-
-
-    document.getElementById(
-        "usuario"
-    ).value = "";
-
-
-    document.getElementById(
-        "senha"
-    ).value = "";
-
-}
-
-
-// ==========================================
-// ATUALIZAÇÃO AUTOMÁTICA
-// ==========================================
-
-setInterval(
-    function() {
-
-        const token =
-            localStorage.getItem(
-                "adminToken"
-            );
-
-
-        if (token) {
+            loginContainer.style.display = "none";
+            painelContainer.style.display = "block";
 
             carregarSolicitacoes();
-
         }
 
-    },
-    10000
-);
+        // ==========================================
+        // CARREGAR SOLICITAÇÕES
+        // ==========================================
 
+        async function carregarSolicitacoes() {
+            if (carregandoSolicitacoes) {
+                atualizacaoPendente = true;
+                return;
+            }
 
-</script>
+            const token = obterToken();
+
+            if (!token) {
+                sair();
+                return;
+            }
+
+            carregandoSolicitacoes = true;
+            atualizacaoPendente = false;
+
+            if (btnAtualizar) {
+                btnAtualizar.disabled = true;
+            }
+
+            if (solicitacoesAtuais.length === 0) {
+                listaSolicitacoes.innerHTML = `
+                    <tr>
+                        <td colspan="11" class="carregando">
+                            ↻ Carregando solicitações...
+                        </td>
+                    </tr>
+                `;
+            }
+
+            try {
+                const resposta = await fetch(`${API}/api/solicitacoes`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (resposta.status === 401 || resposta.status === 403) {
+                    sair();
+                    return;
+                }
+
+                const dados = await lerResposta(resposta);
+
+                if (!resposta.ok) {
+                    throw new Error(
+                        dados.mensagem || "Falha ao carregar solicitações."
+                    );
+                }
+
+                if (!Array.isArray(dados.solicitacoes)) {
+                    throw new Error(
+                        "A API não retornou uma lista de solicitações."
+                    );
+                }
+
+                solicitacoesAtuais = dados.solicitacoes;
+
+                atualizarIndicadores();
+                renderizarSolicitacoes();
+
+            } catch (erro) {
+                console.error("Erro ao carregar solicitações:", erro);
+
+                listaSolicitacoes.innerHTML = `
+                    <tr>
+                        <td colspan="11" class="sem-solicitacoes mensagem-erro">
+                            Erro ao carregar solicitações. Clique em Atualizar para tentar novamente.
+                        </td>
+                    </tr>
+                `;
+
+            } finally {
+                carregandoSolicitacoes = false;
+
+                if (btnAtualizar) {
+                    btnAtualizar.disabled = false;
+                }
+
+                if (atualizacaoPendente && obterToken()) {
+                    atualizacaoPendente = false;
+                    carregarSolicitacoes();
+                }
+            }
+        }
+
+        // ==========================================
+        // INDICADORES
+        // ==========================================
+
+        function atualizarIndicadores() {
+            const pendentes = solicitacoesAtuais.filter(
+                item => item.status === "pendente"
+            ).length;
+
+            const andamento = solicitacoesAtuais.filter(
+                item => item.status === "em_andamento"
+            ).length;
+
+            const concluidos = solicitacoesAtuais.filter(
+                item => item.status === "concluido"
+            ).length;
+
+            document.getElementById("contadorPendente").textContent = pendentes;
+            document.getElementById("contadorAndamento").textContent = andamento;
+            document.getElementById("contadorConcluido").textContent = concluidos;
+        }
+
+        // ==========================================
+        // PESQUISA E FILTROS
+        // ==========================================
+
+        function renderizarSolicitacoes() {
+            const termo = normalizar(pesquisaSolicitacoes.value);
+            const statusEscolhido = filtroStatus.value;
+
+            // Os concluídos saem da lista principal, mas continuam no banco.
+            const ativas = solicitacoesAtuais.filter(
+                item => item.status !== "concluido"
+            );
+
+            const filtradas = ativas.filter(item => {
+                const correspondeStatus =
+                    statusEscolhido === "todos" ||
+                    item.status === statusEscolhido;
+
+                const camposPesquisa = [
+                    item.protocolo,
+                    item.nome,
+                    item.email,
+                    item.servico
+                ];
+
+                const correspondePesquisa =
+                    !termo ||
+                    camposPesquisa.some(campo =>
+                        normalizar(campo).includes(termo)
+                    );
+
+                return correspondeStatus && correspondePesquisa;
+            });
+
+            contadorResultados.textContent =
+                `${filtradas.length} ${
+                    filtradas.length === 1
+                        ? "solicitação encontrada"
+                        : "solicitações encontradas"
+                }`;
+
+            listaSolicitacoes.innerHTML = "";
+
+            if (filtradas.length === 0) {
+                listaSolicitacoes.innerHTML = `
+                    <tr>
+                        <td colspan="11" class="sem-solicitacoes">
+                            Nenhuma solicitação corresponde à pesquisa.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtradas.forEach(solicitacao => {
+                const linha = document.createElement("tr");
+
+                const opcoesStatus = [
+                    { valor: "pendente", texto: "🟡 Pendente" },
+                    { valor: "em_andamento", texto: "🔵 Em andamento" },
+                    { valor: "concluido", texto: "🟢 Concluído" }
+                ];
+
+                const opcoesHTML = opcoesStatus.map(opcao => `
+                    <option
+                        value="${opcao.valor}"
+                        ${solicitacao.status === opcao.valor ? "selected" : ""}
+                    >${opcao.texto}</option>
+                `).join("");
+
+                linha.innerHTML = `
+                    <td class="protocolo">
+                        ${escaparHTML(solicitacao.protocolo || "-")}
+                    </td>
+                    <td>${escaparHTML(solicitacao.nome)}</td>
+                    <td>${escaparHTML(solicitacao.whatsapp)}</td>
+                    <td>${escaparHTML(solicitacao.email)}</td>
+                    <td>${escaparHTML(solicitacao.servico)}</td>
+                    <td>${escaparHTML(solicitacao.descricao)}</td>
+                    <td>${escaparHTML(solicitacao.orcamento)}</td>
+                    <td>${escaparHTML(solicitacao.prazo)}</td>
+                    <td>${criarStatus(solicitacao.status)}</td>
+                    <td>
+                        <select
+                            class="select-status"
+                            aria-label="Alterar status da solicitação"
+                            data-id="${escaparHTML(solicitacao.id)}"
+                        >
+                            ${opcoesHTML}
+                        </select>
+                    </td>
+                    <td>${escaparHTML(formatarData(solicitacao.criado_em))}</td>
+                `;
+
+                const seletor = linha.querySelector(".select-status");
+
+                seletor.addEventListener("change", async function() {
+                    const id = this.dataset.id;
+                    const novoStatus = this.value;
+
+                    this.disabled = true;
+
+                    try {
+                        await alterarStatus(id, novoStatus);
+                    } finally {
+                        this.disabled = false;
+                    }
+                });
+
+                listaSolicitacoes.appendChild(linha);
+            });
+        }
+
+        pesquisaSolicitacoes.addEventListener(
+            "input",
+            renderizarSolicitacoes
+        );
+
+        filtroStatus.addEventListener(
+            "change",
+            renderizarSolicitacoes
+        );
+
+        limparFiltros.addEventListener("click", function() {
+            pesquisaSolicitacoes.value = "";
+            filtroStatus.value = "todos";
+
+            renderizarSolicitacoes();
+            pesquisaSolicitacoes.focus();
+        });
+
+        // ==========================================
+        // STATUS VISUAL
+        // ==========================================
+
+        function criarStatus(status) {
+            if (status === "em_andamento") {
+                return `
+                    <span class="status status-andamento">
+                        🔵 Em andamento
+                    </span>
+                `;
+            }
+
+            if (status === "concluido") {
+                return `
+                    <span class="status status-concluido">
+                        🟢 Concluído
+                    </span>
+                `;
+            }
+
+            return `
+                <span class="status status-pendente">
+                    🟡 Pendente
+                </span>
+            `;
+        }
+
+        // ==========================================
+        // ALTERAR STATUS
+        // ==========================================
+
+        async function alterarStatus(id, novoStatus) {
+            const token = obterToken();
+
+            if (!token) {
+                sair();
+                return;
+            }
+
+            try {
+                const resposta = await fetch(
+                    `${API}/api/solicitacoes/${encodeURIComponent(id)}/status`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ status: novoStatus })
+                    }
+                );
+
+                const dados = await lerResposta(resposta);
+
+                if (resposta.status === 401 || resposta.status === 403) {
+                    sair();
+                    return;
+                }
+
+                if (!resposta.ok) {
+                    alert(dados.mensagem || "Erro ao alterar status.");
+                    await carregarSolicitacoes();
+                    return;
+                }
+
+                // Atualiza a lista depois da confirmação do servidor.
+                await carregarSolicitacoes();
+
+                // Atualiza o histórico quando o pedido for concluído.
+                if (novoStatus === "concluido") {
+                    await carregarHistorico();
+                }
+
+            } catch (erro) {
+                console.error("Erro ao alterar status:", erro);
+
+                alert(
+                    "Não foi possível alterar o status. Confira sua conexão."
+                );
+
+                await carregarSolicitacoes();
+            }
+        }
+
+        // ==========================================
+        // HISTÓRICO DE CONCLUÍDOS
+        // ==========================================
+
+        async function carregarHistorico() {
+            const token = obterToken();
+
+            if (!token) {
+                sair();
+                return;
+            }
+
+            secaoHistorico.style.display = "block";
+
+            listaHistorico.innerHTML = `
+                <tr>
+                    <td colspan="6" class="carregando">
+                        ↻ Carregando histórico...
+                    </td>
+                </tr>
+            `;
+
+            try {
+                const resposta = await fetch(
+                    `${API}/api/solicitacoes/concluidas`,
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (resposta.status === 401 || resposta.status === 403) {
+                    sair();
+                    return;
+                }
+
+                const dados = await lerResposta(resposta);
+
+                if (!resposta.ok) {
+                    throw new Error(
+                        dados.mensagem || "Erro ao carregar histórico."
+                    );
+                }
+
+                if (!Array.isArray(dados.solicitacoes)) {
+                    throw new Error("Resposta inválida do histórico.");
+                }
+
+                listaHistorico.innerHTML = "";
+
+                if (dados.solicitacoes.length === 0) {
+                    listaHistorico.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="sem-solicitacoes">
+                                Nenhuma solicitação concluída.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                dados.solicitacoes.forEach(solicitacao => {
+                    const linha = document.createElement("tr");
+
+                    linha.innerHTML = `
+                        <td class="protocolo">
+                            ${escaparHTML(solicitacao.protocolo || "-")}
+                        </td>
+                        <td>${escaparHTML(solicitacao.nome)}</td>
+                        <td>${escaparHTML(solicitacao.servico)}</td>
+                        <td>${criarStatus("concluido")}</td>
+                        <td>${escaparHTML(formatarData(solicitacao.criado_em))}</td>
+                        <td>${escaparHTML(formatarData(solicitacao.atualizado_em))}</td>
+                    `;
+
+                    listaHistorico.appendChild(linha);
+                });
+
+            } catch (erro) {
+                console.error("Erro ao carregar histórico:", erro);
+
+                listaHistorico.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="sem-solicitacoes mensagem-erro">
+                            Erro ao carregar histórico.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // ==========================================
+        // SAIR DO PAINEL
+        // ==========================================
+
+        function sair() {
+            localStorage.removeItem("adminToken");
+
+            painelContainer.style.display = "none";
+            loginContainer.style.display = "flex";
+
+            document.getElementById("usuario").value = "";
+            document.getElementById("senha").value = "";
+            mensagemLogin.textContent = "";
+
+            solicitacoesAtuais = [];
+            atualizarIndicadores();
+
+            pesquisaSolicitacoes.value = "";
+            filtroStatus.value = "todos";
+            renderizarSolicitacoes();
+
+            secaoHistorico.style.display = "none";
+
+            listaHistorico.innerHTML = `
+                <tr>
+                    <td colspan="6" class="sem-solicitacoes">
+                        Nenhum histórico carregado.
+                    </td>
+                </tr>
+            `;
+        }
+
+        // ==========================================
+        // ATUALIZAÇÃO AUTOMÁTICA
+        // ==========================================
+
+        setInterval(function() {
+            if (
+                obterToken() &&
+                painelContainer.style.display !== "none"
+            ) {
+                carregarSolicitacoes();
+            }
+        }, 10000);
+
+        // ==========================================
+        // INICIALIZAÇÃO
+        // ==========================================
+
+        if (obterToken()) {
+            mostrarPainel();
+        }
+    </script>
 
 </body>
-
 </html>
