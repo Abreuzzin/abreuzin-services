@@ -1,3 +1,4 @@
+
 /* ==========================================
    ABREUZIN SERVICES
    FORMULÁRIOS, API E ACOMPANHAMENTO
@@ -125,46 +126,66 @@ async function requisitarAPI(caminho, opcoes = {}) {
 }
 
 /* ==========================================
-   NAVEGAÇÃO
-   O index.html JÁ CONTROLA AS ABAS
+   NAVEGAÇÃO E SELEÇÃO DE SERVIÇOS
 ========================================== */
 
 function abrirFormulario(servico) {
-    const selectServico = obterElemento("servico");
+    const secao = obterElemento("formulario");
 
-    if (selectServico && servico) {
-        const opcaoExiste = Array.from(selectServico.options)
-            .some(opcao => opcao.value === servico);
-
-        if (opcaoExiste) {
-            selectServico.value = servico;
-        }
+    if (!secao) {
+        console.error(
+            "Abreuzin Services: seção do formulário não encontrada."
+        );
+        return;
     }
 
     const linkFormulario = document.querySelector(
         '[data-tab="formulario"]'
     );
 
+    /*
+     * O index.html já controla a navegação
+     * entre as abas.
+     */
     if (linkFormulario) {
         linkFormulario.click();
-        return;
-    }
-
-    const secao = obterElemento("formulario");
-
-    if (secao) {
+    } else {
         document.querySelectorAll(".page-section")
             .forEach(item => {
                 item.classList.remove("active-section");
             });
 
         secao.classList.add("active-section");
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
     }
+
+    /*
+     * Preenche o serviço escolhido no card.
+     */
+    const selectServico = obterElemento("servico");
+
+    if (selectServico && servico) {
+        const servicoEscolhido = String(servico).trim();
+
+        const opcao = Array.from(selectServico.options)
+            .find(item =>
+                item.value.trim() === servicoEscolhido ||
+                item.textContent.trim() === servicoEscolhido
+            );
+
+        if (opcao) {
+            selectServico.value = opcao.value;
+        } else {
+            console.warn(
+                "Serviço não encontrado nas opções:",
+                servicoEscolhido
+            );
+        }
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
 /* ==========================================
@@ -181,12 +202,6 @@ function atualizarLinhaDoTempo(status) {
     );
 
     const statusAtual = normalizarStatus(status);
-
-    /*
-     * Os nomes abaixo correspondem aos data-step
-     * presentes no HTML:
-     * recebida, analise, execucao e concluida.
-     */
 
     const etapaPorStatus = {
         pendente: "recebida",
@@ -277,7 +292,7 @@ function obterMensagemStatus(status) {
 }
 
 /* ==========================================
-   LIMPAR E MOSTRAR RESULTADOS
+   LIMPAR RESULTADOS DA CONSULTA
 ========================================== */
 
 function limparResultadoConsulta() {
@@ -392,10 +407,6 @@ if (formularioContratacao) {
 
                 limparResultadoConsulta();
 
-                /*
-                 * O campo protocolo pertence ao formulário
-                 * de consulta. Ele recebe o protocolo criado.
-                 */
                 const campoProtocolo = obterElemento("protocolo");
 
                 if (campoProtocolo) {
@@ -583,12 +594,13 @@ if (formularioConsulta) {
 }
 
 /* ==========================================
-   INICIALIZAÇÃO
+   INICIALIZAÇÃO E VERIFICAÇÃO
 ========================================== */
 
 console.log("Abreuzin Services: script.js carregado.");
+
 window.addEventListener("load", () => {
-    const formulario = document.getElementById("contratacaoForm");
+    const formulario = obterElemento("contratacaoForm");
 
     console.log(
         "Formulário encontrado:",
