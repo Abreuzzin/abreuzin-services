@@ -1,19 +1,26 @@
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const { Pool } = require("pg");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 require("dotenv").config({
-    path: require("path").join(__dirname, "..", ".env")
+    path: path.join(__dirname, "..", ".env")
 });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(cors());
 app.use(express.json({ limit: "20kb" }));
+
+if (!JWT_SECRET) {
+    console.error("Configure JWT_SECRET nas variáveis de ambiente.");
+    process.exit(1);
+}
 
 // ==========================================
 // POSTGRESQL
@@ -26,23 +33,19 @@ const pool = new Pool({
         : false
 });
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-    console.error("❌ Configure JWT_SECRET nas variáveis de ambiente.");
-    process.exit(1);
-}
+pool.on("error", erro => {
+    console.error("Erro inesperado no PostgreSQL:", erro.message);
+});
 
 // ==========================================
 // CONFIGURAR BANCO
 // ==========================================
 
 async function configurarBanco() {
-    // A tabela solicitacoes já precisa existir.
+    // A tabela solicitacoes precisa existir.
     await pool.query(`
         ALTER TABLE solicitacoes
-        ADD COLUMN IF NOT EXISTS status VARCHAR(20)
-        DEFAULT 'pendente'
+        ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'pendente'
     `);
 
     await pool.query(`
@@ -52,8 +55,7 @@ async function configurarBanco() {
 
     await pool.query(`
         ALTER TABLE solicitacoes
-        ADD COLUMN IF NOT EXISTS atualizado_em TIMESTAMP
-        DEFAULT CURRENT_TIMESTAMP
+        ADD COLUMN IF NOT EXISTS atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     `);
 
     await pool.query(`
@@ -63,8 +65,10 @@ async function configurarBanco() {
     `);
 
     const antigas = await pool.query(`
-        SELECT id FROM solicitacoes
+        SELECT id
+        FROM solicitacoes
         WHERE protocolo IS NULL
+        ORDER BY id
     `);
 
     for (const item of antigas.rows) {
@@ -76,7 +80,6 @@ async function configurarBanco() {
         );
     }
 
-    // Tabela exclusiva para contas de clientes.
     await pool.query(`
         CREATE TABLE IF NOT EXISTS clientes (
             id SERIAL PRIMARY KEY,
@@ -93,19 +96,17 @@ async function configurarBanco() {
         ON clientes (LOWER(email))
     `);
 
-    // Vincula novas solicitações a uma conta, quando autenticada.
-    // Solicitações antigas continuam preservadas.
     await pool.query(`
         ALTER TABLE solicitacoes
         ADD COLUMN IF NOT EXISTS cliente_id INTEGER
         REFERENCES clientes(id) ON DELETE SET NULL
     `);
 
-    console.log("✅ Banco configurado!");
+    console.log("Banco configurado com sucesso!");
 }
 
 // ==========================================
-// MIDDLEWARE: TOKEN JWT
+// AUTENTICAÇÃO JWT
 // ==========================================
 
 function lerToken(req) {
@@ -122,10 +123,6 @@ function lerToken(req) {
         return null;
     }
 }
-
-// ==========================================
-// AUTENTICAÇÃO ADMINISTRATIVA
-// ==========================================
 
 function verificarAdmin(req, res, next) {
     const dados = lerToken(req);
@@ -148,10 +145,6 @@ function verificarAdmin(req, res, next) {
     next();
 }
 
-// ==========================================
-// AUTENTICAÇÃO DE CLIENTES
-// ==========================================
-
 function verificarCliente(req, res, next) {
     const dados = lerToken(req);
 
@@ -173,12 +166,8 @@ function verificarCliente(req, res, next) {
     next();
 }
 
-// Aceita a solicitação pública existente e também
-// identifica o cliente se ele enviar um token válido.
 function clienteOpcional(req, res, next) {
-    const autorizacao = req.headers.authorization;
-
-    if (!autorizacao) {
+    if (!req.headers.authorization) {
         req.cliente = null;
         return next();
     }
@@ -199,6 +188,7 @@ function clienteOpcional(req, res, next) {
 
 // ==========================================
 // LOGIN ADMINISTRATIVO
+// POST /api/admin/login
 // ==========================================
 
 app.post("/api/admin/login", async (req, res) => {
@@ -207,15 +197,24 @@ app.post("/api/admin/login", async (req, res) => {
         const usuarioAdmin = process.env.ADMIN_USER;
         const senhaAdmin = process.env.ADMIN_PASSWORD;
 
-        if (!usuario || !senha) {
+        if (
+            typeof usuario !== "string" ||
+            typeof senha !== "string" ||
+            !usuario ||
+            !senha
+        ) {
             return res.status(400).json({
                 sucesso: false,
                 mensagem: "Informe usuário e senha."
             });
         }
 
-        if (!usuarioAdmin || !senhaAdmin ||
-            usuario !== usuarioAdmin || senha !== senhaAdmin) {
+        if (
+            !usuarioAdmin ||
+            !senhaAdmin ||
+            usuario !== usuarioAdmin ||
+            senha !== senhaAdmin
+        ) {
             return res.status(401).json({
                 sucesso: false,
                 mensagem: "Usuário ou senha inválidos."
@@ -231,6 +230,7 @@ app.post("/api/admin/login", async (req, res) => {
         return res.json({ sucesso: true, token });
     } catch (erro) {
         console.error("Erro no login administrativo:", erro.message);
+
         return res.status(500).json({
             sucesso: false,
             mensagem: "Erro interno no servidor."
@@ -310,7 +310,9 @@ app.post("/api/clientes/cadastro", async (req, res) => {
             [
                 nomeLimpo,
                 emailLimpo,
-                whatsapp ? whatsapp.trim() : null,
+                typeof whatsapp === "string" && whatsapp.trim()
+                    ? whatsapp.trim()
+                    : null,
                 senhaHash
             ]
         );
@@ -329,6 +331,7 @@ app.post("/api/clientes/cadastro", async (req, res) => {
         }
 
         console.error("Erro no cadastro:", erro.message);
+
         return res.status(500).json({
             sucesso: false,
             mensagem: "Não foi possível realizar o cadastro."
@@ -405,6 +408,7 @@ app.post("/api/clientes/login", async (req, res) => {
         });
     } catch (erro) {
         console.error("Erro no login do cliente:", erro.message);
+
         return res.status(500).json({
             sucesso: false,
             mensagem: "Erro interno no servidor."
@@ -413,7 +417,7 @@ app.post("/api/clientes/login", async (req, res) => {
 });
 
 // ==========================================
-// DADOS DO CLIENTE AUTENTICADO
+// DADOS DO CLIENTE
 // GET /api/clientes/me
 // ==========================================
 
@@ -441,6 +445,7 @@ app.get("/api/clientes/me", verificarCliente, async (req, res) => {
         });
     } catch (erro) {
         console.error("Erro ao buscar cliente:", erro.message);
+
         return res.status(500).json({
             sucesso: false,
             mensagem: "Erro ao buscar os dados da conta."
@@ -449,7 +454,7 @@ app.get("/api/clientes/me", verificarCliente, async (req, res) => {
 });
 
 // ==========================================
-// SOLICITAÇÕES DO CLIENTE AUTENTICADO
+// SOLICITAÇÕES DO CLIENTE
 // GET /api/clientes/me/solicitacoes
 // ==========================================
 
@@ -475,6 +480,7 @@ app.get(
             });
         } catch (erro) {
             console.error("Erro nas solicitações do cliente:", erro.message);
+
             return res.status(500).json({
                 sucesso: false,
                 mensagem: "Erro ao buscar suas solicitações."
@@ -499,8 +505,7 @@ app.get("/healthz", (req, res) => {
 
 // ==========================================
 // CRIAR SOLICITAÇÃO
-// Mantém o formulário público existente.
-// Se autenticado, vincula à conta do cliente.
+// POST /api/solicitacoes
 // ==========================================
 
 app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
@@ -516,10 +521,14 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
         } = req.body;
 
         if (
-            !nome || !whatsapp || !email || !servico ||
             typeof nome !== "string" ||
+            typeof whatsapp !== "string" ||
             typeof email !== "string" ||
-            typeof servico !== "string"
+            typeof servico !== "string" ||
+            !nome.trim() ||
+            !whatsapp.trim() ||
+            !email.trim() ||
+            !servico.trim()
         ) {
             return res.status(400).json({
                 sucesso: false,
@@ -529,8 +538,7 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
 
         const resultado = await pool.query(
             `
-            INSERT INTO solicitacoes
-            (
+            INSERT INTO solicitacoes (
                 nome, whatsapp, email, servico, descricao,
                 orcamento, prazo, status, cliente_id
             )
@@ -539,12 +547,12 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
             `,
             [
                 nome.trim(),
-                whatsapp,
-                email.trim(),
-                servico,
-                descricao || null,
-                orcamento || null,
-                prazo || null,
+                whatsapp.trim(),
+                email.trim().toLowerCase(),
+                servico.trim(),
+                typeof descricao === "string" ? descricao.trim() || null : null,
+                orcamento ?? null,
+                prazo ?? null,
                 req.cliente ? req.cliente.id : null
             ]
         );
@@ -555,14 +563,13 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
         const atualizada = await pool.query(
             `
             UPDATE solicitacoes
-            SET protocolo = $1, atualizado_em = CURRENT_TIMESTAMP
+            SET protocolo = $1,
+                atualizado_em = CURRENT_TIMESTAMP
             WHERE id = $2
             RETURNING *
             `,
             [protocolo, solicitacao.id]
         );
-
-        console.log("✅ Nova solicitação:", protocolo);
 
         return res.status(201).json({
             sucesso: true,
@@ -572,6 +579,7 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
         });
     } catch (erro) {
         console.error("Erro ao salvar solicitação:", erro.message);
+
         return res.status(500).json({
             sucesso: false,
             mensagem: "Erro ao salvar solicitação."
@@ -581,13 +589,15 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
 
 // ==========================================
 // TODAS AS SOLICITAÇÕES - ADMIN
+// GET /api/solicitacoes
 // ==========================================
 
 app.get("/api/solicitacoes", verificarAdmin, async (req, res) => {
     try {
-        const resultado = await pool.query(
-            "SELECT * FROM solicitacoes ORDER BY id DESC"
-        );
+        const resultado = await pool.query(`
+            SELECT * FROM solicitacoes
+            ORDER BY id DESC
+        `);
 
         return res.json({
             sucesso: true,
@@ -595,6 +605,7 @@ app.get("/api/solicitacoes", verificarAdmin, async (req, res) => {
         });
     } catch (erro) {
         console.error("Erro ao buscar solicitações:", erro.message);
+
         return res.status(500).json({
             sucesso: false,
             mensagem: "Erro ao buscar solicitações."
@@ -604,6 +615,7 @@ app.get("/api/solicitacoes", verificarAdmin, async (req, res) => {
 
 // ==========================================
 // SOLICITAÇÕES PENDENTES - ADMIN
+// GET /api/solicitacoes/pendentes
 // ==========================================
 
 app.get(
@@ -611,13 +623,12 @@ app.get(
     verificarAdmin,
     async (req, res) => {
         try {
-            const resultado = await pool.query(
-                `
-                SELECT * FROM solicitacoes
+            const resultado = await pool.query(`
+                SELECT *
+                FROM solicitacoes
                 WHERE status IS DISTINCT FROM 'concluido'
                 ORDER BY id DESC
-                `
-            );
+            `);
 
             return res.json({
                 sucesso: true,
@@ -625,6 +636,7 @@ app.get(
             });
         } catch (erro) {
             console.error("Erro ao buscar pendentes:", erro.message);
+
             return res.status(500).json({
                 sucesso: false,
                 mensagem: "Erro ao buscar solicitações."
@@ -634,7 +646,8 @@ app.get(
 );
 
 // ==========================================
-// HISTÓRICO DE CONCLUÍDOS - ADMIN
+// SOLICITAÇÕES CONCLUÍDAS - ADMIN
+// GET /api/solicitacoes/concluidas
 // ==========================================
 
 app.get(
@@ -642,13 +655,12 @@ app.get(
     verificarAdmin,
     async (req, res) => {
         try {
-            const resultado = await pool.query(
-                `
-                SELECT * FROM solicitacoes
+            const resultado = await pool.query(`
+                SELECT *
+                FROM solicitacoes
                 WHERE status = 'concluido'
                 ORDER BY id DESC
-                `
-            );
+            `);
 
             return res.json({
                 sucesso: true,
@@ -656,6 +668,7 @@ app.get(
             });
         } catch (erro) {
             console.error("Erro ao buscar histórico:", erro.message);
+
             return res.status(500).json({
                 sucesso: false,
                 mensagem: "Erro ao buscar histórico."
@@ -666,6 +679,7 @@ app.get(
 
 // ==========================================
 // ALTERAR STATUS - ADMIN
+// PATCH /api/solicitacoes/:id/status
 // ==========================================
 
 app.patch(
@@ -699,7 +713,8 @@ app.patch(
             const resultado = await pool.query(
                 `
                 UPDATE solicitacoes
-                SET status = $1, atualizado_em = CURRENT_TIMESTAMP
+                SET status = $1,
+                    atualizado_em = CURRENT_TIMESTAMP
                 WHERE id = $2
                 RETURNING *
                 `,
@@ -720,6 +735,7 @@ app.patch(
             });
         } catch (erro) {
             console.error("Erro ao alterar status:", erro.message);
+
             return res.status(500).json({
                 sucesso: false,
                 mensagem: "Erro ao alterar status."
@@ -729,14 +745,71 @@ app.patch(
 );
 
 // ==========================================
+// CLIENTES - ADMIN
+// GET /api/admin/clientes
+// ==========================================
+
+app.get("/api/admin/clientes", verificarAdmin, async (req, res) => {
+    try {
+        const resultado = await pool.query(`
+            SELECT id, nome, email, whatsapp, criado_em
+            FROM clientes
+            ORDER BY criado_em DESC, id DESC
+        `);
+
+        return res.json({
+            sucesso: true,
+            clientes: resultado.rows
+        });
+    } catch (erro) {
+        console.error("Erro ao buscar clientes:", erro.message);
+
+        return res.status(500).json({
+            sucesso: false,
+            mensagem: "Erro ao buscar clientes."
+        });
+    }
+});
+
+// ==========================================
+// E-MAILS DAS SOLICITAÇÕES - ADMIN
+// GET /api/admin/emails
+// ==========================================
+
+app.get("/api/admin/emails", verificarAdmin, async (req, res) => {
+    try {
+        const resultado = await pool.query(`
+            SELECT id, protocolo, nome, email, whatsapp,
+                   servico, status, criado_em
+            FROM solicitacoes
+            ORDER BY criado_em DESC, id DESC
+        `);
+
+        return res.json({
+            sucesso: true,
+            emails: resultado.rows
+        });
+    } catch (erro) {
+        console.error("Erro ao buscar e-mails:", erro.message);
+
+        return res.status(500).json({
+            sucesso: false,
+            mensagem: "Erro ao buscar e-mails."
+        });
+    }
+});
+
+// ==========================================
 // CONSULTAR PROTOCOLO
-// Mantém a rota pública existente.
+// GET /api/solicitacoes/protocolo/:protocolo
 // ==========================================
 
 app.get(
     "/api/solicitacoes/protocolo/:protocolo",
     async (req, res) => {
         try {
+            const protocolo = String(req.params.protocolo).trim();
+
             const resultado = await pool.query(
                 `
                 SELECT protocolo, nome, servico, status,
@@ -744,7 +817,7 @@ app.get(
                 FROM solicitacoes
                 WHERE protocolo = $1
                 `,
-                [req.params.protocolo]
+                [protocolo]
             );
 
             if (resultado.rows.length === 0) {
@@ -760,6 +833,7 @@ app.get(
             });
         } catch (erro) {
             console.error("Erro ao consultar protocolo:", erro.message);
+
             return res.status(500).json({
                 sucesso: false,
                 mensagem: "Erro ao consultar protocolo."
@@ -769,21 +843,52 @@ app.get(
 );
 
 // ==========================================
+// TRATAMENTO DE ERROS
+// ==========================================
+
+app.use((erro, req, res, next) => {
+    if (erro instanceof SyntaxError && erro.status === 400 && "body" in erro) {
+        return res.status(400).json({
+            sucesso: false,
+            mensagem: "O JSON enviado é inválido."
+        });
+    }
+
+    console.error("Erro inesperado:", erro.message);
+
+    return res.status(500).json({
+        sucesso: false,
+        mensagem: "Erro interno no servidor."
+    });
+});
+
+app.use((req, res) => {
+    return res.status(404).json({
+        sucesso: false,
+        mensagem: "Rota não encontrada."
+    });
+});
+
+// ==========================================
 // INICIALIZAÇÃO
 // ==========================================
 
 async function iniciarServidor() {
     try {
+        if (!process.env.DATABASE_URL) {
+            throw new Error("DATABASE_URL não foi configurada.");
+        }
+
         await pool.query("SELECT NOW()");
-        console.log("✅ PostgreSQL conectado!");
+        console.log("PostgreSQL conectado!");
 
         await configurarBanco();
 
         app.listen(PORT, () => {
-            console.log(`🚀 Servidor iniciado na porta ${PORT}`);
+            console.log(`Servidor iniciado na porta ${PORT}`);
         });
     } catch (erro) {
-        console.error("❌ Não foi possível iniciar:", erro.message);
+        console.error("Não foi possível iniciar:", erro.message);
         process.exit(1);
     }
 }
