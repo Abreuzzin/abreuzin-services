@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#172554">
+  <title>Minha área | Abreuzin Services</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+
+    .topbar {
+      background: #172554;
+      color: #fff;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .topbar h1 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    .topbar button {
+      background: #fff;
+      color: #172554;
+      border: 0;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .topbar button:hover {
+      background: #e2e8f0;
+    }
+
+    .container {
+      width: min(100% - 32px, 1000px);
+      margin: 30px auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 5px 20px #1725540b;
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: #64748b;
+    }
+
+    .request {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .request h3 {
+      margin-top: 0;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #334155;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: .85rem;
+      font-weight: 700;
+    }
+
+    .status.pendente {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status.em_analise {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status.em_andamento,
+    .status.em_execucao {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .status.concluido {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status.cancelado {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .error {
+      color: #b91c1c;
+    }
+
+    .success {
+      color: #166534;
+    }
+
+    .empty {
+      padding: 18px 0;
+      color: #64748b;
+    }
+
+    .new-request {
+      display: inline-block;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: #2563eb;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .new-request:hover {
+      background: #1d4ed8;
+    }
+
+    .loading {
+      color: #64748b;
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .request-actions a {
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    @media (max-width: 520px) {
+      .card {
+        padding: 18px;
+      }
+
+      .topbar {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <h1>Abreuzin Services | Minha área</h1>
+    <button id="botaoSair" type="button">Sair da conta</button>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Bem-vindo(a)!</h2>
+      <p class="muted">
+        Aqui você pode consultar seus dados e acompanhar seus pedidos.
+      </p>
+
+      <div id="dadosCliente" aria-live="polite">
+        <p class="loading">Carregando seus dados...</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Minhas solicitações</h2>
+      <p class="muted">
+        Acompanhe o andamento dos serviços solicitados.
+      </p>
+
+      <a class="new-request" href="index.html#formulario">
+        Solicitar um serviço
+      </a>
+
+      <div id="listaSolicitacoes" aria-live="polite">
+        <p class="empty">Carregando solicitações...</p>
+      </div>
+    </section>
+
+    <p><a href="index.html">Voltar à página inicial</a></p>
+  </main>
+
+  <script>
+    "use strict";
+
+    /* ==========================================
+       CONFIGURAÇÃO
+    ========================================== */
+
+    const API_URL = "https://abreuzin-services.onrender.com";
+    const CHAVE_TOKEN = "clienteToken";
+
+    const dadosCliente = document.getElementById("dadosCliente");
+    const listaSolicitacoes = document.getElementById("listaSolicitacoes");
+    const botaoSair = document.getElementById("botaoSair");
+
+    let token = sessionStorage.getItem(CHAVE_TOKEN);
+
+    /* ==========================================
+       SEGURANÇA E UTILITÁRIOS
+    ========================================== */
+
+    function escaparHTML(valor) {
+      return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[caractere]);
+    }
+
+    function normalizarStatus(status) {
+      return String(status || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[\s-]+/g, "_");
+    }
+
+    function formatarStatus(status) {
+      const normalizado = normalizarStatus(status);
+
+      const nomes = {
+        pendente: "Pendente",
+        recebida: "Recebida",
+        em_analise: "Em análise",
+        em_andamento: "Em andamento",
+        em_execucao: "Em execução",
+        concluido: "Concluído",
+        concluida: "Concluída",
+        cancelado: "Cancelado"
+      };
+
+      return nomes[normalizado] || "Em análise";
+    }
+
+    function formatarData(data, somenteData = false) {
+      if (!data) return "Não informado";
+
+      const dataConvertida = new Date(data);
+
+      if (Number.isNaN(dataConvertida.getTime())) {
+        return "Data indisponível";
+      }
+
+      return dataConvertida.toLocaleString(
+        "pt-BR",
+        somenteData
+          ? {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric"
+            }
+          : {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            }
+      );
+    }
+
+    function encerrarSessao() {
+      sessionStorage.removeItem(CHAVE_TOKEN);
+      window.location.replace("login.html");
+    }
+
+    botaoSair.addEventListener("click", encerrarSessao);
+
+    /* ==========================================
+       COMUNICAÇÃO COM A API
+    ========================================== */
+
+    async function buscarAPI(caminho) {
+      let resposta;
+
+      try {
+        resposta = await fetch(`${API_URL}${caminho}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json"
+          }
+        });
+      } catch {
+        throw new Error(
+          "Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente."
+        );
+      }
+
+      let resultado = {};
+
+      try {
+        resultado = await resposta.json();
+      } catch {
+        resultado = {};
+      }
+
+      if (resposta.status === 401 || resposta.status === 403) {
+        encerrarSessao();
+
+        throw new Error(
+          "Sua sessão expirou. Entre novamente na sua conta."
+        );
+      }
+
+      if (!resposta.ok || resultado.sucesso === false) {
+        throw new Error(
+          resultado.mensagem ||
+          resultado.erro ||
+          "Não foi possível carregar os dados."
+        );
+      }
+
+      return resultado;
+    }
+
+    /* ==========================================
+       PERFIL DO CLIENTE
+    ========================================== */
+
+    async function carregarPerfil() {
+      const resultado = await buscarAPI("/api/clientes/me");
+      const cliente = resultado.cliente;
+
+      if (!cliente) {
+        throw new Error("Não foi possível encontrar os dados da sua conta.");
+      }
+
+      dadosCliente.innerHTML = `
+        <p>
+          <strong>Nome:</strong>
+          ${escaparHTML(cliente.nome || "Não informado")}
+        </p>
+
+        <p>
+          <strong>E-mail:</strong>
+          ${escaparHTML(cliente.email || "Não informado")}
+        </p>
+
+        <p>
+          <strong>WhatsApp:</strong>
+          ${escaparHTML(cliente.whatsapp || cliente.telefone || "Não informado")}
+        </p>
+
+        <p class="muted">
+          <strong>Cliente desde:</strong>
+          ${escaparHTML(formatarData(cliente.criado_em, true))}
+        </p>
+      `;
+    }
+
+    /* ==========================================
+       SOLICITAÇÕES DO CLIENTE
+    ========================================== */
+
+    async function carregarSolicitacoes() {
+      const resultado = await buscarAPI("/api/clientes/me/solicitacoes");
+      const solicitacoes = resultado.solicitacoes;
+
+      if (!Array.isArray(solicitacoes) || solicitacoes.length === 0) {
+        listaSolicitacoes.innerHTML = `
+          <p class="empty">
+            Você ainda não tem solicitações vinculadas à sua conta.
+          </p>
+          <p class="muted">
+            Quando você enviar um pedido estando conectado à sua conta,
+            ele poderá aparecer aqui.
+          </p>
+        `;
+        return;
+      }
+
+      listaSolicitacoes.innerHTML = solicitacoes.map(item => {
+        const statusNormalizado = normalizarStatus(item.status || "pendente");
+        const statusClasse = [
+          "pendente",
+          "recebida",
+          "em_analise",
+          "em_andamento",
+          "em_execucao",
+          "concluido",
+          "concluida",
+          "cancelado"
+        ].includes(statusNormalizado)
+          ? statusNormalizado
+          : "";
+
+        const protocolo = item.protocolo || "";
+        const linkAcompanhamento = protocolo
+          ? `
+              <a href="index.html#acompanhar"
+                 data-protocolo="${escaparHTML(protocolo)}">
+                Acompanhar protocolo
+              </a>
+            `
+          : "";
+
+        return `
+          <article class="request">
+            <h3>${escaparHTML(item.servico || "Serviço solicitado")}</h3>
+
+            <p>
+              <strong>Protocolo:</strong>
+              ${escaparHTML(protocolo || "Não disponível")}
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              <span class="status ${statusClasse}">
+                ${escaparHTML(formatarStatus(statusNormalizado))}
+              </span>
+            </p>
+
+            <p>
+              <strong>Descrição:</strong>
+              ${escaparHTML(item.descricao || "Não informada")}
+            </p>
+
+            <p class="muted">
+              <strong>Criada em:</strong>
+              ${escaparHTML(formatarData(item.criado_em))}
+            </p>
+
+            <div class="request-actions">
+              ${linkAcompanhamento}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      listaSolicitacoes
+        .querySelectorAll("[data-protocolo]")
+        .forEach(link => {
+          link.addEventListener("click", () => {
+            const protocolo = link.dataset.protocolo;
+
+            try {
+              sessionStorage.setItem("protocoloParaConsultar", protocolo);
+            } catch (erro) {
+              console.warn("Não foi possível guardar o protocolo:", erro);
+            }
+          });
+        });
+    }
+
+    /* ==========================================
+       INICIALIZAÇÃO DO PAINEL
+    ========================================== */
+
+    async function iniciarPainel() {
+      if (!token) {
+        window.location.replace("login.html");
+        return;
+      }
+
+      try {
+        await Promise.all([
+          carregarPerfil(),
+          carregarSolicitacoes()
+        ]);
+      } catch (erro) {
+        console.error("Erro ao iniciar painel:", erro);
+
+        dadosCliente.innerHTML = `
+          <p class="error">
+            ${escaparHTML(erro.message)}
+          </p>
+        `;
+
+        listaSolicitacoes.innerHTML = `
+          <p class="empty">
+            Não foi possível carregar suas solicitações.
+            Atualize a página ou tente novamente mais tarde.
+          </p>
+          <button id="botaoTentarNovamente" type="button">
+            Tentar novamente
+          </button>
+        `;
+
+        const botaoTentarNovamente =
+          document.getElementById("botaoTentarNovamente");
+
+        if (botaoTentarNovamente) {
+          botaoTentarNovamente.addEventListener("click", () => {
+            iniciarPainel();
+          });
+        }
+      }
+    }
+
+    iniciarPainel();
+  </script>
+</body>
+</html>

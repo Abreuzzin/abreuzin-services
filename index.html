@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -13,16 +14,17 @@
 </head>
 
 <body>
-    <!-- CABEÇALHO -->
     <header class="header">
         <div class="header-container">
-            <a href="#inicio" class="logo" data-tab="inicio" aria-label="Abreuzin Services, início">
+            <a href="#inicio" class="logo" data-tab="inicio"
+               aria-label="Abreuzin Services, início">
                 <span class="logo-mark">A</span>
                 <span>Abreuzin <strong>Services</strong></span>
             </a>
 
             <button class="menu-toggle" id="menuToggle" type="button"
-                aria-label="Abrir menu" aria-expanded="false" aria-controls="mainNav">
+                    aria-label="Abrir menu" aria-expanded="false"
+                    aria-controls="mainNav">
                 <span></span><span></span><span></span>
             </button>
 
@@ -33,6 +35,10 @@
                 <a href="#formulario" class="nav-link" data-tab="formulario">Orçamento</a>
                 <a href="#acompanhar" class="nav-link" data-tab="acompanhar">Acompanhar</a>
                 <a href="#contato" class="nav-link" data-tab="contato">Contato</a>
+
+                <!-- NOVOS ACESSOS -->
+                <a href="login.html" class="nav-link account-nav-link">Entrar</a>
+                <a href="cadastro.html" class="nav-link account-nav-link">Criar conta</a>
 
                 <button class="mobile-budget" data-tab="formulario" type="button">
                     Solicitar orçamento <span aria-hidden="true">↗</span>
@@ -175,10 +181,9 @@
             </div>
         </section>
 
-        <!-- SERVIÇOS PREMIUM -->
+        <!-- SERVIÇOS -->
         <section id="servicos" class="page-section">
             <div class="section-container services-premium">
-
                 <div class="services-intro">
                     <div class="services-intro-copy">
                         <span class="section-tag">
@@ -202,198 +207,107 @@
                 </div>
 
                 <div class="services-premium-grid">
-
                     <article class="service-card service-card-premium service-card-featured"
-                        role="button" tabindex="0"
-                        onclick="abrirFormulario('Criação de Sites')"
-                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Criação de Sites')}">
-
+                             role="button" tabindex="0"
+                             onclick="abrirFormulario('Criação de Sites')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Criação de Sites')}">
                         <div class="service-card-top">
                             <span class="service-number">01 / WEB</span>
                             <span class="service-badge">MAIS COMPLETO</span>
                         </div>
-
                         <div class="service-icon service-icon-premium">⌘</div>
                         <h3>Criação de Sites</h3>
-
-                        <p>
-                            Uma presença digital profissional, responsiva e personalizada
-                            para apresentar sua marca e conquistar clientes.
-                        </p>
-
+                        <p>Uma presença digital profissional, responsiva e personalizada para apresentar sua marca e conquistar clientes.</p>
                         <div class="service-card-bottom">
-                            <div class="service-price">
-                                <small>Projetos a partir de</small>
-                                <strong>R$ 400</strong>
-                            </div>
+                            <div class="service-price"><small>Projetos a partir de</small><strong>R$ 400</strong></div>
                             <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
                         </div>
-
                         <span class="service-corner" aria-hidden="true">↗</span>
                     </article>
 
                     <article class="service-card service-card-premium"
-                        role="button" tabindex="0"
-                        onclick="abrirFormulario('Landing Pages')"
-                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Landing Pages')}">
-
-                        <div class="service-card-top">
-                            <span class="service-number">02 / CONVERSÃO</span>
-                            <span class="service-corner-small">↗</span>
-                        </div>
-
+                             role="button" tabindex="0"
+                             onclick="abrirFormulario('Landing Pages')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Landing Pages')}">
+                        <div class="service-card-top"><span class="service-number">02 / CONVERSÃO</span><span class="service-corner-small">↗</span></div>
                         <div class="service-icon service-icon-premium">↗</div>
                         <h3>Landing Pages</h3>
-
-                        <p>
-                            Páginas objetivas para divulgar produtos, serviços e campanhas,
-                            com foco na apresentação da sua oferta.
-                        </p>
-
+                        <p>Páginas objetivas para divulgar produtos, serviços e campanhas, com foco na apresentação da sua oferta.</p>
                         <div class="service-card-bottom">
-                            <div class="service-price">
-                                <small>Projetos a partir de</small>
-                                <strong>R$ 250</strong>
-                            </div>
+                            <div class="service-price"><small>Projetos a partir de</small><strong>R$ 250</strong></div>
                             <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
                         </div>
                     </article>
 
                     <article class="service-card service-card-premium"
-                        role="button" tabindex="0"
-                        onclick="abrirFormulario('Suporte Técnico')"
-                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Suporte Técnico')}">
-
-                        <div class="service-card-top">
-                            <span class="service-number">03 / TECNOLOGIA</span>
-                            <span class="service-corner-small">↗</span>
-                        </div>
-
+                             role="button" tabindex="0"
+                             onclick="abrirFormulario('Suporte Técnico')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Suporte Técnico')}">
+                        <div class="service-card-top"><span class="service-number">03 / TECNOLOGIA</span><span class="service-corner-small">↗</span></div>
                         <div class="service-icon service-icon-premium">⌘</div>
                         <h3>Suporte Técnico</h3>
-
-                        <p>
-                            Ajuda com computadores, programas, configurações e
-                            dificuldades técnicas do dia a dia.
-                        </p>
-
+                        <p>Ajuda com computadores, programas, configurações e dificuldades técnicas do dia a dia.</p>
                         <div class="service-card-bottom">
-                            <div class="service-price">
-                                <small>Atendimentos a partir de</small>
-                                <strong>R$ 80</strong>
-                            </div>
+                            <div class="service-price"><small>Atendimentos a partir de</small><strong>R$ 80</strong></div>
                             <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
                         </div>
                     </article>
 
                     <article class="service-card service-card-premium"
-                        role="button" tabindex="0"
-                        onclick="abrirFormulario('Planilhas')"
-                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Planilhas')}">
-
-                        <div class="service-card-top">
-                            <span class="service-number">04 / ORGANIZAÇÃO</span>
-                            <span class="service-corner-small">↗</span>
-                        </div>
-
+                             role="button" tabindex="0"
+                             onclick="abrirFormulario('Planilhas')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Planilhas')}">
+                        <div class="service-card-top"><span class="service-number">04 / ORGANIZAÇÃO</span><span class="service-corner-small">↗</span></div>
                         <div class="service-icon service-icon-premium">▦</div>
                         <h3>Planilhas</h3>
-
-                        <p>
-                            Planilhas personalizadas para organizar informações,
-                            controlar despesas e facilitar tarefas.
-                        </p>
-
+                        <p>Planilhas personalizadas para organizar informações, controlar despesas e facilitar tarefas.</p>
                         <div class="service-card-bottom">
-                            <div class="service-price">
-                                <small>Projetos a partir de</small>
-                                <strong>R$ 100</strong>
-                            </div>
+                            <div class="service-price"><small>Projetos a partir de</small><strong>R$ 100</strong></div>
                             <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
                         </div>
                     </article>
 
                     <article class="service-card service-card-premium"
-                        role="button" tabindex="0"
-                        onclick="abrirFormulario('Loja Online')"
-                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Loja Online')}">
-
-                        <div class="service-card-top">
-                            <span class="service-number">05 / E-COMMERCE</span>
-                            <span class="service-corner-small">↗</span>
-                        </div>
-
+                             role="button" tabindex="0"
+                             onclick="abrirFormulario('Loja Online')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Loja Online')}">
+                        <div class="service-card-top"><span class="service-number">05 / E-COMMERCE</span><span class="service-corner-small">↗</span></div>
                         <div class="service-icon service-icon-premium">▤</div>
                         <h3>Loja Online</h3>
-
-                        <p>
-                            Estrutura digital para apresentar produtos e começar
-                            a vender pela internet.
-                        </p>
-
+                        <p>Estrutura digital para apresentar produtos e começar a vender pela internet.</p>
                         <div class="service-card-bottom">
-                            <div class="service-price">
-                                <small>Projetos a partir de</small>
-                                <strong>R$ 300</strong>
-                            </div>
+                            <div class="service-price"><small>Projetos a partir de</small><strong>R$ 300</strong></div>
                             <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
                         </div>
                     </article>
 
                     <article class="service-card service-card-premium"
-                        role="button" tabindex="0"
-                        onclick="abrirFormulario('Automações')"
-                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Automações')}">
-
-                        <div class="service-card-top">
-                            <span class="service-number">06 / PRODUTIVIDADE</span>
-                            <span class="service-corner-small">↗</span>
-                        </div>
-
+                             role="button" tabindex="0"
+                             onclick="abrirFormulario('Automações')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Automações')}">
+                        <div class="service-card-top"><span class="service-number">06 / PRODUTIVIDADE</span><span class="service-corner-small">↗</span></div>
                         <div class="service-icon service-icon-premium">ϟ</div>
                         <h3>Automações</h3>
-
-                        <p>
-                            Automatização de tarefas repetitivas para tornar
-                            processos digitais mais práticos.
-                        </p>
-
+                        <p>Automatização de tarefas repetitivas para tornar processos digitais mais práticos.</p>
                         <div class="service-card-bottom">
-                            <div class="service-price">
-                                <small>Projetos a partir de</small>
-                                <strong>R$ 150</strong>
-                            </div>
+                            <div class="service-price"><small>Projetos a partir de</small><strong>R$ 150</strong></div>
                             <span class="service-cta-label">Conhecer serviço <b>↗</b></span>
                         </div>
                     </article>
 
                     <article class="service-card service-card-premium"
-                        role="button" tabindex="0"
-                        onclick="abrirFormulario('Outro')"
-                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Outro')}">
-
-                        <div class="service-card-top">
-                            <span class="service-number">07 / PERSONALIZADO</span>
-                            <span class="service-corner-small">↗</span>
-                        </div>
-
+                             role="button" tabindex="0"
+                             onclick="abrirFormulario('Outro')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirFormulario('Outro')}">
+                        <div class="service-card-top"><span class="service-number">07 / PERSONALIZADO</span><span class="service-corner-small">↗</span></div>
                         <div class="service-icon service-icon-premium">✳</div>
                         <h3>Outro projeto</h3>
-
-                        <p>
-                            Tem uma necessidade diferente? Conte sua ideia
-                            e vamos avaliar uma solução personalizada.
-                        </p>
-
+                        <p>Tem uma necessidade diferente? Conte sua ideia e vamos avaliar uma solução personalizada.</p>
                         <div class="service-card-bottom">
-                            <div class="service-price">
-                                <small>Orçamento</small>
-                                <strong>Sob consulta</strong>
-                            </div>
+                            <div class="service-price"><small>Orçamento</small><strong>Sob consulta</strong></div>
                             <span class="service-cta-label">Conversar sobre ideia <b>↗</b></span>
                         </div>
                     </article>
-
                 </div>
 
                 <div class="services-footer-note">
@@ -410,44 +324,21 @@
         <section id="sobre" class="page-section">
             <div class="section-container about-redesign">
                 <div class="about-heading">
-                    <span class="section-tag">
-                        <span class="about-tag-dot"></span>
-                        CONHEÇA A ABREUZIN
-                    </span>
-
+                    <span class="section-tag"><span class="about-tag-dot"></span>CONHEÇA A ABREUZIN</span>
                     <h2>Tecnologia simples, <span>soluções eficientes.</span></h2>
-
-                    <p class="about-intro">
-                        Transformamos necessidades em soluções digitais práticas,
-                        modernas e feitas para você.
-                    </p>
+                    <p class="about-intro">Transformamos necessidades em soluções digitais práticas, modernas e feitas para você.</p>
                 </div>
 
                 <div class="about-box about-box-redesign">
                     <div class="about-content">
                         <span class="about-kicker">QUEM SOMOS</span>
                         <h3>Sua ideia merece <span>ir mais longe.</span></h3>
-
-                        <p>
-                            A Abreuzin Services nasceu com o objetivo de oferecer
-                            soluções digitais acessíveis, modernas e funcionais.
-                        </p>
-
-                        <p>
-                            Trabalhamos com desenvolvimento de sites, sistemas,
-                            automações, planilhas, suporte técnico e soluções
-                            para negócios digitais.
-                        </p>
-
-                        <p>
-                            Nosso foco é entender o que cada cliente precisa e
-                            transformar essa necessidade em uma solução prática,
-                            com atenção aos detalhes.
-                        </p>
-
+                        <p>A Abreuzin Services nasceu com o objetivo de oferecer soluções digitais acessíveis, modernas e funcionais.</p>
+                        <p>Trabalhamos com desenvolvimento de sites, sistemas, automações, planilhas, suporte técnico e soluções para negócios digitais.</p>
+                        <p>Nosso foco é entender o que cada cliente precisa e transformar essa necessidade em uma solução prática, com atenção aos detalhes.</p>
                         <a class="primary-button about-cta"
-                            href="https://wa.me/554999118663?text=Ol%C3%A1!%20Vim%20pelo%20site%20Abreuzin%20Services%20e%20gostaria%20de%20conversar%20sobre%20um%20servi%C3%A7o."
-                            target="_blank" rel="noopener noreferrer">
+                           href="https://wa.me/554999118663?text=Ol%C3%A1!%20Vim%20pelo%20site%20Abreuzin%20Services%20e%20gostaria%20de%20conversar%20sobre%20um%20servi%C3%A7o."
+                           target="_blank" rel="noopener noreferrer">
                             Vamos conversar <span aria-hidden="true">↗</span>
                         </a>
                     </div>
@@ -455,7 +346,6 @@
                     <div class="about-visual about-visual-redesign">
                         <div class="about-orbit about-orbit-one"></div>
                         <div class="about-orbit about-orbit-two"></div>
-
                         <div class="about-logo-card">
                             <div class="about-logo-mark">A</div>
                             <strong>ABS</strong>
@@ -463,42 +353,15 @@
                             <div class="about-logo-line"></div>
                             <small>SOLUÇÕES DIGITAIS</small>
                         </div>
-
-                        <div class="about-floating about-floating-top">
-                            <span>✦</span> Design moderno
-                        </div>
-
-                        <div class="about-floating about-floating-bottom">
-                            <span class="about-status-dot"></span>
-                            Feito para você
-                        </div>
+                        <div class="about-floating about-floating-top"><span>✦</span> Design moderno</div>
+                        <div class="about-floating about-floating-bottom"><span class="about-status-dot"></span> Feito para você</div>
                     </div>
                 </div>
 
                 <div class="about-values">
-                    <article class="about-value">
-                        <span class="about-value-icon">✦</span>
-                        <div>
-                            <h4>Personalização</h4>
-                            <p>Soluções pensadas para cada projeto.</p>
-                        </div>
-                    </article>
-
-                    <article class="about-value">
-                        <span class="about-value-icon">◎</span>
-                        <div>
-                            <h4>Praticidade</h4>
-                            <p>Tecnologia para facilitar o dia a dia.</p>
-                        </div>
-                    </article>
-
-                    <article class="about-value">
-                        <span class="about-value-icon">↗</span>
-                        <div>
-                            <h4>Compromisso</h4>
-                            <p>Foco nas necessidades do cliente.</p>
-                        </div>
-                    </article>
+                    <article class="about-value"><span class="about-value-icon">✦</span><div><h4>Personalização</h4><p>Soluções pensadas para cada projeto.</p></div></article>
+                    <article class="about-value"><span class="about-value-icon">◎</span><div><h4>Praticidade</h4><p>Tecnologia para facilitar o dia a dia.</p></div></article>
+                    <article class="about-value"><span class="about-value-icon">↗</span><div><h4>Compromisso</h4><p>Foco nas necessidades do cliente.</p></div></article>
                 </div>
             </div>
         </section>
@@ -510,6 +373,11 @@
                     <span class="section-tag">SOLICITE UM ORÇAMENTO</span>
                     <h2>Conte-nos sobre <span>seu projeto.</span></h2>
                     <p>Preencha o formulário para solicitar uma análise do seu projeto.</p>
+
+                    <p id="clienteSessaoAviso" hidden>
+                        Você está conectado à sua conta.
+                        <a href="cliente.html">Acessar meu painel</a>
+                    </p>
                 </div>
 
                 <div class="formulario-container">
@@ -517,22 +385,19 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nome">Nome</label>
-                                <input type="text" id="nome" name="nome"
-                                    placeholder="Seu nome" autocomplete="name" required>
+                                <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="whatsapp">WhatsApp</label>
-                                <input type="text" id="whatsapp" name="whatsapp"
-                                    placeholder="(00) 00000-0000" autocomplete="tel" required>
+                                <input type="tel" id="whatsapp" name="whatsapp" placeholder="(00) 00000-0000" autocomplete="tel" required>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input type="email" id="email" name="email"
-                                    placeholder="seuemail@email.com" autocomplete="email" required>
+                                <input type="email" id="email" name="email" placeholder="seuemail@email.com" autocomplete="email" required>
                             </div>
 
                             <div class="form-group">
@@ -552,83 +417,58 @@
 
                         <div class="form-group">
                             <label for="descricao">Descrição do projeto</label>
-                            <textarea id="descricao" name="descricao" rows="6"
-                                placeholder="Explique o que você precisa..." required></textarea>
+                            <textarea id="descricao" name="descricao" rows="6" placeholder="Explique o que você precisa..." required></textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="orcamento">Orçamento disponível</label>
-                                <input type="text" id="orcamento" name="orcamento"
-                                    placeholder="Ex.: R$ 500">
+                                <input type="text" id="orcamento" name="orcamento" placeholder="Ex.: R$ 500">
                             </div>
 
                             <div class="form-group">
                                 <label for="prazo">Prazo desejado</label>
-                                <input type="text" id="prazo" name="prazo"
-                                    placeholder="Ex.: 15 dias">
+                                <input type="text" id="prazo" name="prazo" placeholder="Ex.: 15 dias">
                             </div>
                         </div>
 
                         <button type="submit" class="submit-button">
                             Enviar solicitação <span aria-hidden="true">→</span>
                         </button>
+
+                        <p id="mensagemContratacao" role="status" aria-live="polite"></p>
                     </form>
                 </div>
             </div>
         </section>
 
-        <!-- ACOMPANHAMENTO PREMIUM -->
+        <!-- ACOMPANHAMENTO -->
         <section id="acompanhar" class="page-section">
             <div class="section-container tracking-section tracking-premium">
-
                 <div class="tracking-heading">
-                    <span class="section-tag">
-                        <span class="tracking-live-dot"></span>
-                        CENTRAL DE ACOMPANHAMENTO
-                    </span>
-
+                    <span class="section-tag"><span class="tracking-live-dot"></span>CENTRAL DE ACOMPANHAMENTO</span>
                     <h2>Seu projeto, <span>passo a passo.</span></h2>
-
-                    <p>
-                        Acompanhe a evolução da sua solicitação com transparência.
-                        Informe seu protocolo e veja os detalhes do atendimento.
-                    </p>
+                    <p>Acompanhe a evolução da sua solicitação com transparência. Informe seu protocolo e veja os detalhes do atendimento.</p>
                 </div>
 
                 <div class="tracking-layout">
-
-                    <!-- PAINEL DE CONSULTA -->
                     <aside class="tracking-search-card">
                         <div class="tracking-search-icon" aria-hidden="true">⌕</div>
-
                         <span class="tracking-eyebrow">CONSULTA DE PROTOCOLO</span>
                         <h3>Vamos localizar seu projeto?</h3>
-
-                        <p>
-                            Digite o número recebido ao enviar sua solicitação.
-                        </p>
+                        <p>Digite o número recebido ao enviar sua solicitação.</p>
 
                         <form id="consultaForm">
                             <div class="form-group tracking-input-group">
                                 <label for="protocolo">Número do protocolo</label>
-
                                 <div class="tracking-input-wrap">
                                     <span aria-hidden="true">#</span>
-                                    <input
-                                        type="text"
-                                        id="protocolo"
-                                        name="protocolo"
-                                        placeholder="ABS-000001"
-                                        autocomplete="off"
-                                        required
-                                    >
+                                    <input type="text" id="protocolo" name="protocolo" placeholder="ABS-000001" autocomplete="off" required>
                                 </div>
                             </div>
 
                             <button type="submit" class="submit-button tracking-submit">
-                                Consultar solicitação
-                                <span aria-hidden="true">↗</span>
+                                Consultar solicitação <span aria-hidden="true">↗</span>
                             </button>
                         </form>
 
@@ -643,24 +483,15 @@
                         </div>
                     </aside>
 
-                    <!-- RESULTADO DA CONSULTA -->
                     <div class="tracking-result-card">
-
-                        <!-- VISÍVEL ANTES DA CONSULTA -->
                         <div class="tracking-result-placeholder" id="trackingPlaceholder">
                             <div class="tracking-placeholder-art">
                                 <div class="tracking-placeholder-ring"></div>
                                 <div class="tracking-placeholder-icon">⌕</div>
                             </div>
-
                             <span class="tracking-eyebrow">SEU ESPAÇO DE ACOMPANHAMENTO</span>
                             <h3>Tudo começa pelo protocolo.</h3>
-
-                            <p>
-                                Quando você consultar sua solicitação, os dados
-                                do atendimento aparecerão nesta área.
-                            </p>
-
+                            <p>Quando você consultar sua solicitação, os dados do atendimento aparecerão nesta área.</p>
                             <div class="tracking-placeholder-steps">
                                 <span><i>01</i> Consultar</span>
                                 <span><i>02</i> Acompanhar</span>
@@ -668,130 +499,51 @@
                             </div>
                         </div>
 
-                        <!-- RESULTADO REAL VINDO DO SCRIPT -->
                         <div id="resultadoConsulta" class="tracking-result" style="display:none">
-
                             <div class="tracking-result-header">
-                                <div>
-                                    <span class="tracking-eyebrow">DETALHES DO PROJETO</span>
-                                    <h3>Sua solicitação</h3>
-                                </div>
-
-                                <div class="tracking-status-pill">
-                                    <span class="tracking-status-dot"></span>
-                                    <strong id="consultaStatus">-</strong>
-                                </div>
+                                <div><span class="tracking-eyebrow">DETALHES DO PROJETO</span><h3>Sua solicitação</h3></div>
+                                <div class="tracking-status-pill"><span class="tracking-status-dot"></span><strong id="consultaStatus">-</strong></div>
                             </div>
 
                             <div class="tracking-protocol-banner">
                                 <div class="tracking-protocol-symbol">A</div>
-
-                                <div>
-                                    <span>SEU PROTOCOLO</span>
-                                    <strong id="consultaProtocolo">-</strong>
-                                </div>
-
+                                <div><span>SEU PROTOCOLO</span><strong id="consultaProtocolo">-</strong></div>
                                 <span class="tracking-protocol-decoration" aria-hidden="true">✦</span>
                             </div>
 
                             <div class="tracking-details">
-                                <div class="tracking-detail-item">
-                                    <span class="tracking-detail-icon" aria-hidden="true">⌘</span>
-                                    <div>
-                                        <span>SERVIÇO SOLICITADO</span>
-                                        <strong id="consultaServico">-</strong>
-                                    </div>
-                                </div>
-
-                                <div class="tracking-detail-item">
-                                    <span class="tracking-detail-icon" aria-hidden="true">◷</span>
-                                    <div>
-                                        <span>DATA DA SOLICITAÇÃO</span>
-                                        <strong id="consultaCriado">-</strong>
-                                    </div>
-                                </div>
-
-                                <div class="tracking-detail-item tracking-detail-full">
-                                    <span class="tracking-detail-icon" aria-hidden="true">↻</span>
-                                    <div>
-                                        <span>ÚLTIMA ATUALIZAÇÃO</span>
-                                        <strong id="consultaAtualizado">-</strong>
-                                    </div>
-                                </div>
+                                <div class="tracking-detail-item"><span class="tracking-detail-icon" aria-hidden="true">⌘</span><div><span>SERVIÇO SOLICITADO</span><strong id="consultaServico">-</strong></div></div>
+                                <div class="tracking-detail-item"><span class="tracking-detail-icon" aria-hidden="true">◷</span><div><span>DATA DA SOLICITAÇÃO</span><strong id="consultaCriado">-</strong></div></div>
+                                <div class="tracking-detail-item tracking-detail-full"><span class="tracking-detail-icon" aria-hidden="true">↻</span><div><span>ÚLTIMA ATUALIZAÇÃO</span><strong id="consultaAtualizado">-</strong></div></div>
                             </div>
 
-                            <!-- LINHA DO TEMPO VISUAL -->
                             <div class="tracking-timeline">
                                 <div class="tracking-timeline-heading">
-                                    <div>
-                                        <span class="tracking-eyebrow">EVOLUÇÃO</span>
-                                        <h4>Etapas do atendimento</h4>
-                                    </div>
-
+                                    <div><span class="tracking-eyebrow">EVOLUÇÃO</span><h4>Etapas do atendimento</h4></div>
                                     <span class="tracking-timeline-symbol" aria-hidden="true">✳</span>
                                 </div>
 
                                 <div class="tracking-timeline-list" id="trackingTimeline">
-                                    <div class="tracking-timeline-item" data-step="recebida">
-                                        <span class="tracking-timeline-marker">1</span>
-                                        <div>
-                                            <strong>Solicitação recebida</strong>
-                                            <p>Seu pedido foi registrado no sistema.</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="tracking-timeline-item" data-step="analise">
-                                        <span class="tracking-timeline-marker">2</span>
-                                        <div>
-                                            <strong>Em análise</strong>
-                                            <p>Os detalhes da solicitação estão sendo avaliados.</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="tracking-timeline-item" data-step="execucao">
-                                        <span class="tracking-timeline-marker">3</span>
-                                        <div>
-                                            <strong>Em execução</strong>
-                                            <p>O trabalho está em andamento.</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="tracking-timeline-item" data-step="concluida">
-                                        <span class="tracking-timeline-marker">4</span>
-                                        <div>
-                                            <strong>Projeto concluído</strong>
-                                            <p>O atendimento foi finalizado.</p>
-                                        </div>
-                                    </div>
+                                    <div class="tracking-timeline-item" data-step="recebida"><span class="tracking-timeline-marker">1</span><div><strong>Solicitação recebida</strong><p>Seu pedido foi registrado no sistema.</p></div></div>
+                                    <div class="tracking-timeline-item" data-step="analise"><span class="tracking-timeline-marker">2</span><div><strong>Em análise</strong><p>Os detalhes da solicitação estão sendo avaliados.</p></div></div>
+                                    <div class="tracking-timeline-item" data-step="execucao"><span class="tracking-timeline-marker">3</span><div><strong>Em execução</strong><p>O trabalho está em andamento.</p></div></div>
+                                    <div class="tracking-timeline-item" data-step="concluida"><span class="tracking-timeline-marker">4</span><div><strong>Projeto concluído</strong><p>O atendimento foi finalizado.</p></div></div>
                                 </div>
                             </div>
 
                             <div class="tracking-message">
                                 <span class="tracking-message-icon" aria-hidden="true">✦</span>
-                                <div>
-                                    <strong>Mensagem sobre sua solicitação</strong>
-                                    <p id="consultaMensagem"></p>
-                                </div>
+                                <div><strong>Mensagem sobre sua solicitação</strong><p id="consultaMensagem"></p></div>
                             </div>
-
                         </div>
                     </div>
                 </div>
 
                 <div class="tracking-footer">
                     <span class="tracking-footer-icon" aria-hidden="true">✦</span>
-
-                    <p>
-                        Precisa de ajuda?
-                        <strong>Entre em contato com a Abreuzin Services.</strong>
-                    </p>
-
-                    <a href="https://wa.me/554999118663"
-                       target="_blank" rel="noopener noreferrer">
-                        Falar pelo WhatsApp <span aria-hidden="true">↗</span>
-                    </a>
+                    <p>Precisa de ajuda? <strong>Entre em contato com a Abreuzin Services.</strong></p>
+                    <a href="https://wa.me/554999118663" target="_blank" rel="noopener noreferrer">Falar pelo WhatsApp <span aria-hidden="true">↗</span></a>
                 </div>
-
             </div>
         </section>
 
@@ -800,34 +552,20 @@
             <div class="section-container">
                 <div class="contact-section">
                     <div class="contact-glow" aria-hidden="true"></div>
-
                     <span class="section-tag">FALE CONOSCO</span>
                     <h2>Tem um projeto <span>em mente?</span></h2>
-
-                    <p>
-                        Conte sua ideia para a Abreuzin Services e vamos encontrar
-                        a melhor solução para você.
-                    </p>
+                    <p>Conte sua ideia para a Abreuzin Services e vamos encontrar a melhor solução para você.</p>
 
                     <div class="contact-options">
-                        <a href="https://wa.me/554999118663"
-                            target="_blank" rel="noopener noreferrer" class="contact-card">
+                        <a href="https://wa.me/554999118663" target="_blank" rel="noopener noreferrer" class="contact-card">
                             <div class="contact-icon whatsapp-icon">📱</div>
-                            <div class="contact-card-info">
-                                <span>WHATSAPP</span>
-                                <strong>Fale conosco pelo WhatsApp</strong>
-                                <small>Clique para iniciar uma conversa</small>
-                            </div>
+                            <div class="contact-card-info"><span>WHATSAPP</span><strong>Fale conosco pelo WhatsApp</strong><small>Clique para iniciar uma conversa</small></div>
                             <div class="contact-arrow">↗</div>
                         </a>
 
                         <a href="mailto:abreubusines@gmail.com" class="contact-card">
                             <div class="contact-icon email-icon">✉️</div>
-                            <div class="contact-card-info">
-                                <span>E-MAIL</span>
-                                <strong>Entre em contato por e-mail</strong>
-                                <small>Clique para enviar sua mensagem</small>
-                            </div>
+                            <div class="contact-card-info"><span>E-MAIL</span><strong>Entre em contato por e-mail</strong><small>Clique para enviar sua mensagem</small></div>
                             <div class="contact-arrow">↗</div>
                         </a>
                     </div>
@@ -864,11 +602,18 @@
                 <a href="#acompanhar" data-tab="acompanhar">Acompanhar protocolo</a>
             </div>
 
+            <!-- NOVA ÁREA DO CLIENTE -->
+            <div class="footer-column">
+                <h4>Área do cliente</h4>
+                <a href="login.html">Entrar na conta</a>
+                <a href="cadastro.html">Criar conta</a>
+                <a href="cliente.html">Meu painel</a>
+            </div>
+
             <div class="footer-column">
                 <h4>Informações</h4>
                 <a href="mailto:abreubusines@gmail.com">E-mail</a>
-                <a href="https://wa.me/554999118663"
-                    target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a href="https://wa.me/554999118663" target="_blank" rel="noopener noreferrer">WhatsApp</a>
             </div>
         </div>
 
@@ -878,20 +623,20 @@
         </div>
     </footer>
 
-    <!-- NAVEGAÇÃO ENTRE ABAS -->
+    <!-- NAVEGAÇÃO INTERNA -->
     <script>
         (() => {
             const elementosAbas = document.querySelectorAll("[data-tab]");
             const secoes = document.querySelectorAll(".page-section");
-            const linksMenu = document.querySelectorAll(".nav-link");
+            const linksMenu = document.querySelectorAll(".nav-link[data-tab]");
             const nav = document.getElementById("mainNav");
             const menuToggle = document.getElementById("menuToggle");
 
             function fecharMenu() {
-                nav.classList.remove("nav-open");
-                menuToggle.classList.remove("menu-open");
-                menuToggle.setAttribute("aria-expanded", "false");
-                menuToggle.setAttribute("aria-label", "Abrir menu");
+                nav?.classList.remove("nav-open");
+                menuToggle?.classList.remove("menu-open");
+                menuToggle?.setAttribute("aria-expanded", "false");
+                menuToggle?.setAttribute("aria-label", "Abrir menu");
             }
 
             function abrirAba(nomeAba) {
@@ -923,15 +668,12 @@
                 });
             });
 
-            menuToggle.addEventListener("click", () => {
+            menuToggle?.addEventListener("click", () => {
                 const aberto = nav.classList.toggle("nav-open");
 
                 menuToggle.classList.toggle("menu-open", aberto);
                 menuToggle.setAttribute("aria-expanded", String(aberto));
-                menuToggle.setAttribute(
-                    "aria-label",
-                    aberto ? "Fechar menu" : "Abrir menu"
-                );
+                menuToggle.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
             });
 
             document.addEventListener("keydown", event => {
@@ -942,18 +684,14 @@
                 const hash = window.location.hash.slice(1);
                 const secao = document.getElementById(hash);
 
-                if (hash && secao && secao.classList.contains("page-section")) {
-                    abrirAba(hash);
-                } else {
-                    abrirAba("inicio");
-                }
+                abrirAba(hash && secao?.classList.contains("page-section") ? hash : "inicio");
             }
 
             carregarAbaInicial();
         })();
     </script>
 
-    <!-- MOSTRAR O PAINEL CERTO NO ACOMPANHAMENTO -->
+    <!-- PAINEL DO ACOMPANHAMENTO -->
     <script>
         (() => {
             const resultado = document.getElementById("resultadoConsulta");
@@ -961,40 +699,50 @@
             const erro = document.getElementById("erroConsulta");
             const formulario = document.getElementById("consultaForm");
 
-            function atualizarPainelAcompanhamento() {
-                const resultadoVisivel =
-                    resultado &&
+            function atualizarPainel() {
+                const visivel = resultado &&
                     window.getComputedStyle(resultado).display !== "none";
 
                 if (placeholder) {
-                    placeholder.style.display = resultadoVisivel ? "none" : "flex";
+                    placeholder.style.display = visivel ? "none" : "flex";
                 }
 
-                if (resultadoVisivel && erro) {
-                    erro.style.display = "none";
-                }
+                if (visivel && erro) erro.style.display = "none";
             }
 
             if (resultado && placeholder) {
-                const observador = new MutationObserver(atualizarPainelAcompanhamento);
-
-                observador.observe(resultado, {
+                new MutationObserver(atualizarPainel).observe(resultado, {
                     attributes: true,
                     attributeFilter: ["style", "class"]
                 });
-
-                atualizarPainelAcompanhamento();
+                atualizarPainel();
             }
 
-            if (formulario && erro) {
-                formulario.addEventListener("input", () => {
-                    erro.style.display = "none";
-                });
+            formulario?.addEventListener("input", () => {
+                if (erro) erro.style.display = "none";
+            });
+        })();
+    </script>
+
+    <!-- INTEGRAÇÃO DA SESSÃO DO CLIENTE -->
+    <script>
+        (() => {
+            const token = sessionStorage.getItem("clienteToken");
+            const aviso = document.getElementById("clienteSessaoAviso");
+            const linkEntrar = document.querySelector(".account-nav-link[href='login.html']");
+            const linkCadastro = document.querySelector(".account-nav-link[href='cadastro.html']");
+
+            if (token) {
+                if (aviso) aviso.hidden = false;
+                if (linkEntrar) {
+                    linkEntrar.href = "cliente.html";
+                    linkEntrar.textContent = "Minha conta";
+                }
+                if (linkCadastro) linkCadastro.hidden = true;
             }
         })();
     </script>
 
-    <!-- JAVASCRIPT DOS FORMULÁRIOS E DA API -->
     <script src="script.js"></script>
 </body>
 </html>

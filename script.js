@@ -1,12 +1,13 @@
 
 /* ==========================================
    ABREUZIN SERVICES
-   FORMULÁRIOS, API E ACOMPANHAMENTO
+   FORMULÁRIOS, API, CLIENTES E ACOMPANHAMENTO
 ========================================== */
 
 "use strict";
 
 const API = "https://abreuzin-services.onrender.com";
+const CHAVE_TOKEN_CLIENTE = "clienteToken";
 
 /* ==========================================
    UTILITÁRIOS
@@ -21,16 +22,32 @@ function obterValor(id) {
     return elemento ? elemento.value.trim() : "";
 }
 
-function mostrarMensagem(elemento, mensagem) {
+function mostrarMensagem(elemento, mensagem, tipo = "erro") {
     if (!elemento) return;
 
     elemento.textContent = mensagem;
     elemento.style.display = "block";
+    elemento.dataset.tipo = tipo;
+    elemento.setAttribute("role", tipo === "erro" ? "alert" : "status");
 }
 
 function ocultarElemento(elemento) {
-    if (elemento) {
-        elemento.style.display = "none";
+    if (elemento) elemento.style.display = "none";
+}
+
+function obterTokenCliente() {
+    try {
+        return sessionStorage.getItem(CHAVE_TOKEN_CLIENTE);
+    } catch {
+        return null;
+    }
+}
+
+function limparTokenCliente() {
+    try {
+        sessionStorage.removeItem(CHAVE_TOKEN_CLIENTE);
+    } catch (erro) {
+        console.warn("Não foi possível limpar a sessão:", erro);
     }
 }
 
@@ -48,10 +65,12 @@ function formatarStatus(status) {
 
     const statusConhecidos = {
         pendente: "Pendente",
+        recebida: "Recebida",
         em_analise: "Em análise",
         em_andamento: "Em andamento",
         em_execucao: "Em execução",
         concluido: "Concluído",
+        concluida: "Concluída",
         cancelado: "Cancelado"
     };
 
@@ -94,23 +113,35 @@ async function requisitarAPI(caminho, opcoes = {}) {
 
     try {
         resposta = await fetch(`${API}${caminho}`, opcoes);
-    } catch (erro) {
+    } catch {
         throw new Error(
-            "Não foi possível conectar à API. Verifique sua conexão e se o servidor está disponível."
+            "Não foi possível conectar à API. Verifique sua conexão e tente novamente."
         );
     }
 
     const resultado = await lerResposta(resposta);
 
     if (!resposta.ok) {
+        if (resposta.status === 401) {
+            throw new Error(
+                resultado.mensagem ||
+                resultado.erro ||
+                "Sua sessão expirou ou você não está autorizado."
+            );
+        }
+
         if (resposta.status === 404) {
             throw new Error(
-                resultado.mensagem || "Registro não encontrado."
+                resultado.mensagem ||
+                resultado.erro ||
+                "Registro não encontrado."
             );
         }
 
         if (resposta.status >= 500) {
             throw new Error(
+                resultado.mensagem ||
+                resultado.erro ||
                 "O servidor encontrou um problema. Tente novamente mais tarde."
             );
         }
@@ -125,6 +156,20 @@ async function requisitarAPI(caminho, opcoes = {}) {
     return resultado;
 }
 
+function obterCabecalhosJSON(comToken = false) {
+    const cabecalhos = {
+        "Content-Type": "application/json"
+    };
+
+    const token = comToken ? obterTokenCliente() : null;
+
+    if (token) {
+        cabecalhos.Authorization = `Bearer ${token}`;
+    }
+
+    return cabecalhos;
+}
+
 /* ==========================================
    NAVEGAÇÃO E SELEÇÃO DE SERVIÇOS
 ========================================== */
@@ -133,9 +178,7 @@ function abrirFormulario(servico) {
     const secao = obterElemento("formulario");
 
     if (!secao) {
-        console.error(
-            "Abreuzin Services: seção do formulário não encontrada."
-        );
+        console.error("Seção do formulário não encontrada.");
         return;
     }
 
@@ -143,42 +186,28 @@ function abrirFormulario(servico) {
         '[data-tab="formulario"]'
     );
 
-    /*
-     * O index.html já controla a navegação
-     * entre as abas.
-     */
     if (linkFormulario) {
         linkFormulario.click();
     } else {
-        document.querySelectorAll(".page-section")
-            .forEach(item => {
-                item.classList.remove("active-section");
-            });
+        document.querySelectorAll(".page-section").forEach(item => {
+            item.classList.remove("active-section");
+        });
 
         secao.classList.add("active-section");
     }
 
-    /*
-     * Preenche o serviço escolhido no card.
-     */
     const selectServico = obterElemento("servico");
 
     if (selectServico && servico) {
-        const servicoEscolhido = String(servico).trim();
+        const escolhido = String(servico).trim();
 
-        const opcao = Array.from(selectServico.options)
-            .find(item =>
-                item.value.trim() === servicoEscolhido ||
-                item.textContent.trim() === servicoEscolhido
-            );
+        const opcao = Array.from(selectServico.options).find(item =>
+            item.value.trim() === escolhido ||
+            item.textContent.trim() === escolhido
+        );
 
         if (opcao) {
             selectServico.value = opcao.value;
-        } else {
-            console.warn(
-                "Serviço não encontrado nas opções:",
-                servicoEscolhido
-            );
         }
     }
 
@@ -186,6 +215,89 @@ function abrirFormulario(servico) {
         top: 0,
         behavior: "smooth"
     });
+}
+
+/* ==========================================
+   SESSÃO E DADOS DO CLIENTE
+========================================== */
+
+async function carregarDadosCliente() {
+    const token = obterTokenCliente();
+
+    if (!token) return null;
+
+    try {
+        const resultado = await requisitarAPI("/api/clientes/me", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!resultado.sucesso || !resultado.cliente) {
+            return null;
+        }
+
+        const cliente = resultado.cliente;
+
+        preencherSeVazio("nome", cliente.nome);
+        preencherSeVazio("email", cliente.email);
+        preencherSeVazio(
+            "whatsapp",
+            cliente.whatsapp || cliente.telefone
+        );
+
+        const aviso = obterElemento("clienteSessaoAviso");
+
+        if (aviso) {
+            aviso.hidden = false;
+        }
+
+        const linkEntrar = document.querySelector(
+            '.account-nav-link[href="login.html"]'
+        );
+
+        const linkCadastro = document.querySelector(
+            '.account-nav-link[href="cadastro.html"]'
+        );
+
+        if (linkEntrar) {
+            linkEntrar.href = "cliente.html";
+            linkEntrar.textContent = "Minha conta";
+        }
+
+        if (linkCadastro) {
+            linkCadastro.hidden = true;
+        }
+
+        return cliente;
+    } catch (erro) {
+        console.warn("Não foi possível carregar os dados do cliente:", erro.message);
+
+        /*
+         * Não removemos o token automaticamente em qualquer erro de rede.
+         * Uma indisponibilidade temporária da API não significa que o token
+         * esteja inválido.
+         */
+        if (/sessão expirou|não está autorizado/i.test(erro.message)) {
+            limparTokenCliente();
+        }
+
+        return null;
+    }
+}
+
+function preencherSeVazio(id, valor) {
+    const elemento = obterElemento(id);
+
+    if (
+        elemento &&
+        valor !== undefined &&
+        valor !== null &&
+        !elemento.value.trim()
+    ) {
+        elemento.value = String(valor);
+    }
 }
 
 /* ==========================================
@@ -205,10 +317,12 @@ function atualizarLinhaDoTempo(status) {
 
     const etapaPorStatus = {
         pendente: "recebida",
+        recebida: "recebida",
         em_analise: "analise",
         em_andamento: "execucao",
         em_execucao: "execucao",
-        concluido: "concluida"
+        concluido: "concluida",
+        concluida: "concluida"
     };
 
     const etapaAtual = etapaPorStatus[statusAtual];
@@ -243,17 +357,13 @@ function atualizarLinhaDoTempo(status) {
     const indiceAtual = ordemEtapas.indexOf(etapaAtual);
 
     etapas.forEach(etapa => {
-        const nomeEtapa = etapa.dataset.step;
-        const indiceEtapa = ordemEtapas.indexOf(nomeEtapa);
+        const indiceEtapa = ordemEtapas.indexOf(etapa.dataset.step);
 
         if (indiceEtapa === -1) return;
 
-        if (statusAtual === "concluido") {
+        if (statusAtual === "concluido" || statusAtual === "concluida") {
             etapa.classList.add("is-complete");
-            return;
-        }
-
-        if (indiceEtapa < indiceAtual) {
+        } else if (indiceEtapa < indiceAtual) {
             etapa.classList.add("is-complete");
         } else if (indiceEtapa === indiceAtual) {
             etapa.classList.add("is-current");
@@ -270,19 +380,18 @@ function obterMensagemStatus(status) {
     const mensagens = {
         pendente:
             "Sua solicitação foi recebida e está aguardando análise.",
-
+        recebida:
+            "Sua solicitação foi recebida e está registrada no sistema.",
         em_analise:
             "Sua solicitação está sendo analisada.",
-
         em_andamento:
             "Sua solicitação está em andamento.",
-
         em_execucao:
             "O serviço está em execução.",
-
         concluido:
             "Sua solicitação foi concluída.",
-
+        concluida:
+            "Sua solicitação foi concluída.",
         cancelado:
             "Esta solicitação está marcada como cancelada. Entre em contato para obter esclarecimentos."
     };
@@ -308,16 +417,15 @@ function limparResultadoConsulta() {
     const timeline = obterElemento("trackingTimeline");
 
     if (timeline) {
-        timeline.querySelectorAll(".tracking-timeline-item")
-            .forEach(etapa => {
-                etapa.classList.remove(
-                    "is-complete",
-                    "is-current",
-                    "is-cancelled"
-                );
+        timeline.querySelectorAll(".tracking-timeline-item").forEach(etapa => {
+            etapa.classList.remove(
+                "is-complete",
+                "is-current",
+                "is-cancelled"
+            );
 
-                etapa.removeAttribute("aria-current");
-            });
+            etapa.removeAttribute("aria-current");
+        });
     }
 }
 
@@ -325,7 +433,7 @@ function preencherTexto(id, valor) {
     const elemento = obterElemento(id);
 
     if (elemento) {
-        elemento.textContent = valor;
+        elemento.textContent = valor ?? "Não informado";
     }
 }
 
@@ -336,115 +444,124 @@ function preencherTexto(id, valor) {
 const formularioContratacao = obterElemento("contratacaoForm");
 
 if (formularioContratacao) {
-    formularioContratacao.addEventListener(
-        "submit",
-        async event => {
-            event.preventDefault();
+    formularioContratacao.addEventListener("submit", async event => {
+        event.preventDefault();
 
-            const botao = formularioContratacao.querySelector(
-                'button[type="submit"]'
+        const botao = formularioContratacao.querySelector(
+            'button[type="submit"]'
+        );
+
+        if (botao?.disabled) return;
+
+        const textoOriginal = botao?.innerHTML || "";
+        const mensagem = obterElemento("mensagemContratacao");
+
+        ocultarElemento(mensagem);
+
+        const dados = {
+            nome: obterValor("nome"),
+            whatsapp: obterValor("whatsapp"),
+            email: obterValor("email"),
+            servico: obterValor("servico"),
+            descricao: obterValor("descricao"),
+            orcamento: obterValor("orcamento"),
+            prazo: obterValor("prazo")
+        };
+
+        if (
+            !dados.nome ||
+            !dados.whatsapp ||
+            !dados.email ||
+            !dados.servico ||
+            !dados.descricao
+        ) {
+            const texto = "Preencha todos os campos obrigatórios.";
+
+            if (mensagem) {
+                mostrarMensagem(mensagem, texto, "erro");
+            } else {
+                alert(texto);
+            }
+
+            return;
+        }
+
+        try {
+            if (botao) {
+                botao.disabled = true;
+                botao.textContent = "Enviando...";
+            }
+
+            const resultado = await requisitarAPI("/api/solicitacoes", {
+                method: "POST",
+                headers: obterCabecalhosJSON(true),
+                body: JSON.stringify(dados)
+            });
+
+            const solicitacao = resultado.solicitacao || resultado;
+            const protocolo = solicitacao.protocolo;
+
+            if (resultado.sucesso === false || !protocolo) {
+                throw new Error(
+                    resultado.mensagem ||
+                    "O servidor não confirmou a criação do protocolo."
+                );
+            }
+
+            const protocoloGerado = String(protocolo);
+
+            formularioContratacao.reset();
+            limparResultadoConsulta();
+
+            const campoProtocolo = obterElemento("protocolo");
+
+            if (campoProtocolo) {
+                campoProtocolo.value = protocoloGerado;
+            }
+
+            /*
+             * Repõe os dados do cliente depois de limpar o formulário.
+             */
+            if (obterTokenCliente()) {
+                await carregarDadosCliente();
+            }
+
+            const mensagemSucesso =
+                `Solicitação enviada com sucesso! Protocolo: ${protocoloGerado}. Guarde esse número para acompanhar seu projeto.`;
+
+            if (mensagem) {
+                mostrarMensagem(mensagem, mensagemSucesso, "sucesso");
+            } else {
+                alert(mensagemSucesso);
+            }
+
+            const linkAcompanhar = document.querySelector(
+                '[data-tab="acompanhar"]'
             );
 
-            if (botao && botao.disabled) return;
-
-            const textoOriginal = botao
-                ? botao.innerHTML
-                : "";
-
-            const dados = {
-                nome: obterValor("nome"),
-                whatsapp: obterValor("whatsapp"),
-                email: obterValor("email"),
-                servico: obterValor("servico"),
-                descricao: obterValor("descricao"),
-                orcamento: obterValor("orcamento"),
-                prazo: obterValor("prazo")
-            };
-
-            if (
-                !dados.nome ||
-                !dados.whatsapp ||
-                !dados.email ||
-                !dados.servico ||
-                !dados.descricao
-            ) {
-                alert("Preencha todos os campos obrigatórios.");
-                return;
+            if (linkAcompanhar) {
+                linkAcompanhar.click();
             }
 
-            try {
-                if (botao) {
-                    botao.disabled = true;
-                    botao.textContent = "Enviando...";
-                }
+        } catch (erro) {
+            console.error("Erro ao enviar solicitação:", erro);
 
-                const resultado = await requisitarAPI(
-                    "/api/solicitacoes",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(dados)
-                    }
+            if (mensagem) {
+                mostrarMensagem(
+                    mensagem,
+                    erro.message || "Não foi possível enviar a solicitação.",
+                    "erro"
                 );
-
-                const solicitacao =
-                    resultado.solicitacao || resultado;
-
-                const protocolo = solicitacao.protocolo;
-
-                if (!resultado.sucesso || !protocolo) {
-                    throw new Error(
-                        resultado.mensagem ||
-                        "O servidor não confirmou a criação do protocolo."
-                    );
-                }
-
-                const protocoloGerado = String(protocolo);
-
-                formularioContratacao.reset();
-
-                limparResultadoConsulta();
-
-                const campoProtocolo = obterElemento("protocolo");
-
-                if (campoProtocolo) {
-                    campoProtocolo.value = protocoloGerado;
-                }
-
-                alert(
-                    "Solicitação enviada com sucesso!\n\n" +
-                    "Protocolo: " + protocoloGerado +
-                    "\n\nGuarde esse número para acompanhar sua solicitação."
-                );
-
-                const linkAcompanhar = document.querySelector(
-                    '[data-tab="acompanhar"]'
-                );
-
-                if (linkAcompanhar) {
-                    linkAcompanhar.click();
-                }
-
-            } catch (erro) {
-                console.error(
-                    "Erro ao enviar solicitação:",
-                    erro
-                );
-
-                alert(
-                    erro.message ||
-                    "Não foi possível enviar a solicitação."
-                );
-            } finally {
-                if (botao) {
-                    botao.disabled = false;
-                    botao.innerHTML = textoOriginal;
-                }
+            } else {
+                alert(erro.message || "Não foi possível enviar a solicitação.");
+            }
+        } finally {
+            if (botao) {
+                botao.disabled = false;
+                botao.innerHTML = textoOriginal;
             }
         }
-    );
+    });
 }
 
 /* ==========================================
@@ -454,139 +571,102 @@ if (formularioContratacao) {
 const formularioConsulta = obterElemento("consultaForm");
 
 if (formularioConsulta) {
-    formularioConsulta.addEventListener(
-        "submit",
-        async event => {
-            event.preventDefault();
+    formularioConsulta.addEventListener("submit", async event => {
+        event.preventDefault();
 
-            const campoProtocolo = obterElemento("protocolo");
-            const resultadoConsulta =
-                obterElemento("resultadoConsulta");
-            const erroConsulta = obterElemento("erroConsulta");
-            const placeholder =
-                obterElemento("trackingPlaceholder");
+        const campoProtocolo = obterElemento("protocolo");
+        const resultadoConsulta = obterElemento("resultadoConsulta");
+        const erroConsulta = obterElemento("erroConsulta");
+        const placeholder = obterElemento("trackingPlaceholder");
 
-            const botao = formularioConsulta.querySelector(
-                'button[type="submit"]'
+        const botao = formularioConsulta.querySelector(
+            'button[type="submit"]'
+        );
+
+        if (botao?.disabled) return;
+
+        const textoOriginal = botao?.innerHTML || "";
+
+        const protocolo = campoProtocolo
+            ? campoProtocolo.value.trim().toUpperCase()
+            : "";
+
+        ocultarElemento(resultadoConsulta);
+        ocultarElemento(erroConsulta);
+
+        if (!protocolo) {
+            mostrarMensagem(erroConsulta, "Digite o número do protocolo.");
+            return;
+        }
+
+        try {
+            if (botao) {
+                botao.disabled = true;
+                botao.textContent = "Consultando...";
+            }
+
+            const resultado = await requisitarAPI(
+                `/api/solicitacoes/protocolo/${encodeURIComponent(protocolo)}`
             );
 
-            if (botao && botao.disabled) return;
+            const solicitacao = resultado.solicitacao;
 
-            const textoOriginal = botao
-                ? botao.innerHTML
-                : "";
+            if (resultado.sucesso === false || !solicitacao) {
+                throw new Error(
+                    resultado.mensagem ||
+                    "Não foi possível encontrar os dados da solicitação."
+                );
+            }
 
-            const protocolo = campoProtocolo
-                ? campoProtocolo.value.trim().toUpperCase()
-                : "";
+            if (!resultadoConsulta) {
+                throw new Error("A área de resultado não foi encontrada no HTML.");
+            }
 
-            ocultarElemento(resultadoConsulta);
+            const status = solicitacao.status || "pendente";
+
+            preencherTexto(
+                "consultaProtocolo",
+                solicitacao.protocolo || protocolo
+            );
+
+            preencherTexto(
+                "consultaServico",
+                solicitacao.servico || "Não informado"
+            );
+
+            preencherTexto("consultaStatus", formatarStatus(status));
+            preencherTexto("consultaCriado", formatarData(solicitacao.criado_em));
+            preencherTexto("consultaAtualizado", formatarData(solicitacao.atualizado_em));
+            preencherTexto("consultaMensagem", obterMensagemStatus(status));
+
+            const statusElemento = obterElemento("consultaStatus");
+
+            if (statusElemento) {
+                statusElemento.dataset.status = normalizarStatus(status);
+            }
+
+            atualizarLinhaDoTempo(status);
+            resultadoConsulta.style.display = "block";
             ocultarElemento(erroConsulta);
 
-            if (!protocolo) {
-                mostrarMensagem(
-                    erroConsulta,
-                    "Digite o número do protocolo."
-                );
-                return;
+            if (placeholder) {
+                placeholder.style.display = "none";
             }
 
-            try {
-                if (botao) {
-                    botao.disabled = true;
-                    botao.textContent = "Consultando...";
-                }
+        } catch (erro) {
+            console.error("Erro ao consultar protocolo:", erro);
 
-                const resultado = await requisitarAPI(
-                    "/api/solicitacoes/protocolo/" +
-                    encodeURIComponent(protocolo)
-                );
-
-                const solicitacao = resultado.solicitacao;
-
-                if (!resultado.sucesso || !solicitacao) {
-                    throw new Error(
-                        resultado.mensagem ||
-                        "Não foi possível encontrar os dados da solicitação."
-                    );
-                }
-
-                if (!resultadoConsulta) {
-                    throw new Error(
-                        "O elemento resultadoConsulta não existe no HTML."
-                    );
-                }
-
-                const status = solicitacao.status || "pendente";
-
-                preencherTexto(
-                    "consultaProtocolo",
-                    solicitacao.protocolo || protocolo
-                );
-
-                preencherTexto(
-                    "consultaServico",
-                    solicitacao.servico || "Não informado"
-                );
-
-                preencherTexto(
-                    "consultaStatus",
-                    formatarStatus(status)
-                );
-
-                preencherTexto(
-                    "consultaCriado",
-                    formatarData(solicitacao.criado_em)
-                );
-
-                preencherTexto(
-                    "consultaAtualizado",
-                    formatarData(solicitacao.atualizado_em)
-                );
-
-                preencherTexto(
-                    "consultaMensagem",
-                    obterMensagemStatus(status)
-                );
-
-                const statusElemento = obterElemento(
-                    "consultaStatus"
-                );
-
-                if (statusElemento) {
-                    statusElemento.dataset.status =
-                        normalizarStatus(status);
-                }
-
-                atualizarLinhaDoTempo(status);
-
-                resultadoConsulta.style.display = "block";
-
-                ocultarElemento(erroConsulta);
-
-                if (placeholder) {
-                    placeholder.style.display = "none";
-                }
-
-            } catch (erro) {
-                console.error(
-                    "Erro ao consultar protocolo:",
-                    erro
-                );
-
-                mostrarMensagem(
-                    erroConsulta,
-                    erro.message ||
-                    "Não foi possível consultar a solicitação."
-                );
-            } finally {
-                if (botao) {
-                    botao.disabled = false;
-                    botao.innerHTML = textoOriginal;
-                }
+            mostrarMensagem(
+                erroConsulta,
+                erro.message || "Não foi possível consultar a solicitação."
+            );
+        } finally {
+            if (botao) {
+                botao.disabled = false;
+                botao.innerHTML = textoOriginal;
             }
         }
-    );
+    });
 
     formularioConsulta.addEventListener("input", () => {
         ocultarElemento(obterElemento("erroConsulta"));
@@ -594,16 +674,11 @@ if (formularioConsulta) {
 }
 
 /* ==========================================
-   INICIALIZAÇÃO E VERIFICAÇÃO
+   INICIALIZAÇÃO
 ========================================== */
 
-console.log("Abreuzin Services: script.js carregado.");
+document.addEventListener("DOMContentLoaded", () => {
+    carregarDadosCliente();
 
-window.addEventListener("load", () => {
-    const formulario = obterElemento("contratacaoForm");
-
-    console.log(
-        "Formulário encontrado:",
-        formulario ? "SIM" : "NÃO"
-    );
+    console.log("Abreuzin Services: script.js carregado.");
 });

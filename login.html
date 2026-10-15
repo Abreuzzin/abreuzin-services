@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#172554">
+  <title>Entrar | Abreuzin Services</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 0;
+      background: #f4f7fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+      box-sizing: border-box;
+    }
+
+    .auth-container {
+      width: min(100% - 32px, 440px);
+      margin: 60px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 35px #00000012;
+      box-sizing: border-box;
+    }
+
+    .auth-container h1 {
+      margin: 0 0 8px;
+      color: #172554;
+    }
+
+    .auth-container > p {
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .auth-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .auth-form label {
+      display: grid;
+      gap: 7px;
+      font-weight: 600;
+    }
+
+    .auth-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d4d4d4;
+      border-radius: 8px;
+      font: inherit;
+      box-sizing: border-box;
+    }
+
+    .auth-form input:focus {
+      outline: 2px solid #93c5fd;
+      border-color: #2563eb;
+    }
+
+    .auth-form button {
+      padding: 13px;
+      border: 0;
+      border-radius: 8px;
+      background: #2563eb;
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .auth-form button:hover:not(:disabled) {
+      background: #1d4ed8;
+    }
+
+    .auth-form button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .auth-message {
+      margin-top: 16px;
+      font-weight: 600;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .auth-message:empty {
+      display: none;
+    }
+
+    .auth-footer {
+      margin-top: 20px;
+      font-size: .95rem;
+    }
+
+    .auth-footer a {
+      color: #2563eb;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="auth-container">
+    <h1>Bem-vindo de volta!</h1>
+
+    <p>Entre na sua conta do Abreuzin Services.</p>
+
+    <form id="formLogin" class="auth-form">
+      <label for="email">
+        E-mail
+        <input
+          id="email"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          maxlength="254"
+          placeholder="voce@exemplo.com"
+        >
+      </label>
+
+      <label for="senha">
+        Senha
+        <input
+          id="senha"
+          type="password"
+          name="senha"
+          required
+          autocomplete="current-password"
+          placeholder="Digite sua senha"
+        >
+      </label>
+
+      <button type="submit" id="botaoLogin">
+        Entrar
+      </button>
+    </form>
+
+    <div
+      id="mensagemLogin"
+      class="auth-message"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+    <div class="auth-footer">
+      Ainda não tem conta?
+      <a href="cadastro.html">Criar conta</a>
+    </div>
+
+    <div class="auth-footer">
+      <a href="index.html">Voltar ao início</a>
+    </div>
+  </main>
+
+  <script>
+    "use strict";
+
+    /* ==========================================
+       CONFIGURAÇÃO
+    ========================================== */
+
+    const API_URL = "https://abreuzin-services.onrender.com";
+    const CHAVE_TOKEN = "clienteToken";
+
+    const form = document.getElementById("formLogin");
+    const mensagem = document.getElementById("mensagemLogin");
+    const botao = document.getElementById("botaoLogin");
+
+    function mostrarMensagem(texto, tipo = "erro") {
+      mensagem.textContent = texto;
+      mensagem.style.color =
+        tipo === "sucesso" ? "#15803d" : "#b91c1c";
+
+      mensagem.dataset.tipo = tipo;
+    }
+
+    async function lerResposta(resposta) {
+      const texto = await resposta.text();
+
+      if (!texto) return {};
+
+      try {
+        return JSON.parse(texto);
+      } catch {
+        return { mensagem: texto };
+      }
+    }
+
+    /* ==========================================
+       LOGIN DO CLIENTE
+    ========================================== */
+
+    form.addEventListener("submit", async evento => {
+      evento.preventDefault();
+
+      mensagem.textContent = "";
+
+      const dados = new FormData(form);
+      const email = String(dados.get("email") || "")
+        .trim()
+        .toLowerCase();
+
+      const senha = String(dados.get("senha") || "");
+
+      if (!email || !senha) {
+        mostrarMensagem("Preencha o e-mail e a senha.");
+        return;
+      }
+
+      const textoOriginal = botao.textContent;
+
+      botao.disabled = true;
+      botao.textContent = "Entrando...";
+
+      try {
+        let resposta;
+
+        try {
+          resposta = await fetch(`${API_URL}/api/clientes/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({ email, senha })
+          });
+        } catch {
+          throw new Error(
+            "Não foi possível conectar à API. Verifique sua conexão e tente novamente."
+          );
+        }
+
+        const resultado = await lerResposta(resposta);
+
+        if (
+          !resposta.ok ||
+          resultado.sucesso !== true ||
+          !resultado.token
+        ) {
+          throw new Error(
+            resultado.mensagem ||
+            resultado.erro ||
+            "Não foi possível entrar. Confira seu e-mail e sua senha."
+          );
+        }
+
+        /*
+         * Salva o token utilizado pelo cliente.html e pelo script.js.
+         */
+        try {
+          sessionStorage.setItem(CHAVE_TOKEN, resultado.token);
+        } catch {
+          throw new Error(
+            "O navegador não permitiu salvar sua sessão. Verifique as configurações de privacidade."
+          );
+        }
+
+        mostrarMensagem(
+          "Login realizado com sucesso! Abrindo sua área...",
+          "sucesso"
+        );
+
+        botao.textContent = "Login confirmado";
+
+        window.setTimeout(() => {
+          window.location.replace("cliente.html");
+        }, 500);
+
+      } catch (erro) {
+        console.error("Erro no login:", erro);
+
+        mostrarMensagem(
+          erro.message || "Ocorreu um erro ao tentar entrar."
+        );
+
+        botao.disabled = false;
+        botao.textContent = textoOriginal;
+      }
+    });
+  </script>
+</body>
+</html>
