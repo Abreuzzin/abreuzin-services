@@ -1,165 +1,506 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070b14">
+
   <title>Criar conta | Abreuzin Services</title>
-  <link rel="stylesheet" href="style.css">
+
   <style>
-    .auth-container {
-      width: min(100% - 32px, 460px);
-      margin: 50px auto;
-      padding: 30px;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 35px #00000012;
+    :root {
+      color-scheme: dark;
+      --bg: #070b14;
+      --border: rgba(148, 163, 184, 0.16);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --blue: #3b82f6;
+      --cyan: #22d3ee;
     }
 
-    .auth-container h1 { margin-bottom: 8px; }
-    .auth-container p { color: #666; margin-bottom: 24px; }
-
-    .auth-form { display: grid; gap: 15px; }
-    .auth-form label { display: grid; gap: 7px; font-weight: 600; }
-
-    .auth-form input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d4d4d4;
-      border-radius: 8px;
-      font: inherit;
+    * {
       box-sizing: border-box;
     }
 
-    .auth-form button {
-      padding: 13px;
-      border: 0;
-      border-radius: 8px;
-      background: #2563eb;
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 16px;
+      display: grid;
+      place-items: center;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 15% 15%, #12346a55, transparent 42%),
+        radial-gradient(ellipse at 85% 85%, #164e6350, transparent 38%),
+        var(--bg);
+    }
+
+    .auth-container {
+      width: min(100%, 480px);
+      margin: auto;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #131e30, #0c1320);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px #0008;
+      animation: aparecer 0.5s ease both;
+    }
+
+    .auth-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 12%;
+      width: 76%;
+      height: 2px;
+      background: linear-gradient(
+        90deg, transparent, var(--cyan), var(--blue), transparent
+      );
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 14px;
       color: white;
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2563eb, #0891b2);
+      box-shadow: 0 8px 24px #2563eb35;
+    }
+
+    .brand-name {
+      margin: 0;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-caption {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .auth-container h1 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: clamp(1.8rem, 5vw, 2.15rem);
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+
+    .auth-container > p {
+      margin: 0 0 26px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .auth-form {
+      display: grid;
+      gap: 17px;
+    }
+
+    .auth-form label {
+      display: grid;
+      gap: 8px;
+      color: #dbeafe;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .auth-form input {
+      width: 100%;
+      min-height: 48px;
+      padding: 13px 14px;
+      border: 1px solid #334155;
+      border-radius: 11px;
+      background: #080f1c;
+      color: #f8fafc;
+      font: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-form input::placeholder {
+      color: #64748b;
+    }
+
+    .auth-form input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px #3b82f626;
+    }
+
+    .auth-form button {
+      min-height: 52px;
+      margin-top: 5px;
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(100deg, #2563eb, #0891b2);
+      color: #fff;
       font: inherit;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 8px 24px #2563eb30;
+      transition: transform 0.2s, filter 0.2s;
     }
 
-    .auth-form button:disabled { opacity: .6; cursor: wait; }
-    .auth-message { margin-top: 16px; font-weight: 600; }
-    .auth-footer { margin-top: 20px; font-size: .95rem; }
-    .auth-footer a { color: #2563eb; }
+    .auth-form button:hover:not(:disabled) {
+      filter: brightness(1.13);
+      transform: translateY(-2px);
+    }
+
+    .auth-form button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+      transform: none;
+    }
+
+    .auth-message {
+      margin-top: 17px;
+      color: #fca5a5;
+      font-size: 0.92rem;
+      font-weight: 600;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .auth-message[data-tipo="sucesso"] {
+      color: #4ade80;
+    }
+
+    .auth-message:empty {
+      display: none;
+    }
+
+    .auth-footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .auth-footer + .auth-footer {
+      margin-top: 12px;
+    }
+
+    .auth-footer a {
+      color: #60a5fa;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .auth-footer a:hover {
+      color: var(--cyan);
+      text-decoration: underline;
+    }
+
+    .security-note {
+      margin-top: 27px;
+      padding-top: 17px;
+      border-top: 1px solid var(--border);
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .auth-container {
+        padding: 27px 21px;
+        border-radius: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 </head>
+
 <body>
   <main class="auth-container">
-    <h1>Criar sua conta</h1>
-    <p>Cadastre-se para acompanhar suas solicitações.</p>
+
+    <header class="brand">
+      <div class="brand-icon" aria-hidden="true">A</div>
+
+      <div>
+        <div class="brand-name">Abreuzin Services</div>
+        <div class="brand-caption">Sua solução começa aqui</div>
+      </div>
+    </header>
+
+    <h1>Crie sua conta</h1>
+
+    <p>
+      Cadastre-se para acompanhar suas solicitações
+      e acessar seus serviços em um só lugar.
+    </p>
 
     <form id="formCadastro" class="auth-form">
-      <label>
+      <label for="nome">
         Nome completo
-        <input type="text" name="nome" required maxlength="120"
-               autocomplete="name" placeholder="Seu nome">
+
+        <input
+          id="nome"
+          type="text"
+          name="nome"
+          required
+          maxlength="120"
+          autocomplete="name"
+          placeholder="Digite seu nome completo"
+        >
       </label>
 
-      <label>
+      <label for="email">
         E-mail
-        <input type="email" name="email" required maxlength="255"
-               autocomplete="email" placeholder="voce@exemplo.com">
+
+        <input
+          id="email"
+          type="email"
+          name="email"
+          required
+          maxlength="255"
+          autocomplete="email"
+          placeholder="voce@exemplo.com"
+        >
       </label>
 
-      <label>
-        WhatsApp
-        <input type="tel" name="whatsapp" maxlength="30"
-               autocomplete="tel" placeholder="(85) 99999-9999">
+      <label for="whatsapp">
+        WhatsApp <span style="color:#94a3b8;font-weight:400">(opcional)</span>
+
+        <input
+          id="whatsapp"
+          type="tel"
+          name="whatsapp"
+          maxlength="30"
+          autocomplete="tel"
+          placeholder="(85) 99999-9999"
+        >
       </label>
 
-      <label>
+      <label for="senha">
         Senha
-        <input type="password" name="senha" required minlength="8"
-               autocomplete="new-password" placeholder="Mínimo de 8 caracteres">
+
+        <input
+          id="senha"
+          type="password"
+          name="senha"
+          required
+          minlength="8"
+          maxlength="72"
+          autocomplete="new-password"
+          placeholder="Mínimo de 8 caracteres"
+        >
       </label>
 
-      <label>
+      <label for="confirmarSenha">
         Confirmar senha
-        <input type="password" name="confirmarSenha" required minlength="8"
-               autocomplete="new-password" placeholder="Digite a senha novamente">
+
+        <input
+          id="confirmarSenha"
+          type="password"
+          name="confirmarSenha"
+          required
+          minlength="8"
+          maxlength="72"
+          autocomplete="new-password"
+          placeholder="Digite a senha novamente"
+        >
       </label>
 
-      <button type="submit" id="botaoCadastro">Criar conta</button>
+      <button type="submit" id="botaoCadastro">
+        Criar minha conta
+      </button>
     </form>
 
-    <div id="mensagemCadastro" class="auth-message" role="status"
-         aria-live="polite"></div>
+    <div
+      id="mensagemCadastro"
+      class="auth-message"
+      role="status"
+      aria-live="polite"
+    ></div>
 
     <div class="auth-footer">
-      Já tem uma conta? <a href="login.html">Entrar</a>
+      Já tem uma conta?
+      <a href="login.html">Entrar agora</a>
     </div>
+
     <div class="auth-footer">
-      <a href="index.html">Voltar ao início</a>
+      <a href="index.html">← Voltar ao início</a>
     </div>
+
+    <div class="security-note">
+      Seus dados são enviados ao servidor para criar sua conta.<br>
+      Abreuzin Services © 2026
+    </div>
+
   </main>
 
   <script>
+    "use strict";
+
     const API_URL = "https://abreuzin-services.onrender.com";
 
     const form = document.getElementById("formCadastro");
     const mensagem = document.getElementById("mensagemCadastro");
     const botao = document.getElementById("botaoCadastro");
 
-    form.addEventListener("submit", async (evento) => {
+    function mostrarMensagem(texto, tipo = "erro") {
+      mensagem.textContent = texto;
+      mensagem.dataset.tipo = tipo;
+    }
+
+    async function lerResposta(resposta) {
+      const texto = await resposta.text();
+
+      if (!texto) return {};
+
+      try {
+        return JSON.parse(texto);
+      } catch {
+        return { mensagem: texto };
+      }
+    }
+
+    form.addEventListener("submit", async evento => {
       evento.preventDefault();
+
       mensagem.textContent = "";
-      mensagem.style.color = "#b91c1c";
 
       const dados = new FormData(form);
-      const nome = dados.get("nome").trim();
-      const email = dados.get("email").trim().toLowerCase();
-      const whatsapp = dados.get("whatsapp").trim();
-      const senha = dados.get("senha");
-      const confirmarSenha = dados.get("confirmarSenha");
+
+      const nome = String(dados.get("nome") || "").trim();
+      const email = String(dados.get("email") || "")
+        .trim()
+        .toLowerCase();
+      const whatsapp = String(dados.get("whatsapp") || "").trim();
+      const senha = String(dados.get("senha") || "");
+      const confirmarSenha = String(
+        dados.get("confirmarSenha") || ""
+      );
+
+      if (!nome || !email || !senha || !confirmarSenha) {
+        mostrarMensagem("Preencha todos os campos obrigatórios.");
+        return;
+      }
 
       if (senha.length < 8) {
-        mensagem.textContent = "A senha precisa ter pelo menos 8 caracteres.";
+        mostrarMensagem(
+          "A senha precisa ter pelo menos 8 caracteres."
+        );
+        return;
+      }
+
+      if (new TextEncoder().encode(senha).length > 72) {
+        mostrarMensagem(
+          "A senha não pode ultrapassar 72 bytes."
+        );
         return;
       }
 
       if (senha !== confirmarSenha) {
-        mensagem.textContent = "As senhas não são iguais.";
+        mostrarMensagem("As senhas não são iguais.");
         return;
       }
 
+      const textoOriginal = botao.textContent;
+
       botao.disabled = true;
-      botao.textContent = "Criando conta...";
+      botao.textContent = "Criando sua conta...";
 
       try {
-        const resposta = await fetch(`${API_URL}/api/clientes/cadastro`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nome, email, whatsapp, senha })
-        });
+        const resposta = await fetch(
+          `${API_URL}/api/clientes/cadastro`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({
+              nome,
+              email,
+              whatsapp,
+              senha
+            })
+          }
+        );
 
-        const resultado = await resposta.json();
+        const resultado = await lerResposta(resposta);
 
-        if (!resposta.ok || !resultado.sucesso) {
-          throw new Error(resultado.mensagem || "Não foi possível criar a conta.");
+        if (!resposta.ok || resultado.sucesso !== true) {
+          throw new Error(
+            resultado.mensagem ||
+            resultado.erro ||
+            "Não foi possível criar a conta."
+          );
         }
 
-        mensagem.style.color = "#15803d";
-        mensagem.textContent = "Conta criada com sucesso! Redirecionando para o login...";
+        mostrarMensagem(
+          "Conta criada com sucesso! Redirecionando para o login...",
+          "sucesso"
+        );
+
+        botao.textContent = "Conta criada!";
 
         form.reset();
 
-        setTimeout(() => {
+        window.setTimeout(() => {
           window.location.href = "login.html";
         }, 1500);
+
       } catch (erro) {
-        mensagem.textContent =
+        console.error("Erro no cadastro:", erro);
+
+        mostrarMensagem(
           erro.message === "Failed to fetch"
-            ? "Não foi possível conectar ao servidor. Confira se a API está funcionando."
-            : erro.message;
+            ? "Não foi possível conectar ao servidor. Tente novamente."
+            : erro.message || "Ocorreu um erro ao criar sua conta."
+        );
+
       } finally {
         botao.disabled = false;
-        botao.textContent = "Criar conta";
+        botao.textContent = "Criar minha conta";
       }
     });
   </script>
 </body>
 </html>
+```

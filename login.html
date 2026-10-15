@@ -1,95 +1,189 @@
-
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#172554">
+  <meta name="theme-color" content="#070b14">
+
   <title>Entrar | Abreuzin Services</title>
-  <link rel="stylesheet" href="style.css">
 
   <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070b14;
+      --surface: #101827;
+      --border: rgba(148, 163, 184, 0.16);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --blue: #3b82f6;
+      --cyan: #22d3ee;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       min-height: 100vh;
       margin: 0;
-      padding: 20px 0;
-      background: #f4f7fb;
-      color: #172033;
-      font-family: Arial, sans-serif;
-      box-sizing: border-box;
+      padding: 32px 16px;
+      display: grid;
+      place-items: center;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 15% 15%, #12346a55, transparent 42%),
+        radial-gradient(ellipse at 85% 85%, #164e6350, transparent 38%),
+        var(--bg);
     }
 
     .auth-container {
-      width: min(100% - 32px, 440px);
-      margin: 60px auto;
-      padding: 30px;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 35px #00000012;
-      box-sizing: border-box;
+      width: min(100%, 460px);
+      margin: auto;
+      padding: 38px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #131e30, #0c1320);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px #0008;
+      animation: aparecer 0.5s ease both;
+    }
+
+    .auth-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 12%;
+      width: 76%;
+      height: 2px;
+      background: linear-gradient(
+        90deg, transparent, var(--cyan), var(--blue), transparent
+      );
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 34px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 14px;
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2563eb, #0891b2);
+      box-shadow: 0 8px 24px #2563eb35;
+    }
+
+    .brand-name {
+      margin: 0;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-caption {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .auth-container h1 {
-      margin: 0 0 8px;
-      color: #172554;
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: clamp(1.8rem, 5vw, 2.2rem);
+      line-height: 1.2;
+      letter-spacing: -1px;
     }
 
     .auth-container > p {
-      color: #666;
-      margin-bottom: 24px;
-      line-height: 1.5;
+      margin: 0 0 30px;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
     .auth-form {
       display: grid;
-      gap: 16px;
+      gap: 20px;
     }
 
     .auth-form label {
       display: grid;
-      gap: 7px;
+      gap: 9px;
+      color: #dbeafe;
+      font-size: 0.92rem;
       font-weight: 600;
     }
 
     .auth-form input {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #d4d4d4;
-      border-radius: 8px;
+      min-height: 50px;
+      padding: 14px 15px;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      background: #080f1c;
+      color: #f8fafc;
       font: inherit;
-      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-form input::placeholder {
+      color: #64748b;
     }
 
     .auth-form input:focus {
-      outline: 2px solid #93c5fd;
-      border-color: #2563eb;
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px #3b82f626;
     }
 
     .auth-form button {
-      padding: 13px;
+      min-height: 52px;
+      margin-top: 5px;
+      padding: 14px 18px;
       border: 0;
-      border-radius: 8px;
-      background: #2563eb;
+      border-radius: 12px;
+      background: linear-gradient(100deg, #2563eb, #0891b2);
       color: #fff;
       font: inherit;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 8px 24px #2563eb30;
+      transition: transform 0.2s, filter 0.2s;
     }
 
     .auth-form button:hover:not(:disabled) {
-      background: #1d4ed8;
+      filter: brightness(1.13);
+      transform: translateY(-2px);
     }
 
     .auth-form button:disabled {
-      opacity: .6;
+      opacity: 0.65;
       cursor: wait;
+      transform: none;
     }
 
     .auth-message {
-      margin-top: 16px;
+      margin-top: 18px;
+      color: #fca5a5;
+      font-size: 0.92rem;
       font-weight: 600;
-      line-height: 1.5;
+      line-height: 1.6;
       overflow-wrap: anywhere;
+    }
+
+    .auth-message[data-tipo="sucesso"] {
+      color: #4ade80 !important;
     }
 
     .auth-message:empty {
@@ -97,25 +191,99 @@
     }
 
     .auth-footer {
-      margin-top: 20px;
-      font-size: .95rem;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .auth-footer + .auth-footer {
+      margin-top: 12px;
     }
 
     .auth-footer a {
-      color: #2563eb;
+      color: #60a5fa;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .auth-footer a:hover {
+      color: var(--cyan);
+      text-decoration: underline;
+    }
+
+    .security-note {
+      margin-top: 30px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .auth-container {
+        padding: 28px 22px;
+        border-radius: 20px;
+      }
+
+      .brand {
+        margin-bottom: 28px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
   <main class="auth-container">
+
+    <header class="brand">
+      <div class="brand-icon" aria-hidden="true">A</div>
+
+      <div>
+        <div class="brand-name">Abreuzin Services</div>
+        <div class="brand-caption">Sua solução começa aqui</div>
+      </div>
+    </header>
+
     <h1>Bem-vindo de volta!</h1>
 
-    <p>Entre na sua conta do Abreuzin Services.</p>
+    <p>
+      Entre na sua conta para acompanhar suas solicitações
+      e acessar seus serviços.
+    </p>
 
     <form id="formLogin" class="auth-form">
       <label for="email">
         E-mail
+
         <input
           id="email"
           type="email"
@@ -129,6 +297,7 @@
 
       <label for="senha">
         Senha
+
         <input
           id="senha"
           type="password"
@@ -140,7 +309,7 @@
       </label>
 
       <button type="submit" id="botaoLogin">
-        Entrar
+        Entrar na minha conta
       </button>
     </form>
 
@@ -153,20 +322,22 @@
 
     <div class="auth-footer">
       Ainda não tem conta?
-      <a href="cadastro.html">Criar conta</a>
+      <a href="cadastro.html">Criar conta grátis</a>
     </div>
 
     <div class="auth-footer">
-      <a href="index.html">Voltar ao início</a>
+      <a href="index.html">← Voltar ao início</a>
     </div>
+
+    <div class="security-note">
+      Acesse sua conta com segurança.<br>
+      Abreuzin Services © 2026
+    </div>
+
   </main>
 
   <script>
     "use strict";
-
-    /* ==========================================
-       CONFIGURAÇÃO
-    ========================================== */
 
     const API_URL = "https://abreuzin-services.onrender.com";
     const CHAVE_TOKEN = "clienteToken";
@@ -177,9 +348,6 @@
 
     function mostrarMensagem(texto, tipo = "erro") {
       mensagem.textContent = texto;
-      mensagem.style.color =
-        tipo === "sucesso" ? "#15803d" : "#b91c1c";
-
       mensagem.dataset.tipo = tipo;
     }
 
@@ -195,16 +363,13 @@
       }
     }
 
-    /* ==========================================
-       LOGIN DO CLIENTE
-    ========================================== */
-
     form.addEventListener("submit", async evento => {
       evento.preventDefault();
 
       mensagem.textContent = "";
 
       const dados = new FormData(form);
+
       const email = String(dados.get("email") || "")
         .trim()
         .toLowerCase();
@@ -219,7 +384,7 @@
       const textoOriginal = botao.textContent;
 
       botao.disabled = true;
-      botao.textContent = "Entrando...";
+      botao.textContent = "Verificando seus dados...";
 
       try {
         let resposta;
@@ -235,7 +400,7 @@
           });
         } catch {
           throw new Error(
-            "Não foi possível conectar à API. Verifique sua conexão e tente novamente."
+            "Não foi possível conectar ao servidor. Tente novamente."
           );
         }
 
@@ -253,14 +418,11 @@
           );
         }
 
-        /*
-         * Salva o token utilizado pelo cliente.html e pelo script.js.
-         */
         try {
           sessionStorage.setItem(CHAVE_TOKEN, resultado.token);
         } catch {
           throw new Error(
-            "O navegador não permitiu salvar sua sessão. Verifique as configurações de privacidade."
+            "Não foi possível salvar sua sessão neste navegador."
           );
         }
 
@@ -269,7 +431,7 @@
           "sucesso"
         );
 
-        botao.textContent = "Login confirmado";
+        botao.textContent = "Acesso confirmado";
 
         window.setTimeout(() => {
           window.location.replace("cliente.html");
@@ -289,3 +451,4 @@
   </script>
 </body>
 </html>
+```
