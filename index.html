@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -623,6 +622,43 @@
         </div>
     </footer>
 
+    <!-- CONTADOR DE VISITAS (precisa vir antes da navegação interna) -->
+    <script>
+        (() => {
+            const API = "https://abreuzin-services.onrender.com";
+            const nomes = {
+                inicio: "Início",
+                servicos: "Serviços",
+                sobre: "Sobre",
+                formulario: "Orçamento",
+                acompanhar: "Acompanhar",
+                contato: "Contato"
+            };
+            let ultima = "";
+
+            window.registrarVisita = secao => {
+                try {
+                    const pagina = nomes[secao] || secao;
+                    if (pagina === ultima) return;
+                    ultima = pagina;
+
+                    let vid = localStorage.getItem("vid");
+                    if (!vid) {
+                        vid = crypto.randomUUID();
+                        localStorage.setItem("vid", vid);
+                    }
+
+                    fetch(API + "/api/visitas", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ visitante: vid, pagina }),
+                        keepalive: true
+                    }).catch(() => {});
+                } catch (e) {}
+            };
+        })();
+    </script>
+
     <!-- NAVEGAÇÃO INTERNA -->
     <script>
         (() => {
@@ -656,6 +692,7 @@
                 fecharMenu();
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 history.replaceState(null, "", "#" + nomeAba);
+                window.registrarVisita?.(nomeAba);
             }
 
             elementosAbas.forEach(elemento => {

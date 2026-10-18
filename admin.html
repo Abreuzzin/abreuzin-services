@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -283,8 +282,13 @@
     .small { font-size: 12px; }
     .nowrap { white-space: nowrap; }
 
+    /* VISITAÇÃO */
+    .stats-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .table-compact { min-width: 0; }
+
     @media (max-width: 1000px) {
       .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .layout { grid-template-columns: 190px minmax(0, 1fr); }
       main { padding: 18px; }
     }
@@ -311,6 +315,7 @@
       main { padding: 15px; }
       .topbar { align-items: flex-start; flex-direction: column; }
       .stats { gap: 9px; }
+      .stats-3 { grid-template-columns: 1fr; }
       .stat { padding: 14px; }
       .stat-number { font-size: 25px; }
       .toolbar { flex-direction: column; }
@@ -365,6 +370,7 @@
         <button class="nav-button" data-section="history">✓ Histórico</button>
         <button class="nav-button" data-section="clients">♙ Clientes</button>
         <button class="nav-button" data-section="emails">✉ E-mails</button>
+        <button class="nav-button" data-section="visits">📊 Visitação</button>
       </nav>
 
       <div class="sidebar-bottom">
@@ -486,6 +492,44 @@
 
         <div id="emailsTable"></div>
       </section>
+
+      <!-- VISITAÇÃO -->
+      <section id="section-visits" class="section">
+        <div class="section-heading">
+          <h2>Visitação do site</h2>
+          <button class="secondary" data-reload="visits">Recarregar</button>
+        </div>
+
+        <div class="stats stats-3">
+          <div class="stat">
+            <div class="stat-label">Pessoas que visitaram</div>
+            <div id="visitUnique" class="stat-number">—</div>
+            <div class="stat-note">Visitantes únicos</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Visualizações de páginas</div>
+            <div id="visitViews" class="stat-number">—</div>
+            <div class="stat-note">Total de páginas abertas</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Visitas hoje</div>
+            <div id="visitToday" class="stat-number">—</div>
+            <div class="stat-note">Visitantes únicos hoje</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-heading">
+            <h2>Páginas mais acessadas</h2>
+            <button id="reportButton" class="secondary">Ver relatório</button>
+          </div>
+          <div id="topPages" class="muted">Carregando...</div>
+        </div>
+
+        <div id="visitReport" class="card hidden" style="margin-top:15px"></div>
+      </section>
     </main>
   </div>
 
@@ -500,7 +544,8 @@
       requests: [],
       history: [],
       clients: [],
-      emails: []
+      emails: [],
+      visits: null
     };
 
     const titles = {
@@ -508,7 +553,8 @@
       requests: "Solicitações",
       history: "Histórico",
       clients: "Clientes cadastrados",
-      emails: "E-mails das solicitações"
+      emails: "E-mails das solicitações",
+      visits: "Visitação"
     };
 
     const $ = id => document.getElementById(id);
@@ -762,6 +808,11 @@
       renderEmails();
     }
 
+    async function loadVisits() {
+      state.visits = await apiRequest("/api/admin/visitas");
+      renderVisits();
+    }
+
     async function loadAll() {
       hideMessage();
 
@@ -769,7 +820,8 @@
         ["solicitações", loadRequests],
         ["histórico", loadHistory],
         ["clientes", loadClients],
-        ["e-mails", loadEmails]
+        ["e-mails", loadEmails],
+        ["visitação", loadVisits]
       ];
 
       const results = await Promise.allSettled(
@@ -1057,6 +1109,64 @@
         </div>`;
     }
 
+    // VISITAÇÃO
+
+    function renderVisits() {
+      const d = state.visits || {};
+      const num = n => Number(n || 0).toLocaleString("pt-BR");
+
+      $("visitUnique").textContent = num(d.unicos);
+      $("visitViews").textContent = num(d.views);
+      $("visitToday").textContent = num(d.hoje);
+
+      const top = d.topPaginas || [];
+
+      $("topPages").innerHTML = top.length ? `
+        <div class="table-wrap">
+          <table class="table-compact">
+            <thead><tr><th>Página</th><th>Acessos</th></tr></thead>
+            <tbody>
+              ${top.slice(0, 5).map(p => `
+                <tr>
+                  <td>${escapeHTML(p.pagina)}</td>
+                  <td>${escapeHTML(num(p.total))}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>` : "Ainda não há visitas registradas.";
+
+      const dias = d.porDia || [];
+
+      $("visitReport").innerHTML = `
+        <h2 style="margin-bottom:14px">Relatório dos últimos 14 dias</h2>
+        <div class="table-wrap">
+          <table class="table-compact">
+            <thead>
+              <tr><th>Dia</th><th>Visitantes</th><th>Visualizações</th></tr>
+            </thead>
+            <tbody>
+              ${dias.length ? dias.map(x => `
+                <tr>
+                  <td>${escapeHTML(x.dia)}</td>
+                  <td>${escapeHTML(num(x.unicos))}</td>
+                  <td>${escapeHTML(num(x.views))}</td>
+                </tr>
+              `).join("") : `
+                <tr><td colspan="3" class="empty">Sem dados no período.</td></tr>
+              `}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    $("reportButton").addEventListener("click", () => {
+      const box = $("visitReport");
+      box.classList.toggle("hidden");
+      $("reportButton").textContent =
+        box.classList.contains("hidden") ? "Ver relatório" : "Ocultar relatório";
+    });
+
     // BUSCAS
 
     $("requestSearch").addEventListener("input", renderRequests);
@@ -1088,7 +1198,8 @@
           requests: loadRequests,
           history: loadHistory,
           clients: loadClients,
-          emails: loadEmails
+          emails: loadEmails,
+          visits: loadVisits
         };
 
         const loader = loaders[button.dataset.reload];

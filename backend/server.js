@@ -1,4 +1,3 @@
-
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -42,7 +41,6 @@ pool.on("error", erro => {
 // ==========================================
 
 async function configurarBanco() {
-    // A tabela solicitacoes precisa existir.
     await pool.query(`
         ALTER TABLE solicitacoes
         ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'pendente'
@@ -73,7 +71,6 @@ async function configurarBanco() {
 
     for (const item of antigas.rows) {
         const protocolo = `ABS-${String(item.id).padStart(6, "0")}`;
-
         await pool.query(
             `UPDATE solicitacoes SET protocolo = $1 WHERE id = $2`,
             [protocolo, item.id]
@@ -102,6 +99,21 @@ async function configurarBanco() {
         REFERENCES clientes(id) ON DELETE SET NULL
     `);
 
+    // TABELA DE VISITAÇÃO
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS visitas (
+            id SERIAL PRIMARY KEY,
+            visitante TEXT NOT NULL,
+            pagina TEXT NOT NULL,
+            criado_em TIMESTAMPTZ DEFAULT NOW()
+        )
+    `);
+
+    await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_visitas_criado_em
+        ON visitas (criado_em)
+    `);
+
     console.log("Banco configurado com sucesso!");
 }
 
@@ -113,9 +125,7 @@ function lerToken(req) {
     const autorizacao = req.headers.authorization || "";
     const partes = autorizacao.split(" ");
 
-    if (partes.length !== 2 || partes[0] !== "Bearer") {
-        return null;
-    }
+    if (partes.length !== 2 || partes[0] !== "Bearer") return null;
 
     try {
         return jwt.verify(partes[1], JWT_SECRET);
@@ -128,17 +138,11 @@ function verificarAdmin(req, res, next) {
     const dados = lerToken(req);
 
     if (!dados) {
-        return res.status(401).json({
-            sucesso: false,
-            mensagem: "Token ausente, inválido ou expirado."
-        });
+        return res.status(401).json({ sucesso: false, mensagem: "Token ausente, inválido ou expirado." });
     }
 
     if (dados.tipo !== "admin") {
-        return res.status(403).json({
-            sucesso: false,
-            mensagem: "Acesso exclusivo para administradores."
-        });
+        return res.status(403).json({ sucesso: false, mensagem: "Acesso exclusivo para administradores." });
     }
 
     req.admin = dados;
@@ -149,17 +153,11 @@ function verificarCliente(req, res, next) {
     const dados = lerToken(req);
 
     if (!dados) {
-        return res.status(401).json({
-            sucesso: false,
-            mensagem: "Faça login para continuar."
-        });
+        return res.status(401).json({ sucesso: false, mensagem: "Faça login para continuar." });
     }
 
     if (dados.tipo !== "cliente" || !Number.isInteger(dados.id)) {
-        return res.status(403).json({
-            sucesso: false,
-            mensagem: "Acesso exclusivo para clientes."
-        });
+        return res.status(403).json({ sucesso: false, mensagem: "Acesso exclusivo para clientes." });
     }
 
     req.cliente = { id: dados.id };
@@ -174,12 +172,8 @@ function clienteOpcional(req, res, next) {
 
     const dados = lerToken(req);
 
-    if (!dados || dados.tipo !== "cliente" ||
-        !Number.isInteger(dados.id)) {
-        return res.status(401).json({
-            sucesso: false,
-            mensagem: "Token inválido ou expirado."
-        });
+    if (!dados || dados.tipo !== "cliente" || !Number.isInteger(dados.id)) {
+        return res.status(401).json({ sucesso: false, mensagem: "Token inválido ou expirado." });
     }
 
     req.cliente = { id: dados.id };
@@ -197,28 +191,12 @@ app.post("/api/admin/login", async (req, res) => {
         const usuarioAdmin = process.env.ADMIN_USER;
         const senhaAdmin = process.env.ADMIN_PASSWORD;
 
-        if (
-            typeof usuario !== "string" ||
-            typeof senha !== "string" ||
-            !usuario ||
-            !senha
-        ) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "Informe usuário e senha."
-            });
+        if (typeof usuario !== "string" || typeof senha !== "string" || !usuario || !senha) {
+            return res.status(400).json({ sucesso: false, mensagem: "Informe usuário e senha." });
         }
 
-        if (
-            !usuarioAdmin ||
-            !senhaAdmin ||
-            usuario !== usuarioAdmin ||
-            senha !== senhaAdmin
-        ) {
-            return res.status(401).json({
-                sucesso: false,
-                mensagem: "Usuário ou senha inválidos."
-            });
+        if (!usuarioAdmin || !senhaAdmin || usuario !== usuarioAdmin || senha !== senhaAdmin) {
+            return res.status(401).json({ sucesso: false, mensagem: "Usuário ou senha inválidos." });
         }
 
         const token = jwt.sign(
@@ -230,11 +208,7 @@ app.post("/api/admin/login", async (req, res) => {
         return res.json({ sucesso: true, token });
     } catch (erro) {
         console.error("Erro no login administrativo:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro interno no servidor."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Erro interno no servidor." });
     }
 });
 
@@ -248,71 +222,41 @@ app.post("/api/clientes/cadastro", async (req, res) => {
         const { nome, email, whatsapp, senha } = req.body;
 
         if (
-            typeof nome !== "string" ||
-            typeof email !== "string" ||
-            typeof senha !== "string" ||
-            !nome.trim() ||
-            !email.trim() ||
-            !senha
+            typeof nome !== "string" || typeof email !== "string" ||
+            typeof senha !== "string" || !nome.trim() || !email.trim() || !senha
         ) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "Informe nome, e-mail e senha."
-            });
+            return res.status(400).json({ sucesso: false, mensagem: "Informe nome, e-mail e senha." });
         }
 
         const nomeLimpo = nome.trim();
         const emailLimpo = email.trim().toLowerCase();
 
         if (nomeLimpo.length > 120) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "O nome deve ter até 120 caracteres."
-            });
+            return res.status(400).json({ sucesso: false, mensagem: "O nome deve ter até 120 caracteres." });
         }
 
-        if (
-            emailLimpo.length > 255 ||
-            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpo)
-        ) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "Informe um e-mail válido."
-            });
+        if (emailLimpo.length > 255 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpo)) {
+            return res.status(400).json({ sucesso: false, mensagem: "Informe um e-mail válido." });
         }
 
         if (senha.length < 8 || Buffer.byteLength(senha, "utf8") > 72) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "A senha deve ter ao menos 8 caracteres e no máximo 72 bytes."
-            });
+            return res.status(400).json({ sucesso: false, mensagem: "A senha deve ter ao menos 8 caracteres e no máximo 72 bytes." });
         }
 
-        if (
-            whatsapp !== undefined &&
-            whatsapp !== null &&
-            (typeof whatsapp !== "string" || whatsapp.length > 30)
-        ) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "WhatsApp inválido."
-            });
+        if (whatsapp !== undefined && whatsapp !== null &&
+            (typeof whatsapp !== "string" || whatsapp.length > 30)) {
+            return res.status(400).json({ sucesso: false, mensagem: "WhatsApp inválido." });
         }
 
         const senhaHash = await bcrypt.hash(senha, 12);
 
         const resultado = await pool.query(
-            `
-            INSERT INTO clientes (nome, email, whatsapp, senha_hash)
-            VALUES ($1, $2, $3, $4)
-            RETURNING id, nome, email, whatsapp, criado_em
-            `,
+            `INSERT INTO clientes (nome, email, whatsapp, senha_hash)
+             VALUES ($1, $2, $3, $4)
+             RETURNING id, nome, email, whatsapp, criado_em`,
             [
-                nomeLimpo,
-                emailLimpo,
-                typeof whatsapp === "string" && whatsapp.trim()
-                    ? whatsapp.trim()
-                    : null,
+                nomeLimpo, emailLimpo,
+                typeof whatsapp === "string" && whatsapp.trim() ? whatsapp.trim() : null,
                 senhaHash
             ]
         );
@@ -324,18 +268,11 @@ app.post("/api/clientes/cadastro", async (req, res) => {
         });
     } catch (erro) {
         if (erro.code === "23505") {
-            return res.status(409).json({
-                sucesso: false,
-                mensagem: "Este e-mail já está cadastrado."
-            });
+            return res.status(409).json({ sucesso: false, mensagem: "Este e-mail já está cadastrado." });
         }
 
         console.error("Erro no cadastro:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Não foi possível realizar o cadastro."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Não foi possível realizar o cadastro." });
     }
 });
 
@@ -348,71 +285,38 @@ app.post("/api/clientes/login", async (req, res) => {
     try {
         const { email, senha } = req.body;
 
-        if (
-            typeof email !== "string" ||
-            typeof senha !== "string" ||
-            !email.trim() ||
-            !senha
-        ) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "Informe e-mail e senha."
-            });
+        if (typeof email !== "string" || typeof senha !== "string" || !email.trim() || !senha) {
+            return res.status(400).json({ sucesso: false, mensagem: "Informe e-mail e senha." });
         }
 
         const resultado = await pool.query(
-            `
-            SELECT id, nome, email, whatsapp, senha_hash
-            FROM clientes
-            WHERE LOWER(email) = LOWER($1)
-            `,
+            `SELECT id, nome, email, whatsapp, senha_hash
+             FROM clientes WHERE LOWER(email) = LOWER($1)`,
             [email.trim()]
         );
 
         if (resultado.rows.length === 0) {
-            return res.status(401).json({
-                sucesso: false,
-                mensagem: "E-mail ou senha inválidos."
-            });
+            return res.status(401).json({ sucesso: false, mensagem: "E-mail ou senha inválidos." });
         }
 
         const cliente = resultado.rows[0];
-        const senhaValida = await bcrypt.compare(
-            senha,
-            cliente.senha_hash
-        );
+        const senhaValida = await bcrypt.compare(senha, cliente.senha_hash);
 
         if (!senhaValida) {
-            return res.status(401).json({
-                sucesso: false,
-                mensagem: "E-mail ou senha inválidos."
-            });
+            return res.status(401).json({ sucesso: false, mensagem: "E-mail ou senha inválidos." });
         }
 
-        const token = jwt.sign(
-            { id: cliente.id, tipo: "cliente" },
-            JWT_SECRET,
-            { expiresIn: "8h" }
-        );
+        const token = jwt.sign({ id: cliente.id, tipo: "cliente" }, JWT_SECRET, { expiresIn: "8h" });
 
         return res.json({
             sucesso: true,
             mensagem: "Login realizado com sucesso!",
             token,
-            cliente: {
-                id: cliente.id,
-                nome: cliente.nome,
-                email: cliente.email,
-                whatsapp: cliente.whatsapp
-            }
+            cliente: { id: cliente.id, nome: cliente.nome, email: cliente.email, whatsapp: cliente.whatsapp }
         });
     } catch (erro) {
         console.error("Erro no login do cliente:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro interno no servidor."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Erro interno no servidor." });
     }
 });
 
@@ -424,32 +328,18 @@ app.post("/api/clientes/login", async (req, res) => {
 app.get("/api/clientes/me", verificarCliente, async (req, res) => {
     try {
         const resultado = await pool.query(
-            `
-            SELECT id, nome, email, whatsapp, criado_em
-            FROM clientes
-            WHERE id = $1
-            `,
+            `SELECT id, nome, email, whatsapp, criado_em FROM clientes WHERE id = $1`,
             [req.cliente.id]
         );
 
         if (resultado.rows.length === 0) {
-            return res.status(404).json({
-                sucesso: false,
-                mensagem: "Conta não encontrada."
-            });
+            return res.status(404).json({ sucesso: false, mensagem: "Conta não encontrada." });
         }
 
-        return res.json({
-            sucesso: true,
-            cliente: resultado.rows[0]
-        });
+        return res.json({ sucesso: true, cliente: resultado.rows[0] });
     } catch (erro) {
         console.error("Erro ao buscar cliente:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro ao buscar os dados da conta."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao buscar os dados da conta." });
     }
 });
 
@@ -458,45 +348,27 @@ app.get("/api/clientes/me", verificarCliente, async (req, res) => {
 // GET /api/clientes/me/solicitacoes
 // ==========================================
 
-app.get(
-    "/api/clientes/me/solicitacoes",
-    verificarCliente,
-    async (req, res) => {
-        try {
-            const resultado = await pool.query(
-                `
-                SELECT id, protocolo, servico, descricao, status,
-                       criado_em, atualizado_em
-                FROM solicitacoes
-                WHERE cliente_id = $1
-                ORDER BY id DESC
-                `,
-                [req.cliente.id]
-            );
+app.get("/api/clientes/me/solicitacoes", verificarCliente, async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `SELECT id, protocolo, servico, descricao, status, criado_em, atualizado_em
+             FROM solicitacoes WHERE cliente_id = $1 ORDER BY id DESC`,
+            [req.cliente.id]
+        );
 
-            return res.json({
-                sucesso: true,
-                solicitacoes: resultado.rows
-            });
-        } catch (erro) {
-            console.error("Erro nas solicitações do cliente:", erro.message);
-
-            return res.status(500).json({
-                sucesso: false,
-                mensagem: "Erro ao buscar suas solicitações."
-            });
-        }
+        return res.json({ sucesso: true, solicitacoes: resultado.rows });
+    } catch (erro) {
+        console.error("Erro nas solicitações do cliente:", erro.message);
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao buscar suas solicitações." });
     }
-);
+});
 
 // ==========================================
 // ROTA PRINCIPAL E HEALTH CHECK
 // ==========================================
 
 app.get("/", (req, res) => {
-    res.json({
-        mensagem: "Abreuzin Services API está funcionando 🚀"
-    });
+    res.json({ mensagem: "Abreuzin Services API está funcionando 🚀" });
 });
 
 app.get("/healthz", (req, res) => {
@@ -510,49 +382,24 @@ app.get("/healthz", (req, res) => {
 
 app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
     try {
-        const {
-            nome,
-            whatsapp,
-            email,
-            servico,
-            descricao,
-            orcamento,
-            prazo
-        } = req.body;
+        const { nome, whatsapp, email, servico, descricao, orcamento, prazo } = req.body;
 
         if (
-            typeof nome !== "string" ||
-            typeof whatsapp !== "string" ||
-            typeof email !== "string" ||
-            typeof servico !== "string" ||
-            !nome.trim() ||
-            !whatsapp.trim() ||
-            !email.trim() ||
-            !servico.trim()
+            typeof nome !== "string" || typeof whatsapp !== "string" ||
+            typeof email !== "string" || typeof servico !== "string" ||
+            !nome.trim() || !whatsapp.trim() || !email.trim() || !servico.trim()
         ) {
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: "Preencha os campos obrigatórios."
-            });
+            return res.status(400).json({ sucesso: false, mensagem: "Preencha os campos obrigatórios." });
         }
 
         const resultado = await pool.query(
-            `
-            INSERT INTO solicitacoes (
-                nome, whatsapp, email, servico, descricao,
-                orcamento, prazo, status, cliente_id
-            )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, 'pendente', $8)
-            RETURNING *
-            `,
+            `INSERT INTO solicitacoes (nome, whatsapp, email, servico, descricao, orcamento, prazo, status, cliente_id)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, 'pendente', $8)
+             RETURNING *`,
             [
-                nome.trim(),
-                whatsapp.trim(),
-                email.trim().toLowerCase(),
-                servico.trim(),
+                nome.trim(), whatsapp.trim(), email.trim().toLowerCase(), servico.trim(),
                 typeof descricao === "string" ? descricao.trim() || null : null,
-                orcamento ?? null,
-                prazo ?? null,
+                orcamento ?? null, prazo ?? null,
                 req.cliente ? req.cliente.id : null
             ]
         );
@@ -561,13 +408,8 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
         const protocolo = `ABS-${String(solicitacao.id).padStart(6, "0")}`;
 
         const atualizada = await pool.query(
-            `
-            UPDATE solicitacoes
-            SET protocolo = $1,
-                atualizado_em = CURRENT_TIMESTAMP
-            WHERE id = $2
-            RETURNING *
-            `,
+            `UPDATE solicitacoes SET protocolo = $1, atualizado_em = CURRENT_TIMESTAMP
+             WHERE id = $2 RETURNING *`,
             [protocolo, solicitacao.id]
         );
 
@@ -579,11 +421,7 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
         });
     } catch (erro) {
         console.error("Erro ao salvar solicitação:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro ao salvar solicitação."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao salvar solicitação." });
     }
 });
 
@@ -594,22 +432,11 @@ app.post("/api/solicitacoes", clienteOpcional, async (req, res) => {
 
 app.get("/api/solicitacoes", verificarAdmin, async (req, res) => {
     try {
-        const resultado = await pool.query(`
-            SELECT * FROM solicitacoes
-            ORDER BY id DESC
-        `);
-
-        return res.json({
-            sucesso: true,
-            solicitacoes: resultado.rows
-        });
+        const resultado = await pool.query(`SELECT * FROM solicitacoes ORDER BY id DESC`);
+        return res.json({ sucesso: true, solicitacoes: resultado.rows });
     } catch (erro) {
         console.error("Erro ao buscar solicitações:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro ao buscar solicitações."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao buscar solicitações." });
     }
 });
 
@@ -618,131 +445,70 @@ app.get("/api/solicitacoes", verificarAdmin, async (req, res) => {
 // GET /api/solicitacoes/pendentes
 // ==========================================
 
-app.get(
-    "/api/solicitacoes/pendentes",
-    verificarAdmin,
-    async (req, res) => {
-        try {
-            const resultado = await pool.query(`
-                SELECT *
-                FROM solicitacoes
-                WHERE status IS DISTINCT FROM 'concluido'
-                ORDER BY id DESC
-            `);
-
-            return res.json({
-                sucesso: true,
-                solicitacoes: resultado.rows
-            });
-        } catch (erro) {
-            console.error("Erro ao buscar pendentes:", erro.message);
-
-            return res.status(500).json({
-                sucesso: false,
-                mensagem: "Erro ao buscar solicitações."
-            });
-        }
+app.get("/api/solicitacoes/pendentes", verificarAdmin, async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `SELECT * FROM solicitacoes WHERE status IS DISTINCT FROM 'concluido' ORDER BY id DESC`
+        );
+        return res.json({ sucesso: true, solicitacoes: resultado.rows });
+    } catch (erro) {
+        console.error("Erro ao buscar pendentes:", erro.message);
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao buscar solicitações." });
     }
-);
+});
 
 // ==========================================
 // SOLICITAÇÕES CONCLUÍDAS - ADMIN
 // GET /api/solicitacoes/concluidas
 // ==========================================
 
-app.get(
-    "/api/solicitacoes/concluidas",
-    verificarAdmin,
-    async (req, res) => {
-        try {
-            const resultado = await pool.query(`
-                SELECT *
-                FROM solicitacoes
-                WHERE status = 'concluido'
-                ORDER BY id DESC
-            `);
-
-            return res.json({
-                sucesso: true,
-                solicitacoes: resultado.rows
-            });
-        } catch (erro) {
-            console.error("Erro ao buscar histórico:", erro.message);
-
-            return res.status(500).json({
-                sucesso: false,
-                mensagem: "Erro ao buscar histórico."
-            });
-        }
+app.get("/api/solicitacoes/concluidas", verificarAdmin, async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `SELECT * FROM solicitacoes WHERE status = 'concluido' ORDER BY id DESC`
+        );
+        return res.json({ sucesso: true, solicitacoes: resultado.rows });
+    } catch (erro) {
+        console.error("Erro ao buscar histórico:", erro.message);
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao buscar histórico." });
     }
-);
+});
 
 // ==========================================
 // ALTERAR STATUS - ADMIN
 // PATCH /api/solicitacoes/:id/status
 // ==========================================
 
-app.patch(
-    "/api/solicitacoes/:id/status",
-    verificarAdmin,
-    async (req, res) => {
-        try {
-            const id = Number(req.params.id);
-            const { status } = req.body;
+app.patch("/api/solicitacoes/:id/status", verificarAdmin, async (req, res) => {
+    try {
+        const id = Number(req.params.id);
+        const { status } = req.body;
+        const permitidos = ["pendente", "em_andamento", "concluido"];
 
-            const permitidos = [
-                "pendente",
-                "em_andamento",
-                "concluido"
-            ];
-
-            if (!Number.isInteger(id) || id < 1) {
-                return res.status(400).json({
-                    sucesso: false,
-                    mensagem: "ID inválido."
-                });
-            }
-
-            if (!permitidos.includes(status)) {
-                return res.status(400).json({
-                    sucesso: false,
-                    mensagem: "Status inválido."
-                });
-            }
-
-            const resultado = await pool.query(
-                `
-                UPDATE solicitacoes
-                SET status = $1,
-                    atualizado_em = CURRENT_TIMESTAMP
-                WHERE id = $2
-                RETURNING *
-                `,
-                [status, id]
-            );
-
-            if (resultado.rows.length === 0) {
-                return res.status(404).json({
-                    sucesso: false,
-                    mensagem: "Solicitação não encontrada."
-                });
-            }
-
-            return res.json({
-                sucesso: true,
-                mensagem: "Status atualizado com sucesso!",
-                solicitacao: resultado.rows[0]
-            });
-        } catch (erro) {
-            console.error("Erro ao alterar status:", erro.message);
-
-            return res.status(500).json({
-                sucesso: false,
-                mensagem: "Erro ao alterar status."
-            });
+        if (!Number.isInteger(id) || id < 1) {
+            return res.status(400).json({ sucesso: false, mensagem: "ID inválido." });
         }
+
+        if (!permitidos.includes(status)) {
+            return res.status(400).json({ sucesso: false, mensagem: "Status inválido." });
+        }
+
+        const resultado = await pool.query(
+            `UPDATE solicitacoes SET status = $1, atualizado_em = CURRENT_TIMESTAMP
+             WHERE id = $2 RETURNING *`,
+            [status, id]
+        );
+
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({ sucesso: false, mensagem: "Solicitação não encontrada." });
+        }
+
+        return res.json({ sucesso: true, mensagem: "Status atualizado com sucesso!", solicitacao: resultado.rows[0] });
+    } catch (erro) {
+        console.error("Erro ao alterar status:", erro.message);
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao alterar status." });
     }
-);
+});
 
 // ==========================================
 // CLIENTES - ADMIN
@@ -751,23 +517,13 @@ app.patch(
 
 app.get("/api/admin/clientes", verificarAdmin, async (req, res) => {
     try {
-        const resultado = await pool.query(`
-            SELECT id, nome, email, whatsapp, criado_em
-            FROM clientes
-            ORDER BY criado_em DESC, id DESC
-        `);
-
-        return res.json({
-            sucesso: true,
-            clientes: resultado.rows
-        });
+        const resultado = await pool.query(
+            `SELECT id, nome, email, whatsapp, criado_em FROM clientes ORDER BY criado_em DESC, id DESC`
+        );
+        return res.json({ sucesso: true, clientes: resultado.rows });
     } catch (erro) {
         console.error("Erro ao buscar clientes:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro ao buscar clientes."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao buscar clientes." });
     }
 });
 
@@ -778,24 +534,14 @@ app.get("/api/admin/clientes", verificarAdmin, async (req, res) => {
 
 app.get("/api/admin/emails", verificarAdmin, async (req, res) => {
     try {
-        const resultado = await pool.query(`
-            SELECT id, protocolo, nome, email, whatsapp,
-                   servico, status, criado_em
-            FROM solicitacoes
-            ORDER BY criado_em DESC, id DESC
-        `);
-
-        return res.json({
-            sucesso: true,
-            emails: resultado.rows
-        });
+        const resultado = await pool.query(
+            `SELECT id, protocolo, nome, email, whatsapp, servico, status, criado_em
+             FROM solicitacoes ORDER BY criado_em DESC, id DESC`
+        );
+        return res.json({ sucesso: true, emails: resultado.rows });
     } catch (erro) {
         console.error("Erro ao buscar e-mails:", erro.message);
-
-        return res.status(500).json({
-            sucesso: false,
-            mensagem: "Erro ao buscar e-mails."
-        });
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao buscar e-mails." });
     }
 });
 
@@ -804,43 +550,104 @@ app.get("/api/admin/emails", verificarAdmin, async (req, res) => {
 // GET /api/solicitacoes/protocolo/:protocolo
 // ==========================================
 
-app.get(
-    "/api/solicitacoes/protocolo/:protocolo",
-    async (req, res) => {
-        try {
-            const protocolo = String(req.params.protocolo).trim();
+app.get("/api/solicitacoes/protocolo/:protocolo", async (req, res) => {
+    try {
+        const protocolo = String(req.params.protocolo).trim();
 
-            const resultado = await pool.query(
-                `
-                SELECT protocolo, nome, servico, status,
-                       criado_em, atualizado_em
-                FROM solicitacoes
-                WHERE protocolo = $1
-                `,
-                [protocolo]
-            );
+        const resultado = await pool.query(
+            `SELECT protocolo, nome, servico, status, criado_em, atualizado_em
+             FROM solicitacoes WHERE protocolo = $1`,
+            [protocolo]
+        );
 
-            if (resultado.rows.length === 0) {
-                return res.status(404).json({
-                    sucesso: false,
-                    mensagem: "Protocolo não encontrado."
-                });
-            }
-
-            return res.json({
-                sucesso: true,
-                solicitacao: resultado.rows[0]
-            });
-        } catch (erro) {
-            console.error("Erro ao consultar protocolo:", erro.message);
-
-            return res.status(500).json({
-                sucesso: false,
-                mensagem: "Erro ao consultar protocolo."
-            });
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({ sucesso: false, mensagem: "Protocolo não encontrado." });
         }
+
+        return res.json({ sucesso: true, solicitacao: resultado.rows[0] });
+    } catch (erro) {
+        console.error("Erro ao consultar protocolo:", erro.message);
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao consultar protocolo." });
     }
-);
+});
+
+// ==========================================
+// VISITAÇÃO — REGISTRAR (PÚBLICO)
+// POST /api/visitas
+// ==========================================
+
+app.post("/api/visitas", async (req, res) => {
+    try {
+        const visitante = String(req.body.visitante || "").trim().slice(0, 64);
+        const pagina = String(req.body.pagina || "").trim().slice(0, 200) || "/";
+
+        if (!visitante) return res.sendStatus(400);
+
+        await pool.query(
+            `INSERT INTO visitas (visitante, pagina) VALUES ($1, $2)`,
+            [visitante, pagina]
+        );
+
+        return res.sendStatus(204);
+    } catch (erro) {
+        console.error("Erro ao registrar visita:", erro.message);
+        return res.sendStatus(500);
+    }
+});
+
+// ==========================================
+// VISITAÇÃO — RESUMO PARA O PAINEL (ADMIN)
+// GET /api/admin/visitas
+// ==========================================
+
+app.get("/api/admin/visitas", verificarAdmin, async (req, res) => {
+    const tz = "America/Sao_Paulo";
+
+    try {
+        const [totais, hoje, top, dias] = await Promise.all([
+            pool.query(
+                `SELECT COUNT(*)::int AS views,
+                        COUNT(DISTINCT visitante)::int AS unicos
+                 FROM visitas`
+            ),
+            pool.query(
+                `SELECT COUNT(DISTINCT visitante)::int AS n
+                 FROM visitas
+                 WHERE (criado_em AT TIME ZONE $1)::date = (NOW() AT TIME ZONE $1)::date`,
+                [tz]
+            ),
+            pool.query(
+                `SELECT pagina, COUNT(*)::int AS total
+                 FROM visitas
+                 GROUP BY pagina
+                 ORDER BY total DESC
+                 LIMIT 10`
+            ),
+            pool.query(
+                `SELECT to_char((criado_em AT TIME ZONE $1)::date, 'DD/MM/YYYY') AS dia,
+                        COUNT(*)::int AS views,
+                        COUNT(DISTINCT visitante)::int AS unicos
+                 FROM visitas
+                 WHERE criado_em > NOW() - INTERVAL '14 days'
+                 GROUP BY (criado_em AT TIME ZONE $1)::date
+                 ORDER BY (criado_em AT TIME ZONE $1)::date DESC`,
+                [tz]
+            )
+        ]);
+
+        return res.json({
+            sucesso: true,
+            unicos: totais.rows[0].unicos,
+            views: totais.rows[0].views,
+            hoje: hoje.rows[0].n,
+            topPaginas: top.rows,
+            porDia: dias.rows
+        });
+    } catch (erro) {
+        console.error("Erro ao carregar visitação:", erro.message);
+        return res.status(500).json({ sucesso: false, mensagem: "Erro ao carregar visitação." });
+    }
+});
 
 // ==========================================
 // TRATAMENTO DE ERROS
@@ -848,25 +655,15 @@ app.get(
 
 app.use((erro, req, res, next) => {
     if (erro instanceof SyntaxError && erro.status === 400 && "body" in erro) {
-        return res.status(400).json({
-            sucesso: false,
-            mensagem: "O JSON enviado é inválido."
-        });
+        return res.status(400).json({ sucesso: false, mensagem: "O JSON enviado é inválido." });
     }
 
     console.error("Erro inesperado:", erro.message);
-
-    return res.status(500).json({
-        sucesso: false,
-        mensagem: "Erro interno no servidor."
-    });
+    return res.status(500).json({ sucesso: false, mensagem: "Erro interno no servidor." });
 });
 
 app.use((req, res) => {
-    return res.status(404).json({
-        sucesso: false,
-        mensagem: "Rota não encontrada."
-    });
+    return res.status(404).json({ sucesso: false, mensagem: "Rota não encontrada." });
 });
 
 // ==========================================
