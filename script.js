@@ -240,6 +240,27 @@ async function carregarDadosCliente() {
 
         const cliente = resultado.cliente;
 
+        const nomePerfil = obterElemento("profileName");
+        const emailPerfil = obterElemento("profileEmail");
+        const inicialPerfil = obterElemento("profileInitial");
+        const entrarPerfil = obterElemento("profileLogin");
+        const cadastroPerfil = obterElemento("profileRegister");
+        const sairPerfil = obterElemento("profileLogout");
+        const headerLogin = obterElemento("headerLogin");
+        const profileWrap = obterElemento("profileWrap");
+
+        if (headerLogin) headerLogin.hidden = true;
+        if (profileWrap) profileWrap.hidden = false;
+
+        if (nomePerfil) nomePerfil.textContent = cliente.nome || "Minha conta";
+        if (emailPerfil) emailPerfil.textContent = cliente.email || "";
+        if (inicialPerfil) {
+            inicialPerfil.textContent = String(cliente.nome || "A").trim().charAt(0).toUpperCase();
+        }
+        if (entrarPerfil) entrarPerfil.hidden = true;
+        if (cadastroPerfil) cadastroPerfil.hidden = true;
+        if (sairPerfil) sairPerfil.hidden = false;
+
         preencherSeVazio("nome", cliente.nome);
         preencherSeVazio("email", cliente.email);
         preencherSeVazio(
@@ -679,6 +700,36 @@ if (formularioConsulta) {
 
 document.addEventListener("DOMContentLoaded", () => {
     carregarDadosCliente();
+
+    const botaoPerfil = obterElemento("profileButton");
+    const menuPerfil = obterElemento("profileMenu");
+    const botaoSair = obterElemento("profileLogout");
+
+    botaoPerfil?.addEventListener("click", () => {
+        if (!menuPerfil) return;
+        const aberto = menuPerfil.hidden;
+        menuPerfil.hidden = !aberto;
+        botaoPerfil.setAttribute("aria-expanded", String(aberto));
+    });
+
+    document.addEventListener("click", event => {
+        if (menuPerfil && !event.target.closest(".profile-wrap")) {
+            menuPerfil.hidden = true;
+            botaoPerfil?.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && menuPerfil) {
+            menuPerfil.hidden = true;
+            botaoPerfil?.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    botaoSair?.addEventListener("click", () => {
+        limparTokenCliente();
+        window.location.href = "index.html";
+    });
 
     console.log("Abreuzin Services: script.js carregado.");
 });

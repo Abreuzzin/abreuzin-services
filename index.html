@@ -21,31 +21,38 @@
                 <span>Abreuzin <strong>Services</strong></span>
             </a>
 
-            <button class="menu-toggle" id="menuToggle" type="button"
-                    aria-label="Abrir menu" aria-expanded="false"
-                    aria-controls="mainNav">
-                <span></span><span></span><span></span>
-            </button>
-
             <nav class="nav" id="mainNav" aria-label="Navegação principal">
                 <a href="#inicio" class="nav-link active" data-tab="inicio">Início</a>
                 <a href="#servicos" class="nav-link" data-tab="servicos">Serviços</a>
                 <a href="#sobre" class="nav-link" data-tab="sobre">Sobre</a>
                 <a href="#formulario" class="nav-link" data-tab="formulario">Orçamento</a>
-                <a href="#acompanhar" class="nav-link" data-tab="acompanhar">Acompanhar</a>
-                <a href="#contato" class="nav-link" data-tab="contato">Contato</a>
-
-                <!-- NOVOS ACESSOS -->
-                <a href="login.html" class="nav-link account-nav-link">Entrar</a>
-                <a href="cadastro.html" class="nav-link account-nav-link">Criar conta</a>
-
-                <button class="mobile-budget" data-tab="formulario" type="button">
-                    Solicitar orçamento <span aria-hidden="true">↗</span>
-                </button>
             </nav>
 
-            <button class="header-button" data-tab="formulario" type="button">
-                Solicitar orçamento <span aria-hidden="true">↗</span>
+            <div class="header-account">
+                <a class="header-login" id="headerLogin" href="login.html">
+                    <span aria-hidden="true">↪</span> Entrar
+                </a>
+                <div class="profile-wrap" id="profileWrap" hidden>
+                    <button class="profile-button" id="profileButton" type="button"
+                            aria-label="Abrir menu do perfil" aria-expanded="false"
+                            aria-controls="profileMenu">
+                        <span id="profileInitial">A</span>
+                    </button>
+                    <div class="profile-menu" id="profileMenu" hidden>
+                        <div class="profile-menu-user">
+                            <strong id="profileName">Minha conta</strong>
+                            <span id="profileEmail"></span>
+                        </div>
+                        <a href="cliente.html" id="profileOrders">Meus pedidos</a>
+                        <button type="button" id="profileLogout">Sair da conta</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="menu-toggle" id="menuToggle" type="button"
+                    aria-label="Abrir menu" aria-expanded="false"
+                    aria-controls="mainNav">
+                <span></span><span></span><span></span>
             </button>
         </div>
     </header>
@@ -758,25 +765,6 @@
             formulario?.addEventListener("input", () => {
                 if (erro) erro.style.display = "none";
             });
-        })();
-    </script>
-
-    <!-- INTEGRAÇÃO DA SESSÃO DO CLIENTE -->
-    <script>
-        (() => {
-            const token = sessionStorage.getItem("clienteToken");
-            const aviso = document.getElementById("clienteSessaoAviso");
-            const linkEntrar = document.querySelector(".account-nav-link[href='login.html']");
-            const linkCadastro = document.querySelector(".account-nav-link[href='cadastro.html']");
-
-            if (token) {
-                if (aviso) aviso.hidden = false;
-                if (linkEntrar) {
-                    linkEntrar.href = "cliente.html";
-                    linkEntrar.textContent = "Minha conta";
-                }
-                if (linkCadastro) linkCadastro.hidden = true;
-            }
         })();
     </script>
 
